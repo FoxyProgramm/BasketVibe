@@ -11,7 +11,7 @@ var target_yaw: float = 0.0
 var is_charging: bool = false
 var charge_progress: float = 0.0
 var knockback_velocity: Vector3 = Vector3.ZERO
-
+# КОМТАРИЙ КАКОЙ
 # Переменные для сетевой интерполяции
 @export var sync_position: Vector3
 @export var sync_rotation_y: float
