@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c8nbxesq2p53e" path="res://textures/RAENGOSLING.png" id="5_fos0i"]
 [ext_resource type="Shader" uid="uid://cbgaoaf10x6dq" path="res://DistanceUV.gdshader" id="5_shader"]
 [ext_resource type="Texture2D" uid="uid://gxl3stlxai58" path="res://textures/mudamuda.png" id="6_3dxm6"]
+[ext_resource type="PackedScene" uid="uid://dy38qfo3bpemy" path="res://scene/button.tscn" id="7_lgr22"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_main"]
 sky_top_color = Color(0.72315586, 0.5664814, 0.33532086, 1)
@@ -179,3 +180,10 @@ placeholder_text = "Enter IP"
 layout_mode = 2
 text = "7777"
 placeholder_text = "Enter Port"
+
+[node name="button" parent="." unique_id=260329884 instance=ExtResource("7_lgr22")]
+transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, -2.3415346, 0.5, -37.943123)
+
+[node name="button2" parent="." unique_id=1891328852 instance=ExtResource("7_lgr22")]
+transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 9.809639, 0.5, -37.943123)
+item_type = "bat"

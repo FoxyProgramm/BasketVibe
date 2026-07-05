@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://dy38qfo3bpemy"]
+
+[ext_resource type="Script" uid="uid://bgqf42m8sponh" path="res://button.gd" id="1_auuqi"]
+[ext_resource type="Texture2D" uid="uid://h6a7agf2ovgq" path="res://textures/MetalFloorsBare.png" id="2_33e6t"]
+[ext_resource type="Texture2D" uid="uid://klfppx006w5i" path="res://textures/brick_wall_gate_metal_bare_2.png" id="3_lc5p3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f3j00"]
+albedo_texture = ExtResource("2_33e6t")
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_sg22l"]
+material = SubResource("StandardMaterial3D_f3j00")
+size = Vector3(0.9, 1, 0.8)
+
+[sub_resource type="PrismMesh" id="PrismMesh_3hk5o"]
+material = SubResource("StandardMaterial3D_f3j00")
+left_to_right = 1.0
+size = Vector3(0.9, 0.4, 0.8)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_y8mo7"]
+radius = 0.9006867
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wngyc"]
+albedo_color = Color(0.99997944, 0.28735858, 0.22509974, 1)
+albedo_texture = ExtResource("3_lc5p3")
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_y8mo7"]
+material = SubResource("StandardMaterial3D_wngyc")
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_y8mo7"]
+size = Vector3(0.9, 1.3966064, 0.8)
+
+[node name="button" type="StaticBody3D" unique_id=260329884]
+script = ExtResource("1_auuqi")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1693636341]
+mesh = SubResource("BoxMesh_sg22l")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=453327745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("PrismMesh_3hk5o")
+
+[node name="ballspawner" type="Node3D" parent="." unique_id=1426714577]
+
+[node name="Area3D" type="Area3D" parent="ballspawner" unique_id=737580002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7841364, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ballspawner/Area3D" unique_id=113740780]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.34271726, -0.5593194, 0)
+shape = SubResource("SphereShape3D_y8mo7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ballspawner" unique_id=823692830]
+transform = Transform3D(0.9175415, -0.3949974, -0.045767628, 0.39373818, 0.91858447, -0.034246568, 0.055568743, 0.013402187, 0.99836504, 0, 0.71765685, 0)
+mesh = SubResource("CylinderMesh_y8mo7")
+
+[node name="Marker3D" type="Marker3D" parent="." unique_id=1527588123]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.927097, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2007006182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.19830322, 0)
+shape = SubResource("BoxShape3D_y8mo7")

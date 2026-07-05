@@ -7,7 +7,7 @@ var hold_offset := Vector3(0, -0.3, -1.2)
 @export var sync_rotation: Vector3
 
 var is_dribbling: bool = false
-
+@onready var anim_sprite = $AnimatedSprite3D
 # Синхронизируемые переменные (через RPC)
 @export var held_by_id: int = 0:
 	set(val):
@@ -18,7 +18,6 @@ func _ready() -> void:
 	var sync = MultiplayerSynchronizer.new()
 	sync.root_path = NodePath("..")
 	var config = SceneReplicationConfig.new()
-
 	# Синхронизируем кастомные переменные вместо прямых координат
 	config.add_property(NodePath(".:sync_position"))
 	config.add_property(NodePath(".:sync_rotation"))
@@ -64,7 +63,6 @@ func _process(delta: float) -> void:
 
 	last_position = global_position
 
-	var anim_sprite = get_node_or_null("AnimatedSprite3D")
 	if anim_sprite:
 		if held_by_id == 0 and speed > 0.5:
 			if not anim_sprite.is_playing():

@@ -109,7 +109,7 @@ func _input(event):
 			return
 
 		var held = get_held_object()
-
+		
 		if held:
 			if held.is_in_group("ball"):
 				if event.pressed:
