@@ -36,7 +36,7 @@ func _spawn_item():
 	var item
 	if item_type == "ball":
 		item = load("res://Ball.tscn").instantiate()
-	else:
+	elif item_type == "bat":
 		item = load("res://Bat.tscn").instantiate()
 	
 	var spawn_pos = spawn_point.global_position if spawn_point else global_position + Vector3.UP * 0.5
