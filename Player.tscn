@@ -1,0 +1,124 @@
+[gd_scene format=3 uid="uid://djkf6584e57hy"]
+
+[ext_resource type="Script" uid="uid://dsw3mgmks6gyo" path="res://Player.gd" id="1_player"]
+[ext_resource type="Texture2D" uid="uid://ihggso1qfsli" path="res://textures/persones/132.png" id="2_kne1u"]
+[ext_resource type="Texture2D" uid="uid://dgy0t4rqxdxx" path="res://textures/persones/131.png" id="3_e80uo"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_player"]
+friction = 0.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_4t7h3"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
+height = 1.64
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
+albedo_color = Color(0.2, 0.6, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cxr5p"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+cull_mode = 2
+albedo_texture = ExtResource("2_kne1u")
+texture_filter = 0
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_tdg3f"]
+material = SubResource("StandardMaterial3D_cxr5p")
+size = Vector2(1.28, 1.28)
+
+[sub_resource type="BoxMesh" id="BoxMesh_head"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_head"]
+albedo_color = Color(0.9, 0.8, 0.6, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wim1b"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("3_e80uo")
+texture_filter = 0
+billboard_mode = 2
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_jd8yr"]
+material = SubResource("StandardMaterial3D_wim1b")
+size = Vector2(1.28, 2.56)
+
+[node name="Player" type="RigidBody3D" unique_id=1312750339 groups=["player"]]
+collision_layer = 3
+collision_mask = 3
+axis_lock_angular_x = true
+axis_lock_angular_z = true
+physics_material_override = SubResource("PhysicsMaterial_player")
+lock_rotation = true
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=136049300]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_4t7h3")
+
+[node name="BodyMesh" type="MeshInstance3D" parent="." unique_id=386194948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8005178, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_1")
+surface_material_override/0 = SubResource("StandardMaterial3D_body")
+
+[node name="Head" type="Node3D" parent="." unique_id=1193462432]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4986223, 0)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Head" unique_id=934733598]
+transform = Transform3D(0.279, 0, 0, 0, 0.279, 0, 0, 0, 0.279, 0, 0.13233662, 0.04246728)
+mesh = SubResource("QuadMesh_tdg3f")
+
+[node name="HeadMesh" type="MeshInstance3D" parent="Head" unique_id=212278078]
+visible = false
+mesh = SubResource("BoxMesh_head")
+surface_material_override/0 = SubResource("StandardMaterial3D_head")
+
+[node name="Camera3D" type="Camera3D" parent="Head" unique_id=612484109]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18742931, -0.2)
+
+[node name="Crosshair" type="ColorRect" parent="Head/Camera3D" unique_id=601267127]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.8)
+
+[node name="WeaponGrip" type="Marker3D" parent="Head" unique_id=819949545]
+
+[node name="GroundCast" type="RayCast3D" parent="." unique_id=102618209]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+target_position = Vector3(0, -0.2, 0)
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1925026307]
+
+[node name="ChargeBar" type="ProgressBar" parent="UI" unique_id=661363224]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -80.0
+offset_right = 150.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 0
+max_value = 1.0
+show_percentage = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=523218740]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0.9107102, 0)
+mesh = SubResource("QuadMesh_jd8yr")

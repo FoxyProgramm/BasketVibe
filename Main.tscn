@@ -1,0 +1,181 @@
+[gd_scene format=3 uid="uid://b12yyr4cjaqd3"]
+
+[ext_resource type="Script" uid="uid://dq55ls286nv4t" path="res://Main.gd" id="1_main"]
+[ext_resource type="Texture2D" uid="uid://bljv4q4l2ulul" path="res://textures/trava.png" id="2_uu6xs"]
+[ext_resource type="Texture2D" uid="uid://810ie2c8hsw1" path="res://textures/zabor.png" id="4_cm0pq"]
+[ext_resource type="Texture2D" uid="uid://c8nbxesq2p53e" path="res://textures/RAENGOSLING.png" id="5_fos0i"]
+[ext_resource type="Shader" uid="uid://cbgaoaf10x6dq" path="res://DistanceUV.gdshader" id="5_shader"]
+[ext_resource type="Texture2D" uid="uid://gxl3stlxai58" path="res://textures/mudamuda.png" id="6_3dxm6"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_main"]
+sky_top_color = Color(0.72315586, 0.5664814, 0.33532086, 1)
+sky_horizon_color = Color(0.6866219, 0.35092923, 0.41351688, 1)
+ground_bottom_color = Color(0.27130467, 0.16789421, 0.18955544, 1)
+ground_horizon_color = Color(0.44209546, 0.24898186, 0.28338188, 1)
+
+[sub_resource type="Sky" id="Sky_main"]
+sky_material = SubResource("ProceduralSkyMaterial_main")
+
+[sub_resource type="Environment" id="Environment_main"]
+background_mode = 2
+sky = SubResource("Sky_main")
+tonemap_mode = 4
+tonemap_exposure = 1.08
+tonemap_agx_white = 14.35
+tonemap_agx_contrast = 1.52
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.8297577, 0.40392077, 0.35900882, 1)
+fog_density = 1.0
+fog_aerial_perspective = 0.13
+fog_sky_affect = 0.118
+fog_height = -2.61
+fog_depth_curve = 0.6597538
+fog_depth_begin = 6.5
+fog_depth_end = 65.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(80, 1, 80)
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(80, 1, 80)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ofhsj"]
+render_priority = 0
+shader = ExtResource("5_shader")
+shader_parameter/albedo = Color(0.912059, 0.726315, 0.486837, 1)
+shader_parameter/texture_albedo = ExtResource("2_uu6xs")
+shader_parameter/triplanar_sharpness = 28.49
+shader_parameter/uv1_scale_close = Vector3(0.2, 0.2, 0.2)
+shader_parameter/uv1_scale_far = Vector3(0.1, 0.1, 0.1)
+shader_parameter/min_distance = 10.0
+shader_parameter/max_distance = 24.425
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wim1b"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+cull_mode = 2
+albedo_texture = ExtResource("4_cm0pq")
+uv1_scale = Vector3(11.075, 1, 1)
+texture_filter = 0
+
+[sub_resource type="QuadMesh" id="QuadMesh_jd8yr"]
+material = SubResource("StandardMaterial3D_wim1b")
+size = Vector2(26.615, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jd8yr"]
+size = Vector3(80, 37.163116, 1)
+
+[node name="Main" type="Node3D" unique_id=1667223710]
+script = ExtResource("1_main")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1156263545]
+transform = Transform3D(0.8475297, -0.26537424, 0.4596411, 2.9228602e-09, 0.8660252, 0.50000036, -0.530748, -0.42376515, 0.733982, 0, 10, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=130271651]
+environment = SubResource("Environment_main")
+
+[node name="Level" type="Node3D" parent="." unique_id=1056526147]
+
+[node name="Floor" type="StaticBody3D" parent="Level" unique_id=811630322]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Level/Floor" unique_id=95542792]
+shape = SubResource("BoxShape3D_floor")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/Floor" unique_id=1243993724]
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("ShaderMaterial_ofhsj")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Level/Floor" unique_id=1198627135]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 1.8744454, -39.633717)
+mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Level/Floor" unique_id=403758295]
+transform = Transform3D(-1.3113416e-07, 0, -3, 0, 3, 0, 3, 0, -1.3113416e-07, 39.615204, 1.874, 0)
+mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Level/Floor" unique_id=1673653831]
+transform = Transform3D(-3, 0, 2.6226832e-07, 0, 3, 0, -2.6226832e-07, 0, -3, -0.07228851, 1.8744454, 39.687492)
+mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Level/Floor" unique_id=1912235754]
+transform = Transform3D(3.9340247e-07, 0, 3, 0, 3, 0, -3, 0, 3.9340247e-07, -39.687492, 1.874, 0.053771973)
+mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Level/Floor" unique_id=441785809]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18.081558, 39.881203)
+shape = SubResource("BoxShape3D_jd8yr")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Level/Floor" unique_id=1609615484]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -40.075, 18.082, 0)
+shape = SubResource("BoxShape3D_jd8yr")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Level/Floor" unique_id=1067005872]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.279274, 18.081558, -40.22287)
+shape = SubResource("BoxShape3D_jd8yr")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="Level/Floor" unique_id=1663488368]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 40.35428, 18.082, -0.3416729)
+shape = SubResource("BoxShape3D_jd8yr")
+
+[node name="Sprite3D" type="Sprite3D" parent="Level" unique_id=916808807]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.465406, -39.980263)
+pixel_size = 0.0125
+billboard = 2
+texture_filter = 0
+texture = ExtResource("5_fos0i")
+
+[node name="Sprite3D2" type="Sprite3D" parent="Level" unique_id=1444463426]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.9925413, 1.465406, -39.980263)
+pixel_size = 0.0125
+billboard = 2
+texture_filter = 0
+texture = ExtResource("6_3dxm6")
+
+[node name="LevelSpawner" type="MultiplayerSpawner" parent="." unique_id=967452454]
+_spawnable_scenes = PackedStringArray("uid://c31asbqq05otd")
+spawn_path = NodePath("../Level")
+
+[node name="Players" type="Node3D" parent="." unique_id=562868757]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=2014072702]
+_spawnable_scenes = PackedStringArray("uid://djkf6584e57hy")
+spawn_path = NodePath("../Players")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=367528450]
+
+[node name="MainMenu" type="VBoxContainer" parent="UI" unique_id=426205973]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -50.0
+offset_right = 100.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HostButton" type="Button" parent="UI/MainMenu" unique_id=203371946]
+layout_mode = 2
+text = "Host Game"
+
+[node name="JoinButton" type="Button" parent="UI/MainMenu" unique_id=465824288]
+layout_mode = 2
+text = "Join Game"
+
+[node name="AddressEntry" type="LineEdit" parent="UI/MainMenu" unique_id=1504129187]
+layout_mode = 2
+text = "127.0.0.1"
+placeholder_text = "Enter IP"
+
+[node name="PortEntry" type="LineEdit" parent="UI/MainMenu" unique_id=716016209]
+layout_mode = 2
+text = "7777"
+placeholder_text = "Enter Port"
