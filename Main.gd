@@ -12,10 +12,12 @@ const MAX_CLIENTS = 2
 var player_scene = preload("res://Player.tscn")
 var ball_scene = preload("res://Ball.tscn")
 var bat_scene = preload("res://Bat.tscn")
+var radio_scene = preload("res://scene/radio.tscn")
 
 func _ready():
 	$LevelSpawner.add_spawnable_scene("res://Ball.tscn")
 	$LevelSpawner.add_spawnable_scene("res://Bat.tscn")
+	$LevelSpawner.add_spawnable_scene("res://scene/radio.tscn")
 	$PlayerSpawner.add_spawnable_scene("res://Player.tscn")
 
 	multiplayer.peer_connected.connect(_on_peer_connected)
@@ -79,6 +81,13 @@ func _on_peer_disconnected(id):
 			if bat.held_by_id == id:
 				bat.held_by_id = 0
 				bat.freeze = false
+
+		var radios = get_tree().get_nodes_in_group("radio")
+		if not radios.is_empty():
+			var radio = radios[0]
+			if radio.held_by_id == id:
+				radio.held_by_id = 0
+				radio.freeze = false
 
 func _spawn_player(id: int):
 	var p = player_scene.instantiate()

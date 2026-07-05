@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bmm3srsibgg0k"
+path="res://.godot/imported/CSGO BHOP THEME.mp3-46eca4cccdcba16957a3057f0b07ea53.mp3str"
+
+[deps]
+
+source_file="res://music/CSGO BHOP THEME.mp3"
+dest_files=["res://.godot/imported/CSGO BHOP THEME.mp3-46eca4cccdcba16957a3057f0b07ea53.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

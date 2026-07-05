@@ -132,6 +132,9 @@ func _input(event):
 						is_charging = false
 						held.rpc_id(1, "request_swing", charge_progress)
 						charge_bar.hide()
+			elif held.is_in_group("radio"):
+				if event.pressed:
+					held.use()
 		else:
 			if event.pressed:
 				var closest = get_closest_interactable()
@@ -142,6 +145,8 @@ func get_held_object():
 	for b in get_tree().get_nodes_in_group("ball"):
 		if b.held_by_id == multiplayer.get_unique_id(): return b
 	for b in get_tree().get_nodes_in_group("bat"):
+		if b.held_by_id == multiplayer.get_unique_id(): return b
+	for b in get_tree().get_nodes_in_group("radio"):
 		if b.held_by_id == multiplayer.get_unique_id(): return b
 	return null
 
@@ -157,6 +162,13 @@ func get_closest_interactable() -> Node3D:
 				min_dist = d
 
 	for b in get_tree().get_nodes_in_group("bat"):
+		if b.held_by_id == 0:
+			var d = global_position.distance_to(b.global_position)
+			if d < min_dist:
+				closest = b
+				min_dist = d
+
+	for b in get_tree().get_nodes_in_group("radio"):
 		if b.held_by_id == 0:
 			var d = global_position.distance_to(b.global_position)
 			if d < min_dist:

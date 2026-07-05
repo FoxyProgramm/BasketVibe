@@ -7,6 +7,7 @@
 [ext_resource type="Shader" uid="uid://cbgaoaf10x6dq" path="res://DistanceUV.gdshader" id="5_shader"]
 [ext_resource type="Texture2D" uid="uid://gxl3stlxai58" path="res://textures/mudamuda.png" id="6_3dxm6"]
 [ext_resource type="PackedScene" uid="uid://dy38qfo3bpemy" path="res://scene/button.tscn" id="7_lgr22"]
+[ext_resource type="PackedScene" uid="uid://csccor8yoh8hg" path="res://scene/radio.tscn" id="8_trn2v"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_main"]
 sky_top_color = Color(0.72315586, 0.5664814, 0.33532086, 1)
@@ -187,3 +188,10 @@ transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, -2.3415346, 
 [node name="button2" parent="." unique_id=1891328852 instance=ExtResource("7_lgr22")]
 transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 9.809639, 0.5, -37.943123)
 item_type = "bat"
+
+[node name="button3" parent="." unique_id=687759358 instance=ExtResource("7_lgr22")]
+transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 13.196983, 0.5, -37.943123)
+item_type = "radio"
+
+[node name="radio" parent="." unique_id=1113669271 instance=ExtResource("8_trn2v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.219837, 0.29415452, -33.777245)

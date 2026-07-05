@@ -38,6 +38,8 @@ func _spawn_item():
 		item = load("res://Ball.tscn").instantiate()
 	elif item_type == "bat":
 		item = load("res://Bat.tscn").instantiate()
+	elif item_type == "radio":
+		item = load("res://scene/radio.tscn").instantiate()
 	
 	var spawn_pos = spawn_point.global_position if spawn_point else global_position + Vector3.UP * 0.5
 	
@@ -53,7 +55,7 @@ func _spawn_item():
 
 @rpc("call_local", "reliable")
 func _play_press_anim():
-	if $MeshInstance3D:
+	if $ballspawner/MeshInstance3D:
 		var tween = create_tween()
-		tween.tween_property($MeshInstance3D, "position:y", -0.1, 0.1)
-		tween.tween_property($MeshInstance3D, "position:y", 0.0, 0.2)
+		tween.tween_property($ballspawner/MeshInstance3D, "position:y", 0.618, 0.1)
+		tween.tween_property($ballspawner/MeshInstance3D, "position:y", 0.718, 0.2)
