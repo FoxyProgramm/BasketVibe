@@ -13,6 +13,8 @@ var is_charging: bool = false
 var charge_progress: float = 0.0
 var knockback_velocity: Vector3 = Vector3.ZERO
 
+@export var default_environment: Environment #юазовый эрваермент, чтобы потом менять
+
 # Переменные для сетевой интерполяции
 @export var sync_position: Vector3
 @export var sync_rotation_y: float
@@ -64,6 +66,9 @@ func _ready():
 		sync_head_rotation_x = head.rotation.x
 		sync_grip_rotation = weapon_grip.rotation
 		charge_bar.hide()
+		
+		if default_environment:
+			camera.environment = default_environment # задаем инваермент в камере, чтобы у каждого игрока он мог быть свой
 	else:
 		# Чужие игроки отключены от локальной физики
 		freeze = true
@@ -288,7 +293,7 @@ func interact():
 	pass
 
 @rpc("any_peer", "call_local", "reliable")
-func _client_teleport(new_pos: Vector3): # временное отключение синхронизации чтобы она не откатывала телепорт двери
+func _client_teleport(new_pos: Vector3, env_path: String): # временное отключение синхронизации чтобы она не откатывала телепорт двери
 	var synchronizer = get_node_or_null("MultiplayerSynchronizer")
 	if synchronizer:
 		synchronizer.set_process(false)
@@ -297,8 +302,17 @@ func _client_teleport(new_pos: Vector3): # временное отключени
 	global_position = new_pos
 	sync_position = new_pos
 	
+	if env_path != "":
+		var env = load(env_path)
+		if env and camera:
+			camera.environment = env
+	
 	await get_tree().create_timer(0.1).timeout
 	
 	if synchronizer:
 		synchronizer.set_process(true)
 		synchronizer.set_physics_process(true)
+
+func set_environment(env: Environment): # для смены инваерментов
+	if camera:
+		camera.environment = env

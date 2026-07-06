@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b12yyr4cjaqd3"]
 
 [ext_resource type="Script" uid="uid://dq55ls286nv4t" path="res://Main.gd" id="1_main"]
+[ext_resource type="Environment" uid="uid://bh1kib30f0oqh" path="res://scene/evening_environment.tres" id="2_c2ibq"]
 [ext_resource type="Texture2D" uid="uid://bljv4q4l2ulul" path="res://textures/trava.png" id="2_uu6xs"]
 [ext_resource type="Texture2D" uid="uid://810ie2c8hsw1" path="res://textures/zabor.png" id="4_cm0pq"]
 [ext_resource type="Texture2D" uid="uid://c8nbxesq2p53e" path="res://textures/RAENGOSLING.png" id="5_fos0i"]
@@ -11,36 +12,11 @@
 [ext_resource type="PackedScene" uid="uid://csccor8yoh8hg" path="res://scene/radio.tscn" id="8_trn2v"]
 [ext_resource type="Script" uid="uid://crssebrmnamsi" path="res://console.gd" id="8_wkp8b"]
 [ext_resource type="PackedScene" uid="uid://bnbat2jdsieje" path="res://scene/door.tscn" id="11_20pc6"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_main"]
-sky_top_color = Color(0.72315586, 0.5664814, 0.33532086, 1)
-sky_horizon_color = Color(0.6866219, 0.35092923, 0.41351688, 1)
-ground_bottom_color = Color(0.27130467, 0.16789421, 0.18955544, 1)
-ground_horizon_color = Color(0.44209546, 0.24898186, 0.28338188, 1)
-
-[sub_resource type="Sky" id="Sky_main"]
-sky_material = SubResource("ProceduralSkyMaterial_main")
-
-[sub_resource type="Environment" id="Environment_main"]
-background_mode = 2
-sky = SubResource("Sky_main")
-tonemap_mode = 4
-tonemap_exposure = 1.08
-tonemap_agx_white = 14.35
-tonemap_agx_contrast = 1.52
-fog_enabled = true
-fog_mode = 1
-fog_light_color = Color(0.8297577, 0.40392077, 0.35900882, 1)
-fog_density = 1.0
-fog_aerial_perspective = 0.13
-fog_sky_affect = 0.118
-fog_height = -2.61
-fog_depth_curve = 0.6597538
-fog_depth_begin = 6.5
-fog_depth_end = 65.5
+[ext_resource type="PackedScene" uid="uid://datr5ht60ko4u" path="res://scene/level_night.tscn" id="12_5vvyt"]
+[ext_resource type="Environment" uid="uid://c0fxnqlt3ov8a" path="res://scene/night_environment.tres" id="13_j4qnp"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
-size = Vector3(80, 1, 80)
+size = Vector3(82, 1, 82)
 
 [sub_resource type="BoxMesh" id="BoxMesh_floor"]
 size = Vector3(80, 1, 80)
@@ -56,7 +32,7 @@ shader_parameter/uv1_scale_far = Vector3(0.1, 0.1, 0.1)
 shader_parameter/min_distance = 10.0
 shader_parameter/max_distance = 24.425
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wim1b"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c2ibq"]
 transparency = 2
 alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
@@ -66,7 +42,7 @@ uv1_scale = Vector3(11.075, 1, 1)
 texture_filter = 0
 
 [sub_resource type="QuadMesh" id="QuadMesh_jd8yr"]
-material = SubResource("StandardMaterial3D_wim1b")
+material = SubResource("StandardMaterial3D_c2ibq")
 size = Vector2(26.615, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_jd8yr"]
@@ -80,7 +56,7 @@ transform = Transform3D(0.8475297, -0.26537424, 0.4596411, 2.9228602e-09, 0.8660
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=130271651]
-environment = SubResource("Environment_main")
+environment = ExtResource("2_c2ibq")
 
 [node name="Level" type="Node3D" parent="." unique_id=1056526147]
 
@@ -91,6 +67,7 @@ collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Level/Floor" unique_id=95542792]
 shape = SubResource("BoxShape3D_floor")
+debug_color = Color(0.7, 0, 0.011666489, 1)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Level/Floor" unique_id=1243993724]
 mesh = SubResource("BoxMesh_floor")
@@ -268,17 +245,29 @@ item_type = "radio"
 [node name="radio" parent="." unique_id=1113669271 instance=ExtResource("8_trn2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.219837, 0.29415452, -33.777245)
 
-[node name="Door" parent="." unique_id=1708420116 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
+[node name="Level_night" parent="." unique_id=284635577 instance=ExtResource("12_5vvyt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.84770393, 227.78882)
+
+[node name="doors" type="Node3D" parent="." unique_id=1431828175]
+
+[node name="Door" parent="doors" unique_id=1708420116 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.017632, 1.2887583, -21.770157)
 target_door = NodePath("../Door2")
 
-[node name="Door2" parent="." unique_id=1483473484 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
+[node name="Door2" parent="doors" unique_id=1483473484 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.814034, 1.2887573, 18.980145)
 target_door = NodePath("../Door")
 variation = 1
 
-[node name="Door3" parent="." unique_id=355073705 instance=ExtResource("11_20pc6")]
+[node name="Door3" parent="doors" unique_id=355073705 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6532516, 1.2887573, 38.388855)
+target_door = NodePath("../Door4")
 variation = 1
+location_environment = ExtResource("13_j4qnp")
+
+[node name="Door4" parent="doors" unique_id=1752515876 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.629873, 1.9511547, 192.0991)
+target_door = NodePath("../Door3")
+location_environment = ExtResource("2_c2ibq")
 
 [connection signal="text_submitted" from="UI/Debug/Console/LineEdit" to="UI/Debug/Console" method="_on_line_edit_text_submitted"]

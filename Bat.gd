@@ -1,6 +1,6 @@
 extends RigidBody3D
 
-var hold_offset := Vector3(0.5, -0.4, -0.8)
+var hold_offset := Vector3(0.5, -0.1, -0.8)
 var hold_rotation := Vector3(0, 0, 0)
 
 @export var sync_position: Vector3

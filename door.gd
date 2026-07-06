@@ -5,6 +5,7 @@ extends Area3D
 	set(val):
 		variation = val
 		_update_sprite()
+@export var location_environment: Environment
 
 @onready var sprite = $AnimatedSprite3D
 
@@ -53,8 +54,10 @@ func _do_teleport(player_path: NodePath):
 		player.sync_position = new_pos
 		player.global_position = new_pos
 		
+		# Отправляем environment
+		var env_path = location_environment.resource_path if location_environment else ""
 		# Отправляем клиенту команду телепортироваться и обновить sync_position
-		player.rpc_id(player.name.to_int(), "_client_teleport", new_pos)
+		player.rpc_id(player.name.to_int(), "_client_teleport", new_pos, env_path)
 		rpc("_play_teleport_effect", player.name)
 
 @rpc("call_local", "reliable")

@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dgwpmosnoms2o"]
+
+[ext_resource type="Texture2D" uid="uid://bwssq0hhr0pah" path="res://textures/queenannelace.png" id="1_1h0nu"]
+[ext_resource type="Texture2D" uid="uid://d1u5j2kg7uxmg" path="res://textures/door1.png" id="2_1f688"]
+
+[resource]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(1.4517182, 1.4517182, 1.4517182, 1)
+albedo_texture = ExtResource("1_1h0nu")
+metallic = 0.77
+backlight_texture = ExtResource("2_1f688")
+uv1_offset = Vector3(-1.025, 0.47, 0)
+texture_filter = 0
