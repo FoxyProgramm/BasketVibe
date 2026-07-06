@@ -186,6 +186,7 @@ func _get_player(id: int) -> Node3D:
 	return null
 
 func _on_check_authority_timeout() -> void:
+	if held_by_id != 0: return
 	var closest_player = null
 	var closest_distance: float = 0.0
 	if not is_authority(): return

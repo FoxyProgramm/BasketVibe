@@ -121,9 +121,6 @@ texture = ExtResource("6_3dxm6")
 
 [node name="Items" type="Node3D" parent="Level" unique_id=1776252388]
 
-[node name="radio" parent="Level/Items" unique_id=1113669271 instance=ExtResource("8_trn2v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.219837, 0.29415452, -33.777245)
-
 [node name="LevelSpawner" type="MultiplayerSpawner" parent="." unique_id=967452454]
 _spawnable_scenes = PackedStringArray("uid://c31asbqq05otd")
 spawn_path = NodePath("../Level/Items")
@@ -253,6 +250,9 @@ item_type = "bat"
 [node name="button3" parent="." unique_id=687759358 instance=ExtResource("7_lgr22")]
 transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 13.196983, 0.5, -37.943123)
 item_type = "radio"
+
+[node name="radio" parent="." unique_id=1113669271 instance=ExtResource("8_trn2v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.219837, 0.29415452, -33.777245)
 
 [node name="Level_night" parent="." unique_id=284635577 instance=ExtResource("12_5vvyt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.84770393, 227.78882)

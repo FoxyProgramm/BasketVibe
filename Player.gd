@@ -32,6 +32,8 @@ var is_swinging := false
 @onready var ground_cast = $GroundCast
 @onready var charge_bar = $UI/ChargeBar
 
+@onready var console = get_tree().get_first_node_in_group("debug_menu").get_node("Console")
+
 func _enter_tree():
 	set_multiplayer_authority(name.to_int())
 
@@ -93,7 +95,8 @@ func _input(event):
 				is_charging = false
 				charge_bar.hide()
 		else:
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			if !console.visible:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 	if event is InputEventKey and event.pressed and event.keycode == KEY_Q:
 		var held = get_held_object()
@@ -111,7 +114,8 @@ func _input(event):
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			if !console.visible:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 			return
 
 		var held = get_held_object()
@@ -247,7 +251,6 @@ func _physics_process(delta):
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if not is_multiplayer_authority(): return
-
 	var t = state.transform
 	t.basis = Basis.from_euler(Vector3(0, target_yaw, 0))
 	state.transform = t

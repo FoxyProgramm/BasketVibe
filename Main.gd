@@ -8,7 +8,8 @@ var names : Array[String] = [
 	"Анальный гром",
 	"Средиземный паук",
 	"Крит на 20",
-	"Силиконовая Сиська"
+	"Силиконовая Сиська",
+	"Лапух Дубравый"
 ]
 
 const PORT = 7777
@@ -78,12 +79,9 @@ func _on_join_pressed():
 @rpc("any_peer", "reliable")
 func add_player(id:int, name_:String) -> void:
 	players[id] = name_
-	print("Received player: ", id, " | with name: ", name_)
 	var player:Player = $Players.get_node_or_null(str(id))
 	if player:
 		player.get_node("Username").text = name_
-	else :
-		print("NOOOOOOOOOOOOOOOO")
 
 func _on_peer_connected(id) -> void:
 	if multiplayer.is_server():
@@ -120,9 +118,8 @@ func _on_peer_disconnected(id) -> void:
 func _spawn_player(id: int):
 	var p = player_scene.instantiate()
 	p.name = str(id)
-	# Раскидываем игроков немного по разным координатам, чтобы не заспавнились в одной точке
-	var offset = (id % 3) * 2.0
-	p.position = Vector3(offset, 2, offset)
+	#var offset = (id % 3) * 10.0
+	p.position = Vector3(randf_range(-10, 10), 2, randf_range(-10, 10))
 	players_node.add_child(p, true)
 
 func _spawn_ball():

@@ -9,7 +9,7 @@ func _spawn_item(item_id:int, count:int = 1) -> void:
 	var level_node = get_tree().current_scene.get_node_or_null("Level/Items")
 	var spawn_position:Vector3 = Vector3(0, 5, 0)
 	
-	if player != null:
+	if player:
 		spawn_position = player.global_position + Vector3(0, 2, 0)
 	
 	for i in range(count):
@@ -20,9 +20,14 @@ func _spawn_item(item_id:int, count:int = 1) -> void:
 		else:
 			get_tree().current_scene.add_child(item, true)
 
+@rpc("any_peer", "reliable")
 func _delete_items(mode:int) -> void:
 	if not multiplayer.is_server(): return
-	
+	var level_node = get_tree().current_scene.get_node_or_null("Level/Items")
+	match mode:
+		0: #ALL
+			for child in level_node.get_children():
+				child.queue_free()
 
 func parse(commands:Array[String]) -> void:
 	match commands.get(0):
@@ -35,17 +40,13 @@ func parse(commands:Array[String]) -> void:
 			else :
 				rpc_id(1, "_spawn_item", idx, int(commands.get(2)) if commands.size() > 2 else 1)
 		"delete":
-			match commands.get(1):
-				"all":
-					pass
-				"radius":
-					pass
-				"count":
-					pass
-				"random":
-					pass
-				"persent":
-					pass
+			var delete_modes:Array[String] = ["all", "radius", "count"]
+			var idx:int = delete_modes.find(commands.get(1))
+			idx = max(idx, 0)
+			if multiplayer.is_server():
+				_delete_items(idx)
+			else :
+				rpc_id(1, "_delete_items", idx)
 				
 				
 
@@ -55,7 +56,18 @@ func _on_line_edit_text_submitted(new_text: String) -> void:
 	for result in regex.search_all(new_text):
 		results.append(result.get_string())
 	parse(results)
+	self.hide()
+	toggle_mouse()
+
+func toggle_mouse() -> void:
+	if self.visible:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		$LineEdit.grab_focus()
+		$LineEdit.text = ""
+	else :
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("show_debug_console"):
 		self.visible = !self.visible
+		toggle_mouse()
