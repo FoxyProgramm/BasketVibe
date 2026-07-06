@@ -24,6 +24,7 @@ window/stretch/aspect="expand"
 
 radio=""
 debug_menu=""
+players=""
 
 [input]
 

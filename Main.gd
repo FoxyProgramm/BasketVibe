@@ -1,5 +1,16 @@
 extends Node3D
 
+var names : Array[String] = [
+	"Чебоксар",
+	"Редиски",
+	"Чаполах",
+	"Сувенир",
+	"Анальный гром",
+	"Средиземный паук",
+	"Крит 20",
+	"Силиконовая Сиська"
+]
+
 const PORT = 7777
 const MAX_CLIENTS = 2
 
@@ -8,6 +19,8 @@ const MAX_CLIENTS = 2
 @onready var port_entry = $UI/MainMenu/PortEntry
 @onready var players_node = $Players
 @onready var level_node = $Level
+@onready var level_items: Node3D = $Level/Items
+
 
 var player_scene = preload("res://Player.tscn")
 var ball_scene = preload("res://Ball.tscn")
@@ -26,6 +39,7 @@ func _ready():
 	# Привязываем функции к кнопкам
 	$UI/MainMenu/HostButton.pressed.connect(_on_host_pressed)
 	$UI/MainMenu/JoinButton.pressed.connect(_on_join_pressed)
+	$UI/MainMenu/Username.text = names.pick_random()
 
 func _on_host_pressed():
 	main_menu.hide()
@@ -101,11 +115,11 @@ func _spawn_ball():
 	var b = ball_scene.instantiate()
 	b.name = "Ball"
 	b.position = Vector3(0, 3, -4)
-	level_node.add_child(b, true)
+	level_items.add_child(b, true)
 
 func _spawn_bat():
 	var b = bat_scene.instantiate()
 	b.name = "Bat"
 	# Спавним чуть левее от мяча
 	b.position = Vector3(-2, 3, -4)
-	level_node.add_child(b, true)
+	level_items.add_child(b, true)

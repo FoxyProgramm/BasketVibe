@@ -119,11 +119,16 @@ billboard = 2
 texture_filter = 0
 texture = ExtResource("6_3dxm6")
 
+[node name="Items" type="Node3D" parent="Level" unique_id=1776252388]
+
+[node name="radio" parent="Level/Items" unique_id=1113669271 instance=ExtResource("8_trn2v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.219837, 0.29415452, -33.777245)
+
 [node name="LevelSpawner" type="MultiplayerSpawner" parent="." unique_id=967452454]
 _spawnable_scenes = PackedStringArray("uid://c31asbqq05otd")
-spawn_path = NodePath("../Level")
+spawn_path = NodePath("../Level/Items")
 
-[node name="Players" type="Node3D" parent="." unique_id=562868757]
+[node name="Players" type="Node3D" parent="." unique_id=562868757 groups=["players"]]
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=2014072702]
 _spawnable_scenes = PackedStringArray("uid://djkf6584e57hy")
@@ -213,6 +218,13 @@ offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Username" type="LineEdit" parent="UI/MainMenu" unique_id=21665153]
+layout_mode = 2
+placeholder_text = "Your name"
+
+[node name="HSeparator" type="HSeparator" parent="UI/MainMenu" unique_id=56451486]
+layout_mode = 2
+
 [node name="HostButton" type="Button" parent="UI/MainMenu" unique_id=203371946]
 layout_mode = 2
 text = "Host Game"
@@ -241,9 +253,6 @@ item_type = "bat"
 [node name="button3" parent="." unique_id=687759358 instance=ExtResource("7_lgr22")]
 transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 13.196983, 0.5, -37.943123)
 item_type = "radio"
-
-[node name="radio" parent="." unique_id=1113669271 instance=ExtResource("8_trn2v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.219837, 0.29415452, -33.777245)
 
 [node name="Level_night" parent="." unique_id=284635577 instance=ExtResource("12_5vvyt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.84770393, 227.78882)
