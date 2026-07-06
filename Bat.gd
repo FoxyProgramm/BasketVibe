@@ -254,6 +254,17 @@ func request_swing(charge: float) -> void:
 						var impulse = (swing_dir + Vector3.UP * 0.3).normalized() * hit_force
 						# Вызываем напрямую, без проверки authority
 						radio.rpc("apply_radio_impulse", impulse)
+			for trash in get_tree().get_nodes_in_group("trash"):
+				print("1")
+				var dist = player.global_position.distance_to(trash.global_position)
+				if dist < 4.0:
+					var to_trash = (trash.global_position - head.global_position).normalized()
+					var dot = swing_dir.dot(to_trash)
+					if dot > 0.2:
+						var hit_force = lerp(50.0, 265.0, charge)
+						var impulse = (swing_dir + Vector3.UP * 0.3).normalized() * hit_force
+						# Вызываем напрямую, без проверки authority
+						trash.rpc("apply_trash_impulse", impulse)
 
 			# Проверяем попадание по ИГРОКАМ
 			for p in get_tree().get_nodes_in_group("player"):

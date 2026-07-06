@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://d3q834rjoujxt"]
+
+[ext_resource type="Texture2D" uid="uid://h6a7agf2ovgq" path="res://textures/MetalFloorsBare.png" id="1_km6jk"]
+
+[resource]
+cull_mode = 2
+albedo_texture = ExtResource("1_km6jk")
+uv1_triplanar = true
+texture_filter = 0

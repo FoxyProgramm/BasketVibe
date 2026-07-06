@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://bnbat2jdsieje" path="res://scene/door.tscn" id="11_20pc6"]
 [ext_resource type="PackedScene" uid="uid://datr5ht60ko4u" path="res://scene/level_night.tscn" id="12_5vvyt"]
 [ext_resource type="Environment" uid="uid://c0fxnqlt3ov8a" path="res://scene/night_environment.tres" id="13_j4qnp"]
+[ext_resource type="PackedScene" uid="uid://bh1mlpwcd7dot" path="res://scene/trash.tscn" id="15_j4qnp"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
 size = Vector3(82, 1, 82)
@@ -266,8 +267,11 @@ variation = 1
 location_environment = ExtResource("13_j4qnp")
 
 [node name="Door4" parent="doors" unique_id=1752515876 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.629873, 1.9511547, 192.0991)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.629873, 1.6428883, 192.0991)
 target_door = NodePath("../Door3")
 location_environment = ExtResource("2_c2ibq")
+
+[node name="trash" parent="." unique_id=434344413 instance=ExtResource("15_j4qnp")]
+transform = Transform3D(-0.9560161, 0, -0.29331404, 0, 1, 0, 0.29331404, 0, -0.9560161, 31.106316, 0.5, -30.274763)
 
 [connection signal="text_submitted" from="UI/Debug/Console/LineEdit" to="UI/Debug/Console" method="_on_line_edit_text_submitted"]
