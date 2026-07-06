@@ -1,3 +1,4 @@
+class_name Player
 extends RigidBody3D
 
 const WALK_SPEED = 6.0
@@ -92,7 +93,7 @@ func _input(event):
 	if event is InputEventKey and event.pressed and event.keycode == KEY_Q:
 		var held = get_held_object()
 		if held:
-			held.rpc_id(1, "request_drop", linear_velocity)
+			held.rpc_id(held.get_multiplayer_authority(), "request_drop", linear_velocity)
 			if is_charging:
 				is_charging = false
 				charge_bar.hide()
@@ -101,7 +102,7 @@ func _input(event):
 		if event.pressed and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			var held = get_held_object()
 			if held and held.is_in_group("ball"):
-				held.rpc_id(1, "request_dribble")
+				held.rpc_id(held.get_multiplayer_authority(), "request_dribble")
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
@@ -121,7 +122,7 @@ func _input(event):
 						var throw_dir = -head.global_transform.basis.z
 						throw_dir += Vector3.UP * 0.2
 						var force = lerp(MIN_THROW_FORCE, MAX_THROW_FORCE, charge_progress)
-						held.rpc_id(1, "request_throw", throw_dir, force, linear_velocity)
+						held.rpc_id(held.get_multiplayer_authority(), "request_throw", throw_dir, force, linear_velocity)
 						charge_bar.hide()
 			elif held.is_in_group("bat"):
 				if event.pressed:
@@ -139,7 +140,8 @@ func _input(event):
 			if event.pressed:
 				var closest = get_closest_interactable()
 				if closest:
-					closest.rpc_id(1, "request_pickup", multiplayer.get_unique_id())
+					closest.rpc_id(closest.get_multiplayer_authority(), "request_pickup", multiplayer.get_unique_id())
+					
 
 func get_held_object():
 	for b in get_tree().get_nodes_in_group("ball"):

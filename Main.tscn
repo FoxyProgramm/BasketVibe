@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c8nbxesq2p53e" path="res://textures/RAENGOSLING.png" id="5_fos0i"]
 [ext_resource type="Shader" uid="uid://cbgaoaf10x6dq" path="res://DistanceUV.gdshader" id="5_shader"]
 [ext_resource type="Texture2D" uid="uid://gxl3stlxai58" path="res://textures/mudamuda.png" id="6_3dxm6"]
+[ext_resource type="Script" uid="uid://b82vhj253sm52" path="res://debug.gd" id="7_03owx"]
 [ext_resource type="PackedScene" uid="uid://dy38qfo3bpemy" path="res://scene/button.tscn" id="7_lgr22"]
 [ext_resource type="PackedScene" uid="uid://csccor8yoh8hg" path="res://scene/radio.tscn" id="8_trn2v"]
 
@@ -150,6 +151,74 @@ _spawnable_scenes = PackedStringArray("uid://djkf6584e57hy")
 spawn_path = NodePath("../Players")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=367528450]
+
+[node name="Debug" type="MarginContainer" parent="UI" unique_id=531311206 groups=["debug_menu"]]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+script = ExtResource("7_03owx")
+
+[node name="Display" type="VBoxContainer" parent="UI/Debug" unique_id=696674594]
+layout_mode = 2
+
+[node name="Label1" type="Label" parent="UI/Debug/Display" unique_id=1173042759]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="UI/Debug/Display" unique_id=2000684781]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="UI/Debug/Display" unique_id=1638767175]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="UI/Debug/Display" unique_id=665828627]
+layout_mode = 2
+
+[node name="Label5" type="Label" parent="UI/Debug/Display" unique_id=1697116595]
+layout_mode = 2
+
+[node name="Label6" type="Label" parent="UI/Debug/Display" unique_id=561597899]
+layout_mode = 2
+
+[node name="Label7" type="Label" parent="UI/Debug/Display" unique_id=689046829]
+layout_mode = 2
+
+[node name="Label8" type="Label" parent="UI/Debug/Display" unique_id=102756924]
+layout_mode = 2
+
+[node name="Label9" type="Label" parent="UI/Debug/Display" unique_id=122122767]
+layout_mode = 2
+
+[node name="Label10" type="Label" parent="UI/Debug/Display" unique_id=985482649]
+layout_mode = 2
+
+[node name="Label11" type="Label" parent="UI/Debug/Display" unique_id=1578190768]
+layout_mode = 2
+
+[node name="Label12" type="Label" parent="UI/Debug/Display" unique_id=1549013017]
+layout_mode = 2
+
+[node name="Label13" type="Label" parent="UI/Debug/Display" unique_id=67815401]
+layout_mode = 2
+
+[node name="Label14" type="Label" parent="UI/Debug/Display" unique_id=2142875509]
+layout_mode = 2
+
+[node name="Console" type="VBoxContainer" parent="UI/Debug" unique_id=1252657937]
+visible = false
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/Debug/Console" unique_id=1871278573]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LineEdit" type="LineEdit" parent="UI/Debug/Console" unique_id=1746633357]
+layout_mode = 2
 
 [node name="MainMenu" type="VBoxContainer" parent="UI" unique_id=426205973]
 anchors_preset = 8
