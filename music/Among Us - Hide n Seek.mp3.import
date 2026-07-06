@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dvtgjix8wqqb0"
+path="res://.godot/imported/Among Us - Hide n Seek.mp3-4f17457e4001ff1aa09dbfa85fe857be.mp3str"
+
+[deps]
+
+source_file="res://music/Among Us - Hide n Seek.mp3"
+dest_files=["res://.godot/imported/Among Us - Hide n Seek.mp3-4f17457e4001ff1aa09dbfa85fe857be.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,6 +1,6 @@
 extends RigidBody3D
 
-var hold_offset := Vector3(0.5, -0.4, -0.8)
+var hold_offset := Vector3(0.5, -0.1, -0.8)
 var hold_rotation := Vector3(0, 0, 0)
 
 @export var sync_position: Vector3
@@ -243,6 +243,17 @@ func request_swing(charge: float) -> void:
 						else :
 							ball.rpc_id(ball.get_multiplayer_authority(), "set_linear_velocity_net", (swing_dir + Vector3.UP * 0.2).normalized() * hit_force)
 							print("Request velocity")
+			# Проверяем попадание по РАДИО
+			for radio in get_tree().get_nodes_in_group("radio"):
+				var dist = player.global_position.distance_to(radio.global_position)
+				if dist < 4.0:
+					var to_radio = (radio.global_position - head.global_position).normalized()
+					var dot = swing_dir.dot(to_radio)
+					if dot > 0.2:
+						var hit_force = lerp(4.0, 15.0, charge)
+						var impulse = (swing_dir + Vector3.UP * 0.3).normalized() * hit_force
+						# Вызываем напрямую, без проверки authority
+						radio.rpc("apply_radio_impulse", impulse)
 
 			# Проверяем попадание по ИГРОКАМ
 			for p in get_tree().get_nodes_in_group("player"):

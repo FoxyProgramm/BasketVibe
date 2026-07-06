@@ -1,0 +1,6 @@
+[gd_resource type="RibbonTrailMesh" format=3 uid="uid://biglivkyduqb8"]
+
+[ext_resource type="Material" uid="uid://dgwpmosnoms2o" path="res://materials/flower_mat.tres" id="1_tlria"]
+
+[resource]
+material = ExtResource("1_tlria")
