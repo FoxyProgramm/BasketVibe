@@ -20,10 +20,13 @@ var hold_rotation := Vector3(0, 0, 0)
 var is_on: bool = false
 var current_song_index: int = -1
 var fade_tween: Tween
+var original_pitch: float = 1.0
 
 @onready var sprite_mat = $Sprite3D
 
 func _ready() -> void:
+	original_pitch = audio_player.pitch_scale
+	
 	var sync = MultiplayerSynchronizer.new()
 	sync.root_path = NodePath("..")
 	var config = SceneReplicationConfig.new()
@@ -184,3 +187,15 @@ func _get_player(id: int) -> Node3D:
 		if p.name == str(id):
 			return p
 	return null
+
+@rpc("any_peer", "call_local", "reliable")
+func apply_radio_impulse(impulse: Vector3):
+	print("apply_radio_impulse called, impulse: ", impulse)
+	apply_central_impulse(impulse)
+	_hit_pitch_effect()
+
+func _hit_pitch_effect():
+	var hit_pitch = randf_range(0.3, 1.8)
+	audio_player.pitch_scale = hit_pitch
+	var tween = create_tween()
+	tween.tween_property(audio_player, "pitch_scale", original_pitch, 0.9).set_ease(Tween.EASE_OUT)
