@@ -19,7 +19,7 @@ func _on_body_exited(body: Node3D):
 	players_nearby.erase(body)
 
 func _process(_delta):
-	if players_nearby.size() > 0 and Input.is_action_just_pressed("lkm"):
+	if players_nearby.size() > 0 and Input.is_action_just_pressed("E"):
 		_request_spawn()
 
 func _request_spawn():
