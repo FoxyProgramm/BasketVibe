@@ -112,13 +112,14 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			var new_id : int = int(collider.name)
 			if new_id == get_multiplayer_authority():
 				return
-			rpc("transfer_authority", new_id)
+			rpc("transfer_authority", new_id, self.linear_velocity)
 
 @rpc("any_peer", "call_local", "reliable")
-func transfer_authority(new_id:int) -> void:
+func transfer_authority(new_id:int, velocity: Vector3 = Vector3.ZERO) -> void:
 	if new_id == multiplayer.get_unique_id():
 		self.freeze = false
 		self.sleeping = false
+		linear_velocity = velocity
 	else :
 		self.freeze = true
 		self.sleeping = true
@@ -192,10 +193,7 @@ func update_held_state(new_id: int):
 	held_by_id = new_id
 	if new_id == 0:
 		is_dribbling = false
-		if has_node("MeshInstance3D"):
-			$MeshInstance3D.position.y = 0.0
-		if has_node("AnimatedSprite3D"):
-			$AnimatedSprite3D.position.y = 0.0
+		$AnimatedSprite3D.position.y = 0.0
 
 func _get_player(id: int) -> Node3D:
 	for p in get_tree().get_nodes_in_group("player"):
@@ -220,5 +218,9 @@ func _on_check_authority_timeout() -> void:
 	if closest_player == null: return
 	var player_id : int = int(closest_player.name)
 	if player_id != get_multiplayer_authority():
-		rpc("transfer_authority", player_id)
-			
+		rpc("transfer_authority", player_id, self.linear_velocity)
+
+@rpc("any_peer", "reliable")
+func set_linear_velocity_net(vect:Vector3) -> void:
+	self.linear_velocity = vect
+	print("Applied Requested velocity in: ", multiplayer.get_unique_id())

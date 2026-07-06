@@ -131,7 +131,7 @@ func _input(event):
 				else:
 					if is_charging:
 						is_charging = false
-						held.rpc_id(1, "request_swing", charge_progress)
+						held.rpc_id(held.get_multiplayer_authority(), "request_swing", charge_progress)
 						charge_bar.hide()
 			elif held.is_in_group("radio"):
 				if event.pressed:

@@ -42,10 +42,10 @@ func _update_bat_state():
 		collision_layer = 0
 		collision_mask = 0
 	else:
-		if not multiplayer.is_server():
+		if not is_authority():
 			freeze = true
 		else:
-			if freeze: freeze = false
+			freeze = false
 		collision_layer = 3
 		collision_mask = 3
 
@@ -151,24 +151,39 @@ func _physics_process(delta: float) -> void:
 				else:
 					global_position = player.global_transform * hold_offset
 
-		if multiplayer.is_server():
+		if is_authority():
 			linear_velocity = Vector3.ZERO
 			angular_velocity = Vector3.ZERO
 			sync_position = global_position
 			sync_rotation = rotation
 	else:
-		if multiplayer.is_server():
+		if is_authority():
 			sync_position = global_position
 			sync_rotation = rotation
 		else:
 			global_position = global_position.lerp(sync_position, 15.0 * delta)
+			
 			rotation.x = lerp_angle(rotation.x, sync_rotation.x, 15.0 * delta)
 			rotation.y = lerp_angle(rotation.y, sync_rotation.y, 15.0 * delta)
 			rotation.z = lerp_angle(rotation.z, sync_rotation.z, 15.0 * delta)
 
+func is_authority() -> int:
+	return get_multiplayer_authority() == multiplayer.get_unique_id()
+
+@rpc("any_peer", "call_local", "reliable")
+func transfer_authority(new_id:int) -> void:
+	if new_id == multiplayer.get_unique_id():
+		self.freeze = false
+		self.sleeping = false
+	else :
+		self.freeze = true
+		self.sleeping = true
+	self.set_multiplayer_authority(new_id)
+
 @rpc("any_peer", "call_local", "reliable")
 func request_pickup(player_id: int) -> void:
-	if not multiplayer.is_server(): return
+	if not is_authority(): return
+	
 	if held_by_id != 0: return
 
 	var player = _get_player(player_id)
@@ -177,10 +192,11 @@ func request_pickup(player_id: int) -> void:
 			held_by_id = player_id
 			self.rotation = Vector3.ZERO
 			rpc("update_held_state", player_id)
+			rpc("transfer_authority", player_id)
 
 @rpc("any_peer", "call_local", "reliable")
 func request_drop(player_vel: Vector3 = Vector3.ZERO) -> void:
-	if not multiplayer.is_server(): return
+	if not is_authority(): return
 	var sender_id = multiplayer.get_remote_sender_id()
 	if held_by_id == sender_id:
 		held_by_id = 0
@@ -189,39 +205,44 @@ func request_drop(player_vel: Vector3 = Vector3.ZERO) -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func request_swing(charge: float) -> void:
-	if not multiplayer.is_server(): return
+	if not is_authority(): return
+	print("Swing requested")
 	var sender_id = multiplayer.get_remote_sender_id()
 	if held_by_id == sender_id:
 		# Вызываем анимацию удара у игрока, а не у биты (т.к. мы крутим Marker3D)
-		var player = _get_player(sender_id)
+		var player:Player = _get_player(sender_id)
 		#if player and player.has_method("rpc"):
 			#player.rpc("play_swing_anim")
 
 		if player:
-			var head = player.get_node_or_null("Head")
+			var head:Node3D = player.get_node_or_null("Head")
 			if not head: return
-			var swing_dir = -head.global_transform.basis.z
+			var swing_dir:Vector3 = -head.global_transform.basis.z
 
-			for ball in get_tree().get_nodes_in_group("ball"):
-				var dist = player.global_position.distance_to(ball.global_position)
+			for ball:RigidBody3D in get_tree().get_nodes_in_group("ball"):
+				var dist:float = player.global_position.distance_to(ball.global_position)
 				if dist < 4.0:
-					var to_ball = (ball.global_position - head.global_position).normalized()
+					var to_ball:Vector3 = (ball.global_position - head.global_position).normalized()
 					# Проверяем, находится ли мяч спереди (угол меньше 60 градусов)
 					if swing_dir.dot(to_ball) > 0.2:
-						var speed = ball.linear_velocity.length()
+						var speed:float = ball.linear_velocity.length()
 
 						# Базовая сила удара теперь зависит от заряда (от слабого тычка 8.0 до мощного удара 40.0)
-						var base_force = lerp(8.0, 16.0, charge)
+						var base_force:float = lerp(8.0, 16.0, charge)
 
 						# Если мяч летит быстро, он отскочит еще сильнее
-						var hit_force = base_force + (clamp(speed, 1.0, 10.0) * 1.5)
+						var hit_force:float = base_force + (clamp(speed, 1.0, 10.0) * 1.5)
 
 						# Если мяч кто-то держит, выбиваем из рук
 						if ball.held_by_id != 0:
 							ball.held_by_id = 0
 							ball.rpc("update_held_state", 0)
-
-						ball.linear_velocity = (swing_dir + Vector3.UP * 0.2).normalized() * hit_force
+						if multiplayer.get_unique_id() == ball.get_multiplayer_authority():
+							ball.linear_velocity = (swing_dir + Vector3.UP * 0.2).normalized() * hit_force
+							print("Applied velocity")
+						else :
+							ball.rpc_id(ball.get_multiplayer_authority(), "set_linear_velocity_net", (swing_dir + Vector3.UP * 0.2).normalized() * hit_force)
+							print("Request velocity")
 
 			# Проверяем попадание по ИГРОКАМ
 			for p in get_tree().get_nodes_in_group("player"):
@@ -245,6 +266,8 @@ func request_swing(charge: float) -> void:
 							if bat.held_by_id == p.name.to_int():
 								bat.held_by_id = 0
 								bat.rpc("update_held_state", 0)
+
+
 
 
 @rpc("authority", "call_local", "reliable")

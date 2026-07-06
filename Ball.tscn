@@ -80,5 +80,6 @@ sprite_frames = SubResource("SpriteFrames_jd8yr")
 
 [node name="CheckAuthority" type="Timer" parent="." unique_id=2036245987]
 process_callback = 0
+autostart = true
 
 [connection signal="timeout" from="CheckAuthority" to="." method="_on_check_authority_timeout"]
