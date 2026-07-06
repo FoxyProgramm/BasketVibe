@@ -120,11 +120,13 @@ billboard = 2
 texture_filter = 0
 texture = ExtResource("6_3dxm6")
 
+[node name="Items" type="Node3D" parent="Level" unique_id=1776252388]
+
 [node name="LevelSpawner" type="MultiplayerSpawner" parent="." unique_id=967452454]
 _spawnable_scenes = PackedStringArray("uid://c31asbqq05otd")
-spawn_path = NodePath("../Level")
+spawn_path = NodePath("../Level/Items")
 
-[node name="Players" type="Node3D" parent="." unique_id=562868757]
+[node name="Players" type="Node3D" parent="." unique_id=562868757 groups=["players"]]
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=2014072702]
 _spawnable_scenes = PackedStringArray("uid://djkf6584e57hy")
@@ -213,6 +215,13 @@ offset_right = 100.0
 offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Username" type="LineEdit" parent="UI/MainMenu" unique_id=21665153]
+layout_mode = 2
+placeholder_text = "Your name"
+
+[node name="HSeparator" type="HSeparator" parent="UI/MainMenu" unique_id=56451486]
+layout_mode = 2
 
 [node name="HostButton" type="Button" parent="UI/MainMenu" unique_id=203371946]
 layout_mode = 2

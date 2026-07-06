@@ -43,7 +43,7 @@ func _spawn_item():
 	
 	var spawn_pos = spawn_point.global_position if spawn_point else global_position + Vector3.UP * 0.5
 	
-	var level_node = get_tree().current_scene.get_node_or_null("Level")
+	var level_node = get_tree().current_scene.get_node_or_null("Level/Items")
 	if level_node:
 		level_node.add_child(item, true)
 	else:

@@ -2,14 +2,12 @@ extends RigidBody3D
 
 var hold_offset := Vector3(0, -0.3, -1.2)
 
-# Переменные для сетевой интерполяции мяча
 @export var sync_position: Vector3
-#@export var sync_rotation: Vector3
 @onready var debug = get_tree().get_first_node_in_group("debug_menu")
 
 var is_dribbling: bool = false
 @onready var anim_sprite = $AnimatedSprite3D
-# Синхронизируемые переменные (через RPC)
+
 @export var held_by_id: int = 0:
 	set(val):
 		held_by_id = val
@@ -18,22 +16,19 @@ var is_dribbling: bool = false
 func _ready() -> void:
 	var sync = MultiplayerSynchronizer.new()
 	sync.root_path = NodePath("..")
+	
 	var config = SceneReplicationConfig.new()
-	# Синхронизируем кастомные переменные вместо прямых координат
 	config.add_property(NodePath(".:sync_position"))
-	#config.add_property(NodePath(".:sync_rotation"))
+	
 	sync.replication_config = config
-
-	# Снова включаем экономию трафика! (20 пакетов в секунду)
 	sync.replication_interval = 0.05
 	sync.delta_interval = 0.05
+	
 	add_child(sync)
 
 	sync_position = global_position
-	#sync_rotation = rotation
 
 	if not multiplayer.is_server():
-		# На клиенте мы не симулируем физику мяча, он полностью контролируется сервером и интерполяцией
 		freeze = true
 
 func _update_ball_state():
@@ -43,9 +38,7 @@ func _update_ball_state():
 		collision_layer = 0
 		collision_mask = 0
 	else:
-		#if not multiplayer.is_server():
 		if not is_authority():
-			# На клиенте мяч всегда заморожен (следует за интерполяцией от сервера)
 			freeze = true
 		else:
 			if freeze:
@@ -55,17 +48,12 @@ func _update_ball_state():
 
 var last_position: Vector3
 
-#func _process(delta: float) -> void:
-#@onready var label_1: Label = $UI/Debug/Display/Label1
-
 func is_authority() -> int:
 	return get_multiplayer_authority() == multiplayer.get_unique_id()
 
 func _physics_process(delta: float) -> void:
 	debug.set_text(0, str(get_multiplayer_authority()) + " | " + str(self.freeze) + " | " + str(self.sleeping))
 	if is_authority():
-		#$UI/Debug/Display/Label1.text = str(get_multiplayer_authority())  + ".." + str(delta)
-		# --- ЛОГИКА СЕРВЕРА ---
 		if held_by_id != 0:
 			var player = _get_player(held_by_id)
 			if player:
@@ -77,9 +65,8 @@ func _physics_process(delta: float) -> void:
 
 				linear_velocity = Vector3.ZERO
 				angular_velocity = Vector3.ZERO
-				rotation = Vector3.ZERO # Фиксируем вращение при удержании, чтобы локальный Y смотрел ровно вниз
+				rotation = Vector3.ZERO
 
-		# Сервер записывает реальную позицию мяча для отправки в сеть
 		if self.global_position.y < -20:
 			self.global_position = Vector3(0,10,0)
 			self.linear_velocity = Vector3.ZERO
@@ -171,9 +158,7 @@ func request_dribble() -> void:
 			query.exclude = [self.get_rid(), player.get_rid()]
 			var result = space_state.intersect_ray(query)
 			if result:
-				# Вычисляем нужную позицию: уровень пола минус текущая позиция мяча + радиус мяча (0.3)
 				drop_y = result.position.y - global_position.y + 0.3
-				# На всякий случай ограничиваем, чтобы мяч не "отскакивал" вверх сквозь руки
 				drop_y = min(-0.1, drop_y)
 
 		rpc("play_dribble_anim", drop_y)
@@ -183,7 +168,6 @@ func play_dribble_anim(target_y: float):
 	if is_dribbling: return
 	is_dribbling = true
 	var tween = create_tween()
-	#if has_node("AnimatedSprite3D"):
 	tween.tween_property($AnimatedSprite3D, "position:y", target_y, 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tween.tween_property($AnimatedSprite3D, "position:y", 0.0, 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func(): is_dribbling = false)
@@ -202,6 +186,7 @@ func _get_player(id: int) -> Node3D:
 	return null
 
 func _on_check_authority_timeout() -> void:
+	if held_by_id != 0: return
 	var closest_player = null
 	var closest_distance: float = 0.0
 	if not is_authority(): return
@@ -223,4 +208,3 @@ func _on_check_authority_timeout() -> void:
 @rpc("any_peer", "reliable")
 func set_linear_velocity_net(vect:Vector3) -> void:
 	self.linear_velocity = vect
-	print("Applied Requested velocity in: ", multiplayer.get_unique_id())
