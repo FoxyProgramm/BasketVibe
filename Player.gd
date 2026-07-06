@@ -12,7 +12,7 @@ var target_yaw: float = 0.0
 var is_charging: bool = false
 var charge_progress: float = 0.0
 var knockback_velocity: Vector3 = Vector3.ZERO
-# КОМТАРИЙ КАКОЙ
+
 # Переменные для сетевой интерполяции
 @export var sync_position: Vector3
 @export var sync_rotation_y: float
@@ -286,3 +286,19 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 
 func interact():
 	pass
+
+@rpc("any_peer", "call_local", "reliable")
+func _client_teleport(new_pos: Vector3): # временное отключение синхронизации чтобы она не откатывала телепорт двери
+	var synchronizer = get_node_or_null("MultiplayerSynchronizer")
+	if synchronizer:
+		synchronizer.set_process(false)
+		synchronizer.set_physics_process(false)
+	
+	global_position = new_pos
+	sync_position = new_pos
+	
+	await get_tree().create_timer(0.1).timeout
+	
+	if synchronizer:
+		synchronizer.set_process(true)
+		synchronizer.set_physics_process(true)
