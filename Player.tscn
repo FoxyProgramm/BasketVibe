@@ -122,3 +122,7 @@ show_percentage = false
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=523218740]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0.9107102, 0)
 mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="Username" type="Label3D" parent="." unique_id=579307843]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9026518, 0)
+billboard = 1
