@@ -190,7 +190,6 @@ func _get_player(id: int) -> Node3D:
 
 @rpc("any_peer", "call_local", "reliable")
 func apply_radio_impulse(impulse: Vector3):
-	print("apply_radio_impulse called, impulse: ", impulse)
 	apply_central_impulse(impulse)
 	_hit_pitch_effect()
 

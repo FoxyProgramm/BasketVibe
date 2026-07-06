@@ -4,6 +4,7 @@ func _ready():
 	await get_tree().process_frame
 	await get_tree().process_frame
 	generate_collision()
+	rotation_degrees.y = 90 * randi_range(1,4)
 
 func generate_collision():
 	var mesh_instance = $MeshInstance3D

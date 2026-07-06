@@ -59,7 +59,7 @@ func spawn_flower_cluster(data: Dictionary):
 	var center = Vector3(world_x, h, world_z)
 	
 	var container = Node3D.new()
-	container.global_position = center
+	container.position = center
 	add_child(container)
 	
 	var multimesh = MultiMeshInstance3D.new()
@@ -67,17 +67,17 @@ func spawn_flower_cluster(data: Dictionary):
 	multimesh.multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	multimesh.multimesh.mesh = flower_mesh
 	multimesh.multimesh.instance_count = count
-	multimesh.global_position = Vector3.ZERO
+	multimesh.position = Vector3.ZERO
 	container.add_child(multimesh)
 	
 	
 	for i in range(count):
-		var x = randf_range(-r, r)
-		var z = randf_range(-r, r)
-		var local_pos = Vector3(x, 0, z)
+		var x:float = randf_range(-r, r)
+		var z:float = randf_range(-r, r)
+		var local_pos:Vector3 = Vector3(x, 0, z)
 		
-		var angle = randi_range(-360, 360)
-		var scale = randf_range(1.7, 2.3)
+		var angle:int = randi_range(-360, 360)
+		var scale:float = randf_range(1.5, 2.5)
 		
 		var t = Transform3D(
 			Basis().rotated(Vector3.UP, angle),

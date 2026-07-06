@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dsxlqkioa6pyj"
-path.s3tc="res://.godot/imported/vozduhniiball.png-4c26bc03910fc3dfcf5ebbd5422d8e85.s3tc.ctex"
+uid="uid://swm5xy0rjt0p"
+path.s3tc="res://.godot/imported/paleking.png-ed7d645f224b9c8e5086b22cf1a19e29.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/vozduhniiball.png"
-dest_files=["res://.godot/imported/vozduhniiball.png-4c26bc03910fc3dfcf5ebbd5422d8e85.s3tc.ctex"]
+source_file="res://textures/paleking.png"
+dest_files=["res://.godot/imported/paleking.png-ed7d645f224b9c8e5086b22cf1a19e29.s3tc.ctex"]
 
 [params]
 

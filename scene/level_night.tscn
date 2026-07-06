@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bv20us4345msd" path="res://textures/chel20.png" id="7_4d4ax"]
 [ext_resource type="Texture2D" uid="uid://sknax0v6lwhp" path="res://textures/skynight.png" id="7_oywpf"]
 [ext_resource type="RibbonTrailMesh" uid="uid://biglivkyduqb8" path="res://materials/flower.tres" id="8_1srea"]
+[ext_resource type="Texture2D" uid="uid://dsxlqkioa6pyj" path="res://textures/vozduhniiball.png" id="8_aqdls"]
 [ext_resource type="Texture2D" uid="uid://c8f0w1a817b45" path="res://textures/127grivn.png" id="8_dxhcr"]
 [ext_resource type="Script" uid="uid://d1hl5yhkcv14g" path="res://scene/flower.gd" id="9_6u4ey"]
 
@@ -119,6 +120,15 @@ shaded = true
 texture_filter = 0
 texture = ExtResource("7_4d4ax")
 
+[node name="Sprite3D4" type="Sprite3D" parent="Sprite3D" unique_id=217349871]
+transform = Transform3D(0.90999997, 0, 0, 0, 0.90999997, 0, 0, 0, 0.90999997, 0.038332462, -2.6043303, -0.06470871)
+modulate = Color(0.4666667, 0, 1, 1)
+pixel_size = 0.0125
+billboard = 2
+shaded = true
+texture_filter = 0
+texture = ExtResource("8_aqdls")
+
 [node name="Sprite3D2" type="Sprite3D" parent="." unique_id=1828193799]
 transform = Transform3D(0.91, 0, 0, 0, 0.91, 0, 0, 0, 0.91, 11.980127, 2.0108736, -40.32181)
 pixel_size = 0.0125
@@ -126,6 +136,15 @@ billboard = 2
 shaded = true
 texture_filter = 0
 texture = ExtResource("8_dxhcr")
+
+[node name="Sprite3D3" type="Sprite3D" parent="Sprite3D2" unique_id=1113929999]
+transform = Transform3D(0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, -2.725346, -0.1510582)
+modulate = Color(1, 0.16666669, 0, 1)
+pixel_size = 0.0125
+billboard = 2
+shaded = true
+texture_filter = 0
+texture = ExtResource("8_aqdls")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1046304260]
 environment = ExtResource("5_pjh0e")
