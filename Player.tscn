@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dsw3mgmks6gyo" path="res://Player.gd" id="1_player"]
 [ext_resource type="Texture2D" uid="uid://ihggso1qfsli" path="res://textures/persones/132.png" id="2_kne1u"]
+[ext_resource type="Texture2D" uid="uid://cxaed5a5ik81b" path="res://materials/grass_heightmap.png" id="3_cxr5p"]
 [ext_resource type="Texture2D" uid="uid://dgy0t4rqxdxx" path="res://textures/persones/131.png" id="3_e80uo"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_player"]
@@ -33,6 +34,20 @@ size = Vector3(0.5, 0.5, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_head"]
 albedo_color = Color(0.9, 0.8, 0.6, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kne1u"]
+texture = ExtResource("3_cxr5p")
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tdg3f"]
+texture = ExtResource("3_cxr5p")
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="Theme" id="Theme_hri7i"]
+ProgressBar/styles/background = SubResource("StyleBoxTexture_kne1u")
+ProgressBar/styles/fill = SubResource("StyleBoxTexture_tdg3f")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wim1b"]
 transparency = 2
@@ -104,7 +119,6 @@ target_position = Vector3(0, -0.2, 0)
 [node name="UI" type="CanvasLayer" parent="." unique_id=1925026307]
 
 [node name="ChargeBar" type="ProgressBar" parent="UI" unique_id=661363224]
-visible = false
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -116,8 +130,19 @@ offset_right = 150.0
 offset_bottom = -50.0
 grow_horizontal = 2
 grow_vertical = 0
+theme = SubResource("Theme_hri7i")
 max_value = 1.0
+value = 0.66
 show_percentage = false
+
+[node name="ColorRect" type="ColorRect" parent="UI/ChargeBar" unique_id=1640625340]
+z_index = -4
+layout_mode = 0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 302.0
+offset_bottom = 32.0
+color = Color(0, 0, 0, 1)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=523218740]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0.9107102, 0)

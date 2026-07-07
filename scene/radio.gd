@@ -198,3 +198,32 @@ func _hit_pitch_effect():
 	audio_player.pitch_scale = hit_pitch
 	var tween = create_tween()
 	tween.tween_property(audio_player, "pitch_scale", original_pitch, 0.9).set_ease(Tween.EASE_OUT)
+
+@rpc("any_peer", "reliable")
+func add_song_from_path(path: String):
+	if not multiplayer.is_server():
+		return
+	
+	var file = FileAccess.open(path, FileAccess.READ)
+	if not file:
+		print("Ошибка: не могу открыть файл ", path)
+		return
+	
+	var data = file.get_buffer(file.get_length())
+	file.close()
+	
+	var audio_stream = AudioStreamMP3.new()
+	audio_stream.data = data
+	
+	songs.append(audio_stream)
+	
+	# Рассылаем всем клиентам аудиоданные
+	for p in get_tree().get_nodes_in_group("player"):
+		p.rpc_id(p.name.to_int(), "_receive_song_data", data)
+
+@rpc("any_peer", "call_local", "reliable")
+func _receive_song_data(data: PackedByteArray):
+	var audio_stream = AudioStreamMP3.new()
+	audio_stream.data = data
+	songs.append(audio_stream)
+	print("Песня добавлена, всего: ", songs.size())

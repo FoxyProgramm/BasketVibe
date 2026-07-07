@@ -54,6 +54,21 @@ func _ready():
 	sync.replication_interval = 0.05
 	sync.delta_interval = 0.05
 	add_child(sync)
+	
+	var charge_bar = $UI/ChargeBar
+	if charge_bar:
+		# Случайный цвет
+		var fill_color = Color(randf(), randf(), randf(), 1.0)
+		# Более тёмный для фона
+		var bg_color = fill_color.darkened(0.8)
+		
+		var fill_style = charge_bar.get_theme_stylebox("fill").duplicate()
+		fill_style.modulate_color = fill_color
+		charge_bar.add_theme_stylebox_override("fill", fill_style)
+		
+		var bg_style = charge_bar.get_theme_stylebox("background").duplicate()
+		bg_style.modulate_color = bg_color
+		charge_bar.add_theme_stylebox_override("background", bg_style)
 
 	if is_multiplayer_authority():
 		target_yaw = rotation.y
@@ -232,7 +247,6 @@ func apply_knockback(direction: Vector3, force: float):
 		_play_hit_effect(direction, force)
 func _play_hit_effect(dir: Vector3, strength: float):
 	var side = 1.0 if randf() > 0.5 else -1.0  # Случайно влево или вправо
-	
 	# Трясём камеру
 	var tween = create_tween()
 	tween.tween_property(camera, "rotation:z", dir.x * 0.3 * side, 0.05)
@@ -264,6 +278,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	var t = state.transform
 	t.basis = Basis.from_euler(Vector3(0, target_yaw, 0))
 	state.transform = t
+	
+	if console.visible:
+		state.linear_velocity.x = 0
+		state.linear_velocity.z = 0
+		return 
 
 	var is_on_floor = ground_cast.is_colliding()
 

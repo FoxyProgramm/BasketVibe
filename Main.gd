@@ -47,6 +47,7 @@ func _ready():
 func _on_host_pressed():
 	players[1] = $UI/MainMenu/Username.text
 	main_menu.hide()
+	$UI/background.visible = false
 	var port = port_entry.text.to_int()
 	if port <= 0: port = 7777
 
@@ -62,9 +63,12 @@ func _on_host_pressed():
 	# И спавнит предметы
 	_spawn_ball()
 	_spawn_bat()
+	
+	
 
 func _on_join_pressed():
 	main_menu.hide()
+	$UI/background.visible = false
 	var port = port_entry.text.to_int()
 	if port <= 0: port = 7777
 
