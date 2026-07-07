@@ -1,0 +1,82 @@
+class_name TrashItem
+extends ItemBase
+
+@export var target_groups: Array[String] = ["ball", "bat", "radio"]
+@onready var area = $Area3D
+@export var slow_down_speed: float = 15.0  # Скорость замедления
+@export var delete_threshold: float = 0.2  # При какой скорости удалять
+var is_slowing: bool = false
+
+var sync_position:Vector3 = Vector3.ZERO
+var sync_rotation:Vector3 = Vector3.ZERO
+
+func is_pickable() -> bool:
+	return false
+
+func _ready():
+	$AnimationPlayer.play("new_animation")
+	#scale = scale* 1.3
+	area.body_entered.connect(_on_body_entered)
+	
+	var sync = MultiplayerSynchronizer.new()
+	sync.root_path = NodePath("..")
+	
+	var config = SceneReplicationConfig.new()
+	config.add_property(NodePath(".:sync_position"))
+	config.add_property(NodePath(".:sync_rotation"))
+	
+	sync.replication_config = config
+	sync.replication_interval = 0.05
+	sync.delta_interval = 0.05
+	
+	add_child(sync)
+	
+	if !multiplayer.is_server():
+		self.freeze = true
+
+func _physics_process(delta: float) -> void:
+	if self.is_multiplayer_authority():
+		sync_position = global_position
+		sync_rotation = global_rotation
+	else :
+		global_position = global_position.lerp(sync_position, 15.0 * delta)
+		rotation.x = lerp_angle(rotation.x, sync_rotation.x, 15.0 * delta)
+		rotation.y = lerp_angle(rotation.y, sync_rotation.y, 15.0 * delta)
+		rotation.z = lerp_angle(rotation.z, sync_rotation.z, 15.0 * delta)
+
+func _on_body_entered(body: Node3D):
+	is_slowing = true
+	if not multiplayer.is_server():
+		return
+	for group in target_groups:
+		if body.is_in_group(group):
+			_start_slow_and_delete(body)
+			break
+
+func _start_slow_and_delete(body: RigidBody3D):
+	if is_slowing == true:
+		await get_tree().create_timer(0.2).timeout
+		body.angular_damp = slow_down_speed
+		var tween = create_tween()
+		tween.tween_property(body, "linear_damp", 20.0, 0.5).set_ease(Tween.EASE_IN)
+		is_slowing = true
+		while body.linear_velocity.length() > delete_threshold:
+			await get_tree().process_frame
+		await get_tree().create_timer(0.5).timeout
+		body.queue_free()
+
+@rpc("any_peer", "call_local", "reliable")
+func apply_trash_impulse(impulse: Vector3):
+	apply_central_impulse(impulse / 2)
+	
+	# Вращение перпендикулярно направлению удара
+	var hit_dir = impulse.normalized()
+	var strength = impulse.length() * -0.5
+	
+	# Основное вращение перпендикулярно удару
+	var torque = hit_dir.cross(Vector3.UP) * strength
+	# Дополнительное вращение по оси удара
+	torque += hit_dir * strength * 0.3
+	# Случайный поворот для живости
+	torque += hit_dir.cross(Vector3.RIGHT) * strength * 0.7
+	apply_torque_impulse(torque)
