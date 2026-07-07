@@ -227,9 +227,19 @@ func play_swing_anim():
 @rpc("any_peer", "call_local", "reliable")
 func apply_knockback(direction: Vector3, force: float):
 	if is_multiplayer_authority():
-		knockback_velocity = direction.normalized() * force
-		# Подкидываем игрока вверх
-		knockback_velocity.y = force * 0.2
+		knockback_velocity = direction.normalized() * force 
+		knockback_velocity.y = force * 0.25
+		_play_hit_effect(direction, force)
+func _play_hit_effect(dir: Vector3, strength: float):
+	var side = 1.0 if randf() > 0.5 else -1.0  # Случайно влево или вправо
+	
+	# Трясём камеру
+	var tween = create_tween()
+	tween.tween_property(camera, "rotation:z", dir.x * 0.3 * side, 0.05)
+	tween.tween_property(camera, "rotation:z", 0.0, 0.3).set_ease(Tween.EASE_OUT)
+	tween.tween_property(camera, "rotation:x", -abs(dir.y) * 0.2 * side, 0.05)
+	tween.tween_property(camera, "rotation:x", 0.0, 0.3).set_ease(Tween.EASE_OUT)
+	
 
 func _physics_process(delta):
 	if is_multiplayer_authority():
@@ -289,8 +299,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	state.linear_velocity.y = current_y
 
 	# Трение для отталкивания
-	knockback_velocity.x = move_toward(knockback_velocity.x, 0, 40.0 * state.step)
-	knockback_velocity.z = move_toward(knockback_velocity.z, 0, 40.0 * state.step)
+	# Вместо раздельного трения:
+	var knockback_speed = knockback_velocity.length()
+	if knockback_speed > 0:
+		knockback_speed = move_toward(knockback_speed, 0, 20.0 * state.step)
+		knockback_velocity = knockback_velocity.normalized() * knockback_speed
 
 func interact():
 	pass
