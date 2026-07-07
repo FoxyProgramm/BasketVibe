@@ -1,20 +1,20 @@
 [gd_scene format=3 uid="uid://b12yyr4cjaqd3"]
 
-[ext_resource type="Script" uid="uid://dq55ls286nv4t" path="res://Main.gd" id="1_main"]
-[ext_resource type="Environment" uid="uid://bh1kib30f0oqh" path="res://scene/evening_environment.tres" id="2_c2ibq"]
+[ext_resource type="Script" uid="uid://dq55ls286nv4t" path="res://scripts/Main.gd" id="1_main"]
+[ext_resource type="Environment" uid="uid://bh1kib30f0oqh" path="res://resources/envieronment/evening_environment.tres" id="2_c2ibq"]
 [ext_resource type="Texture2D" uid="uid://bljv4q4l2ulul" path="res://textures/trava.png" id="2_uu6xs"]
 [ext_resource type="Texture2D" uid="uid://810ie2c8hsw1" path="res://textures/zabor.png" id="4_cm0pq"]
 [ext_resource type="Texture2D" uid="uid://c8nbxesq2p53e" path="res://textures/RAENGOSLING.png" id="5_fos0i"]
-[ext_resource type="Shader" uid="uid://cbgaoaf10x6dq" path="res://DistanceUV.gdshader" id="5_shader"]
+[ext_resource type="Shader" uid="uid://cbgaoaf10x6dq" path="res://resources/shaders/DistanceUV.gdshader" id="5_shader"]
 [ext_resource type="Texture2D" uid="uid://gxl3stlxai58" path="res://textures/mudamuda.png" id="6_3dxm6"]
-[ext_resource type="Script" uid="uid://b82vhj253sm52" path="res://debug.gd" id="7_03owx"]
-[ext_resource type="PackedScene" uid="uid://dy38qfo3bpemy" path="res://scene/button.tscn" id="7_lgr22"]
-[ext_resource type="PackedScene" uid="uid://csccor8yoh8hg" path="res://scene/radio.tscn" id="8_trn2v"]
-[ext_resource type="Script" uid="uid://crssebrmnamsi" path="res://console.gd" id="8_wkp8b"]
-[ext_resource type="PackedScene" uid="uid://bnbat2jdsieje" path="res://scene/door.tscn" id="11_20pc6"]
-[ext_resource type="PackedScene" uid="uid://datr5ht60ko4u" path="res://scene/level_night.tscn" id="12_5vvyt"]
-[ext_resource type="Environment" uid="uid://c0fxnqlt3ov8a" path="res://scene/night_environment.tres" id="13_j4qnp"]
-[ext_resource type="PackedScene" uid="uid://bh1mlpwcd7dot" path="res://scene/trash.tscn" id="15_j4qnp"]
+[ext_resource type="Script" uid="uid://b82vhj253sm52" path="res://scripts/debug.gd" id="7_03owx"]
+[ext_resource type="PackedScene" uid="uid://dy38qfo3bpemy" path="res://scenes/button.tscn" id="7_lgr22"]
+[ext_resource type="PackedScene" uid="uid://csccor8yoh8hg" path="res://scenes/items/radio.tscn" id="8_trn2v"]
+[ext_resource type="Script" uid="uid://crssebrmnamsi" path="res://scripts/console.gd" id="8_wkp8b"]
+[ext_resource type="PackedScene" uid="uid://bnbat2jdsieje" path="res://scenes/door.tscn" id="11_20pc6"]
+[ext_resource type="PackedScene" uid="uid://datr5ht60ko4u" path="res://scenes/level_night.tscn" id="12_5vvyt"]
+[ext_resource type="Environment" uid="uid://c0fxnqlt3ov8a" path="res://resources/envieronment/night_environment.tres" id="13_j4qnp"]
+[ext_resource type="PackedScene" uid="uid://bh1mlpwcd7dot" path="res://scenes/items/trash.tscn" id="15_j4qnp"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
 size = Vector3(82, 1, 82)
@@ -122,14 +122,19 @@ texture = ExtResource("6_3dxm6")
 
 [node name="Items" type="Node3D" parent="Level" unique_id=1776252388]
 
+[node name="trash" parent="Level/Items" unique_id=434344413 instance=ExtResource("15_j4qnp")]
+transform = Transform3D(-0.9560161, 0, -0.29331404, 0, 1, 0, 0.29331404, 0, -0.9560161, 31.106316, 0.5, -30.274763)
+
+[node name="trash2" parent="Level/Items" unique_id=628240654 instance=ExtResource("15_j4qnp")]
+transform = Transform3D(-0.9560161, 0, -0.29331404, 0, 1, 0, 0.29331404, 0, -0.9560161, 31.106316, 0.5, -26.64561)
+
 [node name="LevelSpawner" type="MultiplayerSpawner" parent="." unique_id=967452454]
-_spawnable_scenes = PackedStringArray("uid://c31asbqq05otd")
+_spawnable_scenes = PackedStringArray("uid://c31asbqq05otd", "uid://qqr6cb4ile2j", "uid://csccor8yoh8hg", "uid://bh1mlpwcd7dot")
 spawn_path = NodePath("../Level/Items")
 
 [node name="Players" type="Node3D" parent="." unique_id=562868757 groups=["players"]]
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=2014072702]
-_spawnable_scenes = PackedStringArray("uid://djkf6584e57hy")
 spawn_path = NodePath("../Players")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=367528450]
@@ -279,8 +284,5 @@ location_environment = ExtResource("13_j4qnp")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.629873, 1.6428883, 192.0991)
 target_door = NodePath("../Door3")
 location_environment = ExtResource("2_c2ibq")
-
-[node name="trash" parent="." unique_id=434344413 instance=ExtResource("15_j4qnp")]
-transform = Transform3D(-0.9560161, 0, -0.29331404, 0, 1, 0, 0.29331404, 0, -0.9560161, 31.106316, 0.5, -30.274763)
 
 [connection signal="text_submitted" from="UI/Debug/Console/LineEdit" to="UI/Debug/Console" method="_on_line_edit_text_submitted"]
