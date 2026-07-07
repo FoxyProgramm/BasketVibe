@@ -70,7 +70,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_body")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4986223, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Head" unique_id=934733598]
-transform = Transform3D(0.279, 0, 0, 0, 0.279, 0, 0, 0, 0.279, 0, 0.13233662, 0.04246728)
+transform = Transform3D(0.279, 0, 0, 0, 0.279, 0, 0, 0, 0.279, 0, 0.13233662, -0.04645057)
 mesh = SubResource("QuadMesh_tdg3f")
 
 [node name="HeadMesh" type="MeshInstance3D" parent="Head" unique_id=212278078]

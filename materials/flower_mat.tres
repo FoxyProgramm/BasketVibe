@@ -12,3 +12,4 @@ metallic = 0.77
 backlight_texture = ExtResource("2_1f688")
 uv1_offset = Vector3(-1.025, 0.47, 0)
 texture_filter = 0
+grow_amount = -2.383

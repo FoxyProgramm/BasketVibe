@@ -6,7 +6,7 @@ extends Area3D
 		variation = val
 		_update_sprite()
 @export var location_environment: Environment
-
+	
 @onready var sprite = $AnimatedSprite3D
 
 var player_nearby: Node3D = null
@@ -40,6 +40,7 @@ func _teleport():
 		_do_teleport(player_path)
 	else:
 		rpc_id(1, "_do_teleport", player_path)
+
 
 @rpc("any_peer", "reliable")
 func _do_teleport(player_path: NodePath):

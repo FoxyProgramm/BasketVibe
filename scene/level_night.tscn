@@ -11,7 +11,6 @@
 [ext_resource type="RibbonTrailMesh" uid="uid://biglivkyduqb8" path="res://materials/flower.tres" id="8_1srea"]
 [ext_resource type="Texture2D" uid="uid://dsxlqkioa6pyj" path="res://textures/vozduhniiball.png" id="8_aqdls"]
 [ext_resource type="Texture2D" uid="uid://c8f0w1a817b45" path="res://textures/127grivn.png" id="8_dxhcr"]
-[ext_resource type="Script" uid="uid://d1hl5yhkcv14g" path="res://scene/flower.gd" id="9_6u4ey"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
 size = Vector3(82, 1, 82)
@@ -158,4 +157,3 @@ mesh = SubResource("PlaneMesh_wngyc")
 [node name="flower" type="MeshInstance3D" parent="flowers" unique_id=1080673226]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5953789, 0)
 mesh = ExtResource("8_1srea")
-script = ExtResource("9_6u4ey")

@@ -1,10 +1,25 @@
 extends StaticBody3D
 
+@export var synced_rotation_y: float = 0.0:
+	set(val):
+		synced_rotation_y = val
+		rotation_degrees.y = val
 func _ready():
 	await get_tree().process_frame
 	await get_tree().process_frame
 	generate_collision()
-	rotation_degrees.y = 90 * randi_range(1,4)
+	
+	# Создаём синхронизатор
+	var sync = MultiplayerSynchronizer.new()
+	sync.root_path = NodePath("..")
+	var config = SceneReplicationConfig.new()
+	config.add_property(NodePath(".:synced_rotation_y"))
+	sync.replication_config = config
+	add_child(sync)
+	
+	if multiplayer.is_server():
+		synced_rotation_y = 90 * randi_range(1, 4)
+
 
 func generate_collision():
 	var mesh_instance = $MeshInstance3D
