@@ -24,11 +24,11 @@ var knockback_velocity: Vector3 = Vector3.ZERO
 @onready var head = $Head
 @onready var camera = $Head/Camera3D
 @onready var weapon_grip = $Head/WeaponGrip
-@onready var body_mesh = $BodyMesh
+#@onready var body_mesh = $BodyMesh
 
 var base_grip_rot := Vector3.ZERO
 var is_swinging := false
-@onready var head_mesh = $Head/HeadMesh
+#@onready var head_mesh = $Head/HeadMesh
 @onready var ground_cast = $GroundCast
 @onready var charge_bar = $UI/ChargeBar
 
@@ -54,13 +54,28 @@ func _ready():
 	sync.replication_interval = 0.05
 	sync.delta_interval = 0.05
 	add_child(sync)
+	
+	var charge_bar = $UI/ChargeBar
+	if charge_bar:
+		# Случайный цвет
+		var fill_color = Color(randf(), randf(), randf(), 1.0)
+		# Более тёмный для фона
+		var bg_color = fill_color.darkened(0.8)
+		
+		var fill_style = charge_bar.get_theme_stylebox("fill").duplicate()
+		fill_style.modulate_color = fill_color
+		charge_bar.add_theme_stylebox_override("fill", fill_style)
+		
+		var bg_style = charge_bar.get_theme_stylebox("background").duplicate()
+		bg_style.modulate_color = bg_color
+		charge_bar.add_theme_stylebox_override("background", bg_style)
 
 	if is_multiplayer_authority():
 		target_yaw = rotation.y
 		camera.make_current()
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-		body_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
-		head_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
+		#body_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
+		#head_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
 
 		# Инициализируем переменные своими начальными координатами
 		sync_position = global_position
@@ -227,9 +242,18 @@ func play_swing_anim():
 @rpc("any_peer", "call_local", "reliable")
 func apply_knockback(direction: Vector3, force: float):
 	if is_multiplayer_authority():
-		knockback_velocity = direction.normalized() * force
-		# Подкидываем игрока вверх
-		knockback_velocity.y = force * 0.2
+		knockback_velocity = direction.normalized() * force 
+		knockback_velocity.y = force * 0.25
+		_play_hit_effect(direction, force)
+func _play_hit_effect(dir: Vector3, strength: float):
+	var side = 1.0 if randf() > 0.5 else -1.0  # Случайно влево или вправо
+	# Трясём камеру
+	var tween = create_tween()
+	tween.tween_property(camera, "rotation:z", dir.x * 0.3 * side, 0.05)
+	tween.tween_property(camera, "rotation:z", 0.0, 0.3).set_ease(Tween.EASE_OUT)
+	tween.tween_property(camera, "rotation:x", -abs(dir.y) * 0.2 * side, 0.05)
+	tween.tween_property(camera, "rotation:x", 0.0, 0.3).set_ease(Tween.EASE_OUT)
+	
 
 func _physics_process(delta):
 	if is_multiplayer_authority():
@@ -254,6 +278,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	var t = state.transform
 	t.basis = Basis.from_euler(Vector3(0, target_yaw, 0))
 	state.transform = t
+	
+	if console.visible:
+		state.linear_velocity.x = 0
+		state.linear_velocity.z = 0
+		return 
 
 	var is_on_floor = ground_cast.is_colliding()
 
@@ -289,8 +318,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	state.linear_velocity.y = current_y
 
 	# Трение для отталкивания
-	knockback_velocity.x = move_toward(knockback_velocity.x, 0, 40.0 * state.step)
-	knockback_velocity.z = move_toward(knockback_velocity.z, 0, 40.0 * state.step)
+	# Вместо раздельного трения:
+	var knockback_speed = knockback_velocity.length()
+	if knockback_speed > 0:
+		knockback_speed = move_toward(knockback_speed, 0, 20.0 * state.step)
+		knockback_velocity = knockback_velocity.normalized() * knockback_speed
 
 func interact():
 	pass

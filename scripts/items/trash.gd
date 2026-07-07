@@ -5,6 +5,7 @@ extends ItemBase
 @onready var area = $Area3D
 @export var slow_down_speed: float = 15.0  # Скорость замедления
 @export var delete_threshold: float = 0.2  # При какой скорости удалять
+@export var ejection_force: float = 20.0
 var is_slowing: bool = false
 
 var sync_position:Vector3 = Vector3.ZERO
@@ -45,6 +46,10 @@ func _physics_process(delta: float) -> void:
 		rotation.z = lerp_angle(rotation.z, sync_rotation.z, 15.0 * delta)
 
 func _on_body_entered(body: Node3D):
+	if body.is_in_group("player"):
+		var eject_dir = (body.global_position - global_position).normalized() + Vector3.UP * 0.5
+		eject_dir = eject_dir.normalized()
+		body.rpc_id(body.name.to_int(), "apply_knockback", eject_dir, ejection_force)
 	is_slowing = true
 	if not multiplayer.is_server():
 		return

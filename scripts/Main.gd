@@ -9,7 +9,8 @@ var names : Array[String] = [
 	"Средиземный паук",
 	"Крит на 20",
 	"Силиконовая Сиська",
-	"Лапух Дубравый"
+	"Лапух Дубравый",
+	"Окупант"
 ]
 
 const PORT = 7777
@@ -49,6 +50,7 @@ func _ready():
 func _on_host_pressed():
 	local_info.name = $UI/MainMenu/Username.text
 	main_menu.hide()
+	$UI/background.visible = false
 	var port = port_entry.text.to_int()
 	if port <= 0: port = 7777
 
@@ -63,10 +65,13 @@ func _on_host_pressed():
 	_spawn_player(multiplayer.get_unique_id())
 	_spawn_ball()
 	_spawn_bat()
+	
+	
 
 func _on_join_pressed():
 	main_menu.hide()
 	local_info.name = $UI/MainMenu/Username.text
+	$UI/background.visible = false
 	var port = port_entry.text.to_int()
 	if port <= 0: port = 7777
 

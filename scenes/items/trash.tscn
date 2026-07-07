@@ -8,6 +8,7 @@
 [ext_resource type="Shader" uid="uid://ck7v3llrukvnb" path="res://resources/shaders/trash_dark.gdshader" id="6_7hyc7"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_fpfj3"]
+absorbent = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dltdn"]
 size = Vector3(0.001, 1, 2)
@@ -220,6 +221,10 @@ shape = SubResource("BoxShape3D_y8mo7")
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.001, 0.13, -1)
 shape = SubResource("BoxShape3D_y8mo7")
 
+[node name="CollisionShape3D6" type="CollisionShape3D" parent="." unique_id=1193320523]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_dltdn")
+
 [node name="Area3D" type="Area3D" parent="." unique_id=695150482]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=250211449]
@@ -227,6 +232,46 @@ transform = Transform3D(0.9843342, -0.17631306, 0, 0.17631306, 0.9843342, 0, 0, 
 shape = SubResource("BoxShape3D_wngyc")
 
 [node name="model" type="Node3D" parent="." unique_id=666331324]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="model" unique_id=1838957153]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+cast_shadow = 2
+mesh = SubResource("QuadMesh_k740v")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="model" unique_id=1685213281]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.7484555e-07, 0, -1)
+cast_shadow = 2
+mesh = SubResource("QuadMesh_k740v")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="model" unique_id=420606927]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -0.5, 0.25, 0)
+cast_shadow = 2
+mesh = SubResource("QuadMesh_7hyc7")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="model" unique_id=1646404229]
+transform = Transform3D(-4.371138e-08, 0, 1, 0, 1, 0, -1, 0, -4.371138e-08, 0.5, 0, 0)
+cast_shadow = 2
+mesh = SubResource("QuadMesh_8bc2s")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="model" unique_id=2085891747]
+transform = Transform3D(-4.3711378e-08, 1, -4.371139e-08, 0, -4.371139e-08, -1, -1, -4.371138e-08, 0, 0, -0.46305442, 0)
+cast_shadow = 2
+mesh = SubResource("QuadMesh_8bc2s")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="model" unique_id=501790296]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.7484555e-07, 0.75, -1)
+cast_shadow = 2
+mesh = SubResource("PrismMesh_k740v")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="model" unique_id=971469867]
+transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 0, 0.75, 0.9997779)
+cast_shadow = 2
+mesh = SubResource("PrismMesh_1y1aw")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="model" unique_id=1288224569]
+transform = Transform3D(1, 0, 1.7484555e-07, -1.7484555e-07, -4.371139e-08, 1, 7.642742e-15, -1, -4.371139e-08, 0, 0.49048352, 0)
+cast_shadow = 2
+mesh = SubResource("CylinderMesh_qawy0")
 
 [node name="pila1" type="MeshInstance3D" parent="model" unique_id=881717910]
 transform = Transform3D(0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0, 1, 0, 0.489, 0.9)

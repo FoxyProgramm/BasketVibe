@@ -1,5 +1,6 @@
 extends Node3D
 
+@onready var floor = $Floor
 @export var flower_mesh: Mesh
 @export var flower_material: Material
 @export var plane_size: float = 82.0  # Размер PlaneMesh
@@ -53,14 +54,14 @@ func spawn_flower_cluster(data: Dictionary):
 	var r = data["radius"]
 	var count = data["count"]
 	
-	# Переводим UV (0..1) в мировые координаты (центр меша)
 	var world_x = (uv.x - 0.5) * plane_size
 	var world_z = (uv.y - 0.5) * plane_size
 	var center = Vector3(world_x, h, world_z)
 	
 	var container = Node3D.new()
+	container.name = "FlowerCluster"
 	container.position = center
-	add_child(container)
+	floor.add_child(container)
 	
 	var multimesh = MultiMeshInstance3D.new()
 	multimesh.multimesh = MultiMesh.new()
@@ -70,19 +71,16 @@ func spawn_flower_cluster(data: Dictionary):
 	multimesh.position = Vector3.ZERO
 	container.add_child(multimesh)
 	
-	
 	for i in range(count):
-		var x:float = randf_range(-r, r)
-		var z:float = randf_range(-r, r)
-		var local_pos:Vector3 = Vector3(x, 0, z)
+		var x = randf_range(-r, r)
+		var z = randf_range(-r, r)
+		var local_pos = Vector3(x, 0, z)
+		var angle = randf() * TAU
+		var scale = randf_range(1.5, 2.5)
 		
-		var angle:int = randi_range(-360, 360)
-		var scale:float = randf_range(1.5, 2.5)
-		
-		var t = Transform3D(
-			Basis().rotated(Vector3.UP, angle),
-			local_pos
-		)
+		var t = Transform3D()
+		t.origin = local_pos
+		t = t.rotated(Vector3.UP, angle)
 		t = t.scaled(Vector3(scale, scale, scale))
 		multimesh.multimesh.set_instance_transform(i, t)
 	

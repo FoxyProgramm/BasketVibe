@@ -11,7 +11,9 @@
 [ext_resource type="PackedScene" uid="uid://dy38qfo3bpemy" path="res://scenes/button.tscn" id="7_lgr22"]
 [ext_resource type="PackedScene" uid="uid://csccor8yoh8hg" path="res://scenes/items/radio.tscn" id="8_trn2v"]
 [ext_resource type="Script" uid="uid://crssebrmnamsi" path="res://scripts/console.gd" id="8_wkp8b"]
+[ext_resource type="FontFile" uid="uid://clfy0p1l85uab" path="res://Mx437_Paradise132_7x16.ttf" id="10_fpfj3"]
 [ext_resource type="PackedScene" uid="uid://bnbat2jdsieje" path="res://scenes/door.tscn" id="11_20pc6"]
+[ext_resource type="Shader" uid="uid://0kdctd04l4xb" path="res://consolebackground.gdshader" id="11_sc1dx"]
 [ext_resource type="PackedScene" uid="uid://datr5ht60ko4u" path="res://scenes/level_night.tscn" id="12_5vvyt"]
 [ext_resource type="Environment" uid="uid://c0fxnqlt3ov8a" path="res://resources/envieronment/night_environment.tres" id="13_j4qnp"]
 [ext_resource type="PackedScene" uid="uid://bh1mlpwcd7dot" path="res://scenes/items/trash.tscn" id="15_j4qnp"]
@@ -48,6 +50,48 @@ size = Vector2(26.615, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_jd8yr"]
 size = Vector3(80, 37.163116, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3b0ty"]
+bg_color = Color(0.18, 1, 0.18, 1)
+border_color = Color(0, 1, 0, 1)
+
+[sub_resource type="Theme" id="Theme_devvj"]
+LineEdit/styles/focus = null
+LineEdit/styles/normal = null
+LineEdit/styles/read_only = null
+ScrollContainer/styles/focus = null
+ScrollContainer/styles/panel = null
+VScrollBar/styles/grabber = SubResource("StyleBoxFlat_3b0ty")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_3b0ty")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_3b0ty")
+VScrollBar/styles/scroll = null
+VScrollBar/styles/scroll_focus = SubResource("StyleBoxFlat_3b0ty")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kjvhd"]
+bg_color = Color(0.049599998, 0.08, 0.05061333, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 1, 0, 1)
+expand_margin_left = 6.0
+expand_margin_top = 4.0
+expand_margin_right = 6.0
+expand_margin_bottom = 4.0
+
+[sub_resource type="Theme" id="Theme_ju44k"]
+default_font = ExtResource("10_fpfj3")
+LineEdit/colors/font_color = Color(0, 1, 0, 1)
+LineEdit/font_sizes/font_size = 32
+LineEdit/fonts/font = ExtResource("10_fpfj3")
+LineEdit/styles/focus = SubResource("StyleBoxFlat_kjvhd")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_kjvhd")
+LineEdit/styles/read_only = SubResource("StyleBoxFlat_kjvhd")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y8mo7"]
+shader = ExtResource("11_sc1dx")
+shader_parameter/bg_color = Color(0, 0, 0, 0.7)
+shader_parameter/scanline_amount = 0.3
 
 [node name="Main" type="Node3D" unique_id=1667223710]
 script = ExtResource("1_main")
@@ -196,17 +240,29 @@ layout_mode = 2
 [node name="Label14" type="Label" parent="UI/Debug/Display" unique_id=2142875509]
 layout_mode = 2
 
-[node name="Console" type="VBoxContainer" parent="UI/Debug" unique_id=1252657937]
+[node name="Console" type="VBoxContainer" parent="UI/Debug" unique_id=1252657937 node_paths=PackedStringArray("output_label", "line_edit")]
 visible = false
 layout_mode = 2
 script = ExtResource("8_wkp8b")
+output_label = NodePath("output")
+line_edit = NodePath("LineEdit")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="UI/Debug/Console" unique_id=1871278573]
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="output" type="RichTextLabel" parent="UI/Debug/Console" unique_id=279700735]
+texture_filter = 1
+custom_minimum_size = Vector2(0, 550)
+layout_mode = 2
+theme = SubResource("Theme_devvj")
+theme_override_fonts/normal_font = ExtResource("10_fpfj3")
+theme_override_font_sizes/normal_font_size = 32
+vertical_alignment = 2
+
 [node name="LineEdit" type="LineEdit" parent="UI/Debug/Console" unique_id=1746633357]
 layout_mode = 2
+theme = SubResource("Theme_ju44k")
 
 [node name="MainMenu" type="VBoxContainer" parent="UI" unique_id=426205973]
 anchors_preset = 8
@@ -245,6 +301,16 @@ placeholder_text = "Enter IP"
 layout_mode = 2
 text = "7777"
 placeholder_text = "Enter Port"
+
+[node name="background" type="ColorRect" parent="UI" unique_id=484339905 groups=["background"]]
+z_index = -99
+material = SubResource("ShaderMaterial_y8mo7")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="button" parent="." unique_id=260329884 instance=ExtResource("7_lgr22")]
 transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, -2.3415346, 0.5, -37.943123)
