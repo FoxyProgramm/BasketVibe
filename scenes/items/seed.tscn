@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://w86wd0514jmi"]
+
+[ext_resource type="Script" uid="uid://bxywo0ekhwrga" path="res://seed.gd" id="1_l184s"]
+[ext_resource type="RibbonTrailMesh" uid="uid://biglivkyduqb8" path="res://materials/flower.tres" id="2_a7sle"]
+[ext_resource type="Material" uid="uid://dgwpmosnoms2o" path="res://materials/flower_mat.tres" id="3_syr4b"]
+[ext_resource type="Texture2D" uid="uid://4q68ulfab0su" path="res://textures/semechko.png" id="4_rc2fx"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_83dcw"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_y8mo7"]
+radius = 0.21220778
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wngyc"]
+transparency = 1
+albedo_texture = ExtResource("4_rc2fx")
+texture_filter = 0
+billboard_mode = 1
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_y8mo7"]
+material = SubResource("StandardMaterial3D_wngyc")
+size = Vector2(0.8, 0.8)
+orientation = 2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wngyc"]
+radius = 0.23511611
+
+[node name="seed" type="RigidBody3D" unique_id=277380991 groups=["seed"]]
+physics_material_override = SubResource("PhysicsMaterial_83dcw")
+angular_damp = 100.0
+script = ExtResource("1_l184s")
+flower_mesh = ExtResource("2_a7sle")
+flower_material = ExtResource("3_syr4b")
+cluster_radius = 1.5
+flower_count = 20
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1611505771]
+shape = SubResource("SphereShape3D_y8mo7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1128435744]
+mesh = SubResource("PlaneMesh_y8mo7")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=269994527]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1091623193]
+shape = SubResource("SphereShape3D_wngyc")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

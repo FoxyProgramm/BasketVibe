@@ -1,6 +1,5 @@
 # seed.gd
-class_name SeedItem
-extends ItemBase
+extends RigidBody3D
 
 var hold_offset := Vector3(0, -0.3, -1.2)
 
@@ -15,12 +14,16 @@ var hold_offset := Vector3(0, -0.3, -1.2)
 @export var cluster_radius: float = 3.0
 @export var flower_count: int = 40
 
-var is_thrown: bool = false
+var was_held: bool = false
 
 func is_pickable() -> bool:
-	return not is_thrown
+	return not was_held
+
+func is_authority() -> int:
+	return get_multiplayer_authority() == multiplayer.get_unique_id()
 
 func _ready() -> void:
+	add_to_group("seed")
 	var sync = MultiplayerSynchronizer.new()
 	sync.root_path = NodePath("..")
 	var config = SceneReplicationConfig.new()
@@ -46,9 +49,6 @@ func _update_state():
 		collision_layer = 3
 		collision_mask = 3
 
-func is_authority() -> int:
-	return get_multiplayer_authority() == multiplayer.get_unique_id()
-
 func _physics_process(delta: float) -> void:
 	if is_authority():
 		if held_by_id != 0:
@@ -63,52 +63,29 @@ func _physics_process(delta: float) -> void:
 	else:
 		global_position = global_position.lerp(sync_position, 25.0 * delta)
 
-func _on_body_entered(body: Node):
-	if is_thrown and body.is_in_group("floor"):
-		_plant()
 
-func _plant():
+
+func _do_plant():
+	if multiplayer.is_server():
+		_plant(global_position)
+	else:
+		rpc_id(1, "_plant", global_position)
+
+@rpc("any_peer", "reliable")
+func _plant(pos: Vector3):
+	if not multiplayer.is_server(): return
+	rpc("_hide_seed")
+	var mesh_path = flower_mesh.resource_path
+	var mat_path = flower_material.resource_path if flower_material else ""
+	pos.y -= 0.34
+	get_tree().current_scene.rpc("spawn_flowers_at", pos, flower_count, cluster_radius, mesh_path, mat_path)
+
+@rpc("any_peer", "call_local", "reliable")
+func _hide_seed():
+	visible = false
 	freeze = true
-	is_thrown = true
-	
 	var tween = create_tween()
-	tween.tween_property(self, "scale", Vector3.ZERO, 1.0).set_ease(Tween.EASE_IN)
-	
-	_spawn_flowers(global_position)
-	
-	await get_tree().create_timer(1.0).timeout
-	queue_free()
-
-func _spawn_flowers(center: Vector3):
-	var container = Node3D.new()
-	container.name = "FlowerCluster"
-	container.position = center
-	get_tree().current_scene.add_child(container)
-	
-	var multimesh = MultiMeshInstance3D.new()
-	multimesh.multimesh = MultiMesh.new()
-	multimesh.multimesh.transform_format = MultiMesh.TRANSFORM_3D
-	multimesh.multimesh.mesh = flower_mesh
-	multimesh.multimesh.instance_count = flower_count
-	multimesh.position = Vector3.ZERO
-	container.add_child(multimesh)
-	
-	for i in range(flower_count):
-		var x = randf_range(-cluster_radius, cluster_radius)
-		var z = randf_range(-cluster_radius, cluster_radius)
-		var local_pos = Vector3(x, 0, z)
-		var angle = randf() * TAU
-		var scale = randf_range(1.5, 2.5)
-		
-		var t = Transform3D()
-		t.origin = local_pos
-		t = t.rotated(Vector3.UP, angle)
-		t = t.scaled(Vector3(scale, scale, scale))
-		multimesh.multimesh.set_instance_transform(i, t)
-	
-	multimesh.multimesh.visible_instance_count = flower_count
-	if flower_material:
-		multimesh.material_override = flower_material
+	tween.tween_callback(queue_free).set_delay(0.5)
 
 func _get_player(id: int) -> Node3D:
 	for p in get_tree().get_nodes_in_group("player"):
@@ -119,11 +96,12 @@ func _get_player(id: int) -> Node3D:
 @rpc("any_peer", "call_local", "reliable")
 func request_pickup(player_id: int) -> void:
 	if not is_authority(): return
-	if held_by_id != 0 or is_thrown: return
+	if held_by_id != 0 or was_held: return
 	var player = _get_player(player_id)
 	if player and global_position.distance_to(player.global_position) < 4.0:
 		held_by_id = player_id
 		rpc("update_held_state", player_id)
+		rpc("transfer_authority", player_id)
 
 @rpc("any_peer", "call_local", "reliable")
 func request_drop(player_vel: Vector3 = Vector3.ZERO) -> void:
@@ -141,9 +119,29 @@ func request_throw(direction: Vector3, force: float, player_vel: Vector3 = Vecto
 	if held_by_id == sender_id:
 		held_by_id = 0
 		rpc("update_held_state", 0)
-		is_thrown = true
+		rpc("mark_as_thrown")
 		linear_velocity = direction.normalized() * force + player_vel
+
+@rpc("call_local", "reliable")
+func mark_as_thrown():
+	was_held = true
 
 @rpc("authority", "call_local", "reliable")
 func update_held_state(new_id: int):
 	held_by_id = new_id
+
+@rpc("any_peer", "call_local", "reliable")
+func transfer_authority(new_id:int, velocity: Vector3 = Vector3.ZERO) -> void:
+	if new_id == multiplayer.get_unique_id():
+		self.freeze = false
+		self.sleeping = false
+		linear_velocity = velocity
+	else:
+		self.freeze = true
+		self.sleeping = true
+	self.set_multiplayer_authority(new_id)
+
+
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	if was_held and not body.is_in_group("player")and not body.is_in_group("seed"):
+		_do_plant()

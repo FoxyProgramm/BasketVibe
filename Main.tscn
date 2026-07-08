@@ -104,7 +104,7 @@ environment = ExtResource("2_c2ibq")
 
 [node name="Level" type="Node3D" parent="." unique_id=1056526147]
 
-[node name="Floor" type="StaticBody3D" parent="Level" unique_id=811630322]
+[node name="Floor" type="StaticBody3D" parent="Level" unique_id=811630322 groups=["floor"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 collision_layer = 3
 collision_mask = 3
@@ -366,6 +366,10 @@ item_type = "bat"
 [node name="button3" parent="." unique_id=687759358 instance=ExtResource("7_lgr22")]
 transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 13.196983, 0.5, -37.943123)
 item_type = "radio"
+
+[node name="button4" parent="." unique_id=1711849242 instance=ExtResource("7_lgr22")]
+transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, -7.860634, 0.5, -37.943123)
+item_type = "seed"
 
 [node name="Level_night" parent="." unique_id=284635577 instance=ExtResource("12_5vvyt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.84770393, 227.78882)
