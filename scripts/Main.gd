@@ -65,7 +65,8 @@ func _on_host_pressed():
 	_spawn_player(multiplayer.get_unique_id())
 	_spawn_ball()
 	_spawn_bat()
-	
+	_spawn_radio()
+	_spawn_trash()
 	
 
 func _on_join_pressed():
@@ -140,4 +141,16 @@ func _spawn_bat():
 	var b = Items.BAT.instantiate()
 	b.name = "Bat"
 	b.position = Vector3(-2, 3, -4)
+	level_items.add_child(b, true)
+
+func _spawn_radio():
+	var b = Items.RADIO.instantiate()
+	b.name = "Radio"
+	b.position = Vector3(11.7, 2.5, -36.5)
+	level_items.add_child(b, true)
+
+func _spawn_trash():
+	var b = Items.TRASH.instantiate()
+	b.name = "Trash"
+	b.position = Vector3(35, 3.3, -33.2)
 	level_items.add_child(b, true)

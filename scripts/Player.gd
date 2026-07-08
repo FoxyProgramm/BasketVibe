@@ -232,10 +232,8 @@ func play_swing_anim():
 	if is_swinging: return
 	is_swinging = true
 	var tween = create_tween()
-	# Резкий, сокрушительный удар влево
-	var strike_rot = Vector3(deg_to_rad(-45), deg_to_rad(-80), deg_to_rad(-60))
-	tween.tween_property(weapon_grip, "rotation", strike_rot, 0.1).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
-	# Плавный возврат в исходное положение
+	var strike_rot = Vector3(deg_to_rad(15), deg_to_rad(-20), deg_to_rad(-10))
+	tween.tween_property(weapon_grip, "rotation", strike_rot, 0.15).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	tween.tween_property(weapon_grip, "rotation", Vector3.ZERO, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_callback(func(): is_swinging = false)
 
