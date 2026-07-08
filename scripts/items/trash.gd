@@ -1,7 +1,7 @@
 class_name TrashItem
 extends ItemBase
 
-@export var target_groups: Array[String] = ["ball", "bat", "radio"]
+@export var target_groups: Array[String] = ["ball", "bat", "radio", "seed"]
 @onready var area = $Area3D
 @export var slow_down_speed: float = 15.0  # Скорость замедления
 @export var delete_threshold: float = 0.2  # При какой скорости удалять

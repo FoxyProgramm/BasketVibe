@@ -1,5 +1,5 @@
-# seed.gd
-extends RigidBody3D
+class_name SeedItem
+extends ItemBase
 
 var hold_offset := Vector3(0, -0.3, -1.2)
 

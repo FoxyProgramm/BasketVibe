@@ -167,7 +167,7 @@ texture = ExtResource("6_3dxm6")
 [node name="Items" type="Node3D" parent="Level" unique_id=1776252388]
 
 [node name="LevelSpawner" type="MultiplayerSpawner" parent="." unique_id=967452454]
-_spawnable_scenes = PackedStringArray("uid://c31asbqq05otd", "uid://qqr6cb4ile2j", "uid://csccor8yoh8hg", "uid://bh1mlpwcd7dot")
+_spawnable_scenes = PackedStringArray("uid://c31asbqq05otd", "uid://qqr6cb4ile2j", "uid://csccor8yoh8hg", "uid://bh1mlpwcd7dot", "uid://w86wd0514jmi")
 spawn_path = NodePath("../Level/Items")
 
 [node name="Players" type="Node3D" parent="." unique_id=562868757 groups=["players"]]

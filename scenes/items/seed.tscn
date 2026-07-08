@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://w86wd0514jmi"]
 
-[ext_resource type="Script" uid="uid://bxywo0ekhwrga" path="res://seed.gd" id="1_l184s"]
+[ext_resource type="Script" uid="uid://bxywo0ekhwrga" path="res://scripts/items/seed.gd" id="1_l184s"]
 [ext_resource type="RibbonTrailMesh" uid="uid://biglivkyduqb8" path="res://materials/flower.tres" id="2_a7sle"]
 [ext_resource type="Material" uid="uid://dgwpmosnoms2o" path="res://materials/flower_mat.tres" id="3_syr4b"]
 [ext_resource type="Texture2D" uid="uid://4q68ulfab0su" path="res://textures/semechko.png" id="4_rc2fx"]
