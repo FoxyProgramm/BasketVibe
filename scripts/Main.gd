@@ -50,10 +50,6 @@ var players : Dictionary[int, PlayerInfo] = {}
 var local_info := PlayerInfo.new()
 
 var player_scene = preload("res://scenes/player.tscn")
-#var ball_scene = preload("res://scenes/ball.tscn")
-#var bat_scene = preload("res://scenes/bat.tscn")
-#var radio_scene = preload("res://scenes/radio.tscn")
-#var transh_scene = preload("res://scenes/trash.tscn")
 
 func _ready():
 	$LevelSpawner.add_spawnable_scene("res://scenes/ball.tscn")

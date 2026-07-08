@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://gxl3stlxai58" path="res://textures/mudamuda.png" id="6_3dxm6"]
 [ext_resource type="Script" uid="uid://b82vhj253sm52" path="res://scripts/debug.gd" id="7_03owx"]
 [ext_resource type="PackedScene" uid="uid://dy38qfo3bpemy" path="res://scenes/button.tscn" id="7_lgr22"]
+[ext_resource type="Script" uid="uid://bh41i1mku2arp" path="res://scripts/chat.gd" id="8_sc1dx"]
 [ext_resource type="Script" uid="uid://crssebrmnamsi" path="res://scripts/console.gd" id="8_wkp8b"]
 [ext_resource type="FontFile" uid="uid://clfy0p1l85uab" path="res://Mx437_Paradise132_7x16.ttf" id="10_fpfj3"]
 [ext_resource type="PackedScene" uid="uid://bnbat2jdsieje" path="res://scenes/door.tscn" id="11_20pc6"]
@@ -257,6 +258,66 @@ vertical_alignment = 2
 layout_mode = 2
 theme = SubResource("Theme_ju44k")
 
+[node name="Chat" type="MarginContainer" parent="UI" unique_id=332530029 groups=["chat"]]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 1132.0
+offset_bottom = 628.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+script = ExtResource("8_sc1dx")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Chat" unique_id=1348502216]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="UI/Chat/VBoxContainer" unique_id=1602709605]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Chat/VBoxContainer" unique_id=1618390505]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ChatHandler" type="ColorRect" parent="UI/Chat/VBoxContainer/HBoxContainer" unique_id=1579313160]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0, 0, 0, 0.5254902)
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Chat/VBoxContainer/HBoxContainer/ChatHandler" unique_id=1950225681]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/Chat/VBoxContainer/HBoxContainer/ChatHandler/MarginContainer" unique_id=273748983]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Control" type="Control" parent="UI/Chat/VBoxContainer/HBoxContainer" unique_id=1297597296]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LineEdit" type="LineEdit" parent="UI/Chat/VBoxContainer" unique_id=1168375697]
+visible = false
+layout_mode = 2
+
+[node name="ChatDissapear" type="Timer" parent="UI/Chat" unique_id=139402333]
+process_callback = 0
+wait_time = 3.0
+one_shot = true
+
 [node name="MainMenu" type="VBoxContainer" parent="UI" unique_id=426205973]
 anchors_preset = 8
 anchor_left = 0.5
@@ -400,4 +461,6 @@ location_environment = ExtResource("2_c2ibq")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.04972, 3.3076992, -33.20089)
 
 [connection signal="text_submitted" from="UI/Debug/Console/LineEdit" to="UI/Debug/Console" method="_on_line_edit_text_submitted"]
+[connection signal="text_submitted" from="UI/Chat/VBoxContainer/LineEdit" to="UI/Chat" method="_on_line_edit_text_submitted"]
+[connection signal="timeout" from="UI/Chat/ChatDissapear" to="UI/Chat" method="_on_chat_dissapear_timeout"]
 [connection signal="item_selected" from="UI/MainMenu/OptionButton" to="." method="_on_menu_character_selected"]
