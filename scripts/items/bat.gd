@@ -15,7 +15,6 @@ var hold_rotation := Vector3(0, 0, 0)
 @onready var visuals = $Visuals
 
 @onready var sprite_mat = $Visuals/Sprite3D.material_override
-@onready var anim_mat = $Visuals/AnimatedSprite3D.material_override
 
 func is_pickable() -> bool:
 	return true
@@ -121,12 +120,6 @@ func _process(delta: float):
 		sprite_mat.set_shader_parameter("outline_color", current_color)
 		sprite_mat.set_shader_parameter("outline_thickness", target_thickness)
 
-	if anim_mat:
-		var current_color = anim_mat.get_shader_parameter("outline_color")
-		current_color.a = lerp(current_color.a, target_alpha, 5.0 * delta)
-		anim_mat.set_shader_parameter("outline_color", current_color)
-		anim_mat.set_shader_parameter("outline_thickness", target_thickness)
-
 func _physics_process(delta: float) -> void:
 	if held_by_id != 0:
 		var player = _get_player(held_by_id)
@@ -162,16 +155,6 @@ func _physics_process(delta: float) -> void:
 func is_authority() -> int:
 	return get_multiplayer_authority() == multiplayer.get_unique_id()
 
-#@rpc("any_peer", "call_local", "reliable")
-#func transfer_authority(new_id:int) -> void:
-	#if new_id == multiplayer.get_unique_id():
-		#self.freeze = false
-		#self.sleeping = false
-	#else :
-		#self.freeze = true
-		#self.sleeping = true
-	#self.set_multiplayer_authority(new_id)
-
 @rpc("any_peer", "call_local", "reliable")
 func request_pickup(player_id: int) -> void:
 	if not is_authority(): return
@@ -202,8 +185,8 @@ func request_swing(charge: float) -> void:
 	var sender_id = multiplayer.get_remote_sender_id()
 	if held_by_id == sender_id:
 		var player:Player = _get_player(sender_id)
-		#if player and player.has_method("rpc"):
-			#player.rpc("play_swing_anim")
+		if player:
+			player.rpc("play_swing_anim")
 
 		if player:
 			var head:Node3D = player.get_node_or_null("Head")

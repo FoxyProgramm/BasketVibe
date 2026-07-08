@@ -5,9 +5,15 @@ var name : String = ""
 var skin : int = 0
 
 func pack() -> PackedByteArray:
-	return name.to_utf8_buffer()
+	var result := StreamPeerBuffer.new()
+	result.put_utf8_string(name)
+	result.put_u8(skin)
+	return result.data_array
 
 static func unpack(data:PackedByteArray) -> PlayerInfo:
 	var new_info := PlayerInfo.new()
-	new_info.name = data.get_string_from_utf8()
+	var buffer := StreamPeerBuffer.new()
+	buffer.data_array = data
+	new_info.name = buffer.get_utf8_string()
+	new_info.skin = buffer.get_u8()
 	return new_info

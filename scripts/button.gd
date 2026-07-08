@@ -35,11 +35,11 @@ func _spawn_item():
 	
 	var item
 	if item_type == "ball":
-		item = load("res://Ball.tscn").instantiate()
+		item = Items.BALL.instantiate()
 	elif item_type == "bat":
-		item = load("res://Bat.tscn").instantiate()
+		item = Items.BAT.instantiate()
 	elif item_type == "radio":
-		item = load("res://scene/radio.tscn").instantiate()
+		item = Items.RADIO.instantiate()
 	
 	var spawn_pos = spawn_point.global_position if spawn_point else global_position + Vector3.UP * 0.5
 	

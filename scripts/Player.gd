@@ -55,10 +55,10 @@ func _ready():
 	sync.delta_interval = 0.05
 	add_child(sync)
 	
-	var charge_bar = $UI/ChargeBar
 	if charge_bar:
+		charge_bar.hide()
 		# Случайный цвет
-		var fill_color = Color(randf(), randf(), randf(), 1.0)
+		var fill_color = Color(randf()*0.5+0.5, randf()*0.5+0.5, randf()*0.5+0.5, 1.0)
 		# Более тёмный для фона
 		var bg_color = fill_color.darkened(0.8)
 		
@@ -82,7 +82,7 @@ func _ready():
 		sync_rotation_y = rotation.y
 		sync_head_rotation_x = head.rotation.x
 		sync_grip_rotation = weapon_grip.rotation
-		charge_bar.hide()
+		
 		
 		if default_environment:
 			camera.environment = default_environment # задаем инваермент в камере, чтобы у каждого игрока он мог быть свой
@@ -227,15 +227,19 @@ func _process(delta: float):
 			var q_target = Quaternion.from_euler(base_grip_rot)
 			weapon_grip.rotation = q_current.slerp(q_target, 15.0 * delta).get_euler()
 
+func apply_skin(id:int) -> void:
+	var character:Characters.Character = Characters.LIST.get(id)
+	if character != null:
+		$Head/HeadSprite.texture = character.head_texture
+		$BodySprite.texture = character.body_texture
+
 @rpc("call_local", "reliable")
 func play_swing_anim():
 	if is_swinging: return
 	is_swinging = true
 	var tween = create_tween()
-	# Резкий, сокрушительный удар влево
-	var strike_rot = Vector3(deg_to_rad(-45), deg_to_rad(-80), deg_to_rad(-60))
-	tween.tween_property(weapon_grip, "rotation", strike_rot, 0.1).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
-	# Плавный возврат в исходное положение
+	var strike_rot = Vector3(deg_to_rad(15), deg_to_rad(-20), deg_to_rad(-10))
+	tween.tween_property(weapon_grip, "rotation", strike_rot, 0.15).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	tween.tween_property(weapon_grip, "rotation", Vector3.ZERO, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_callback(func(): is_swinging = false)
 
@@ -245,6 +249,7 @@ func apply_knockback(direction: Vector3, force: float):
 		knockback_velocity = direction.normalized() * force 
 		knockback_velocity.y = force * 0.25
 		_play_hit_effect(direction, force)
+@warning_ignore("unused_parameter")
 func _play_hit_effect(dir: Vector3, strength: float):
 	var side = 1.0 if randf() > 0.5 else -1.0  # Случайно влево или вправо
 	# Трясём камеру

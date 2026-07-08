@@ -9,14 +9,13 @@
 [ext_resource type="Texture2D" uid="uid://gxl3stlxai58" path="res://textures/mudamuda.png" id="6_3dxm6"]
 [ext_resource type="Script" uid="uid://b82vhj253sm52" path="res://scripts/debug.gd" id="7_03owx"]
 [ext_resource type="PackedScene" uid="uid://dy38qfo3bpemy" path="res://scenes/button.tscn" id="7_lgr22"]
-[ext_resource type="PackedScene" uid="uid://csccor8yoh8hg" path="res://scenes/items/radio.tscn" id="8_trn2v"]
 [ext_resource type="Script" uid="uid://crssebrmnamsi" path="res://scripts/console.gd" id="8_wkp8b"]
 [ext_resource type="FontFile" uid="uid://clfy0p1l85uab" path="res://Mx437_Paradise132_7x16.ttf" id="10_fpfj3"]
 [ext_resource type="PackedScene" uid="uid://bnbat2jdsieje" path="res://scenes/door.tscn" id="11_20pc6"]
+[ext_resource type="Texture2D" uid="uid://ihggso1qfsli" path="res://textures/persones/papich_head.png" id="11_fpfj3"]
 [ext_resource type="Shader" uid="uid://0kdctd04l4xb" path="res://consolebackground.gdshader" id="11_sc1dx"]
 [ext_resource type="PackedScene" uid="uid://datr5ht60ko4u" path="res://scenes/level_night.tscn" id="12_5vvyt"]
 [ext_resource type="Environment" uid="uid://c0fxnqlt3ov8a" path="res://resources/envieronment/night_environment.tres" id="13_j4qnp"]
-[ext_resource type="PackedScene" uid="uid://bh1mlpwcd7dot" path="res://scenes/items/trash.tscn" id="15_j4qnp"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
 size = Vector3(82, 1, 82)
@@ -166,12 +165,6 @@ texture = ExtResource("6_3dxm6")
 
 [node name="Items" type="Node3D" parent="Level" unique_id=1776252388]
 
-[node name="trash" parent="Level/Items" unique_id=434344413 instance=ExtResource("15_j4qnp")]
-transform = Transform3D(-0.9560161, 0, -0.29331404, 0, 1, 0, 0.29331404, 0, -0.9560161, 31.106316, 0.5, -30.274763)
-
-[node name="trash2" parent="Level/Items" unique_id=628240654 instance=ExtResource("15_j4qnp")]
-transform = Transform3D(-0.9560161, 0, -0.29331404, 0, 1, 0, 0.29331404, 0, -0.9560161, 31.106316, 0.5, -26.64561)
-
 [node name="LevelSpawner" type="MultiplayerSpawner" parent="." unique_id=967452454]
 _spawnable_scenes = PackedStringArray("uid://c31asbqq05otd", "uid://qqr6cb4ile2j", "uid://csccor8yoh8hg", "uid://bh1mlpwcd7dot")
 spawn_path = NodePath("../Level/Items")
@@ -277,6 +270,45 @@ offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Control" type="Control" parent="UI/MainMenu" unique_id=225679922]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="UI/MainMenu/Control" unique_id=409510479]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -84.0
+offset_right = 100.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("11_fpfj3")
+expand_mode = 1
+
+[node name="OptionButton" type="OptionButton" parent="UI/MainMenu" unique_id=754686298]
+layout_mode = 2
+selected = 0
+item_count = 8
+popup/item_0/text = "Папич"
+popup/item_0/id = 0
+popup/item_1/text = "ГигаЧад"
+popup/item_1/id = 1
+popup/item_2/text = "Гендальф"
+popup/item_2/id = 2
+popup/item_3/text = "Рэпэр"
+popup/item_3/id = 3
+popup/item_4/text = "Володя"
+popup/item_4/id = 4
+popup/item_5/text = "Иван"
+popup/item_5/id = 5
+popup/item_6/text = "Габэн"
+popup/item_6/id = 6
+popup/item_7/text = "Райан Гослинг"
+popup/item_7/id = 7
+
 [node name="Username" type="LineEdit" parent="UI/MainMenu" unique_id=21665153]
 layout_mode = 2
 placeholder_text = "Your name"
@@ -323,9 +355,6 @@ item_type = "bat"
 transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 13.196983, 0.5, -37.943123)
 item_type = "radio"
 
-[node name="radio" parent="." unique_id=1113669271 instance=ExtResource("8_trn2v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.219837, 0.29415452, -33.777245)
-
 [node name="Level_night" parent="." unique_id=284635577 instance=ExtResource("12_5vvyt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.84770393, 227.78882)
 
@@ -351,4 +380,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.629873, 1.6428883, 192.09
 target_door = NodePath("../Door3")
 location_environment = ExtResource("2_c2ibq")
 
+[node name="Marker3D" type="Marker3D" parent="." unique_id=2071872080]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.04972, 3.3076992, -33.20089)
+
 [connection signal="text_submitted" from="UI/Debug/Console/LineEdit" to="UI/Debug/Console" method="_on_line_edit_text_submitted"]
+[connection signal="item_selected" from="UI/MainMenu/OptionButton" to="." method="_on_menu_character_selected"]

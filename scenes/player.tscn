@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://djkf6584e57hy"]
 
 [ext_resource type="Script" uid="uid://dsw3mgmks6gyo" path="res://scripts/Player.gd" id="1_player"]
-[ext_resource type="Texture2D" uid="uid://ihggso1qfsli" path="res://textures/persones/132.png" id="2_kne1u"]
-[ext_resource type="Texture2D" uid="uid://dgy0t4rqxdxx" path="res://textures/persones/131.png" id="3_e80uo"]
+[ext_resource type="Texture2D" uid="uid://ihggso1qfsli" path="res://textures/persones/papich_head.png" id="2_kne1u"]
+[ext_resource type="Texture2D" uid="uid://dgy0t4rqxdxx" path="res://textures/persones/papich_body.png" id="3_e80uo"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_player"]
 friction = 0.0
@@ -22,13 +22,26 @@ billboard_keep_scale = true
 material = SubResource("StandardMaterial3D_cxr5p")
 size = Vector2(1.28, 1.28)
 
+[sub_resource type="Gradient" id="Gradient_qhqgy"]
+offsets = PackedFloat32Array(0, 0.15873016)
+colors = PackedColorArray(0.23921569, 0.23921569, 0.23921569, 1, 0.23753911, 0.23753914, 0.23753908, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_nlkna"]
+gradient = SubResource("Gradient_qhqgy")
+fill_from = Vector2(0.9017094, 0)
+fill_to = Vector2(0, 0.34188035)
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kne1u"]
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
+texture = SubResource("GradientTexture2D_nlkna")
+
+[sub_resource type="Gradient" id="Gradient_dqkch"]
+colors = PackedColorArray(0.37, 0.37, 0.37, 1, 0.82, 0.82, 0.82, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_tyxer"]
+gradient = SubResource("Gradient_dqkch")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tdg3f"]
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
+texture = SubResource("GradientTexture2D_tyxer")
 
 [sub_resource type="Theme" id="Theme_hri7i"]
 ProgressBar/styles/background = SubResource("StyleBoxTexture_kne1u")
@@ -63,8 +76,16 @@ shape = SubResource("CylinderShape3D_4t7h3")
 [node name="Head" type="Node3D" parent="." unique_id=1193462432]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4986223, 0)
 
+[node name="HeadSprite" type="Sprite3D" parent="Head" unique_id=779491032]
+transform = Transform3D(0.279, 0, 0, 0, 0.279, 0, 0, 0, 0.279, 0, 0.13233662, -0.04645057)
+pixel_size = 0.015
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("2_kne1u")
+
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Head" unique_id=934733598]
 transform = Transform3D(0.279, 0, 0, 0, 0.279, 0, 0, 0, 0.279, 0, 0.13233662, -0.04645057)
+visible = false
 mesh = SubResource("QuadMesh_tdg3f")
 
 [node name="Camera3D" type="Camera3D" parent="Head" unique_id=612484109]
@@ -82,6 +103,9 @@ offset_right = 2.0
 offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_scale = Vector2(0.8, 0.8)
+offset_transform_rotation = 0.7853982
 color = Color(1, 1, 1, 0.8)
 
 [node name="WeaponGrip" type="Marker3D" parent="Head" unique_id=819949545]
@@ -106,10 +130,10 @@ grow_horizontal = 2
 grow_vertical = 0
 theme = SubResource("Theme_hri7i")
 max_value = 1.0
-value = 0.66
 show_percentage = false
 
 [node name="ColorRect" type="ColorRect" parent="UI/ChargeBar" unique_id=1640625340]
+visible = false
 z_index = -4
 layout_mode = 0
 offset_left = -2.0
@@ -120,7 +144,15 @@ color = Color(0, 0, 0, 1)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=523218740]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0.9107102, 0)
+visible = false
 mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="BodySprite" type="Sprite3D" parent="." unique_id=913295011]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0.9107102, 0)
+billboard = 2
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("3_e80uo")
 
 [node name="Username" type="Label3D" parent="." unique_id=579307843]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9026518, 0)

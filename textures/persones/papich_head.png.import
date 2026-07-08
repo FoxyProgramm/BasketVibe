@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dgy0t4rqxdxx"
-path.s3tc="res://.godot/imported/131.png-099be7f283348f4a26de4dacecf646ae.s3tc.ctex"
+uid="uid://ihggso1qfsli"
+path.s3tc="res://.godot/imported/papich_head.png-940bf39aa356616c39429737949d341a.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/persones/131.png"
-dest_files=["res://.godot/imported/131.png-099be7f283348f4a26de4dacecf646ae.s3tc.ctex"]
+source_file="res://textures/persones/papich_head.png"
+dest_files=["res://.godot/imported/papich_head.png-940bf39aa356616c39429737949d341a.s3tc.ctex"]
 
 [params]
 
