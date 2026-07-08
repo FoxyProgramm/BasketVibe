@@ -90,36 +90,33 @@ func parse(commands:Array[String]) -> void:
 					if multiplayer.is_server():
 						_add_song(path)
 					else:
-						rpc_id(1, "_add_song", path)
+						_client_add_song(path)
 					log_info("Successful add track from " + path, "#12ab00")
 				else:
 					log_info("Error add track, check your path: " + path, "red")
 
 @rpc("any_peer", "reliable")
-func _add_song(path: String):
+func _add_song(data: PackedByteArray):
 	if not multiplayer.is_server():
 		return
 	
-	var file = FileAccess.open(path, FileAccess.READ)
-	if not file:
+	for radio in get_tree().get_nodes_in_group("radio"):
+		radio.rpc("_receive_song_data", data)
+	
+	log_info("Successful add track", "#12ab00")
+
+func _client_add_song(path: String):
+	if not FileAccess.file_exists(path):
+		log_info("Error add track, check your path: " + path, "red")
 		return
 	
+	var file = FileAccess.open(path, FileAccess.READ)
 	var data = file.get_buffer(file.get_length())
 	file.close()
 	
-	# Отправляем аудиоданные всем радио
-	for radio in get_tree().get_nodes_in_group("radio"):
-		radio.rpc("_receive_song_data", data)
-				
+	rpc_id(1, "_add_song", data)
+	log_info("Sending tract to all players...", "#88ccff")
 
-#func _on_line_edit_text_submitted(new_text: String) -> void:
-	#var regex = RegEx.create_from_string("\\w+")
-	#var results : Array[String] = []
-	#for result in regex.search_all(new_text):
-		#results.append(result.get_string())
-	#parse(results)
-	#self.hide()
-	#toggle_mouse()
 func _on_line_edit_text_submitted(new_text: String) -> void:
 	if new_text.is_empty(): return
 	

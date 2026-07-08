@@ -40,6 +40,8 @@ func _spawn_item():
 		item = Items.BAT.instantiate()
 	elif item_type == "radio":
 		item = Items.RADIO.instantiate()
+	elif item_type == "seed":
+		item = Items.SEED.instantiate()
 	
 	var spawn_pos = spawn_point.global_position if spawn_point else global_position + Vector3.UP * 0.5
 	

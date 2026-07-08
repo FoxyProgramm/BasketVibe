@@ -60,7 +60,8 @@ func _ready():
 	$LevelSpawner.add_spawnable_scene("res://scenes/bat.tscn")
 	$LevelSpawner.add_spawnable_scene("res://scenes/radio.tscn")
 	$PlayerSpawner.add_spawnable_scene("res://scenes/player.tscn")
-	$PlayerSpawner.add_spawnable_scene("res://scenes/trash.tscn")
+	$LevelSpawner.add_spawnable_scene("res://scenes/trash.tscn")
+	$LevelSpawner.add_spawnable_scene("res://scenes/items/seed.tscn")
 
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
@@ -91,6 +92,7 @@ func _on_host_pressed():
 	_spawn_bat()
 	_spawn_radio()
 	_spawn_trash()
+	_spawn_seed()
 	
 
 func _on_join_pressed():
@@ -181,8 +183,52 @@ func _spawn_trash():
 	b.position = Vector3(35, 3.3, -33.2)
 	level_items.add_child(b, true)
 
+func _spawn_seed():
+	var b = Items.SEED.instantiate()
+	b.name = "Seed"
+	b.position = Vector3(0, 3, 0)
+	level_items.add_child(b, true)
+	print("1")
 
 func _on_menu_character_selected(index: int) -> void:
 	var character: Characters.Character = Characters.LIST.get(index)
 	if character:
 		$UI/MainMenu/Control/TextureRect.texture = character.head_texture
+
+func get_local_skin() -> int:
+	return local_info.skin
+
+@rpc("call_local", "reliable")
+func spawn_flowers_at(pos: Vector3, count: int, radius: float, mesh_path: String, mat_path: String):
+	var mesh = load(mesh_path)
+	var material = load(mat_path) if mat_path != "" else null
+	
+	var container = Node3D.new()
+	container.name = "FlowerCluster"
+	container.position = pos
+	level_items.add_child(container)
+	
+	var multimesh = MultiMeshInstance3D.new()
+	multimesh.multimesh = MultiMesh.new()
+	multimesh.multimesh.transform_format = MultiMesh.TRANSFORM_3D
+	multimesh.multimesh.mesh = mesh
+	multimesh.multimesh.instance_count = count
+	multimesh.position = Vector3.ZERO
+	container.add_child(multimesh)
+	
+	for i in range(count):
+		var x = randf_range(-radius, radius)
+		var z = randf_range(-radius, radius)
+		var local_pos = Vector3(x, 0, z)
+		var angle = randf() * TAU
+		var scale = randf_range(1.5, 2.5)
+		
+		var t = Transform3D()
+		t.origin = local_pos
+		t = t.rotated(Vector3.UP, angle)
+		t = t.scaled(Vector3(scale, scale, scale))
+		multimesh.multimesh.set_instance_transform(i, t)
+	
+	multimesh.multimesh.visible_instance_count = count
+	if material:
+		multimesh.material_override = material

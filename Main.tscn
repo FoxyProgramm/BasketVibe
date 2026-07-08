@@ -104,7 +104,7 @@ environment = ExtResource("2_c2ibq")
 
 [node name="Level" type="Node3D" parent="." unique_id=1056526147]
 
-[node name="Floor" type="StaticBody3D" parent="Level" unique_id=811630322]
+[node name="Floor" type="StaticBody3D" parent="Level" unique_id=811630322 groups=["floor"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 collision_layer = 3
 collision_mask = 3
@@ -291,7 +291,7 @@ expand_mode = 1
 [node name="OptionButton" type="OptionButton" parent="UI/MainMenu" unique_id=754686298]
 layout_mode = 2
 selected = 0
-item_count = 8
+item_count = 14
 popup/item_0/text = "Папич"
 popup/item_0/id = 0
 popup/item_1/text = "ГигаЧад"
@@ -308,6 +308,18 @@ popup/item_6/text = "Габэн"
 popup/item_6/id = 6
 popup/item_7/text = "Райан Гослинг"
 popup/item_7/id = 7
+popup/item_8/text = "Кихун"
+popup/item_8/id = 8
+popup/item_9/text = "Магрегор"
+popup/item_9/id = 9
+popup/item_10/text = "Брюс ли"
+popup/item_10/id = 10
+popup/item_11/text = "Джеки Чан"
+popup/item_11/id = 11
+popup/item_12/text = "Годот"
+popup/item_12/id = 12
+popup/item_13/text = "Константин Дебликов"
+popup/item_13/id = 13
 
 [node name="Username" type="LineEdit" parent="UI/MainMenu" unique_id=21665153]
 layout_mode = 2
@@ -354,6 +366,10 @@ item_type = "bat"
 [node name="button3" parent="." unique_id=687759358 instance=ExtResource("7_lgr22")]
 transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 13.196983, 0.5, -37.943123)
 item_type = "radio"
+
+[node name="button4" parent="." unique_id=1711849242 instance=ExtResource("7_lgr22")]
+transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, -7.860634, 0.5, -37.943123)
+item_type = "seed"
 
 [node name="Level_night" parent="." unique_id=284635577 instance=ExtResource("12_5vvyt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.84770393, 227.78882)

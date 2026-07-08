@@ -66,7 +66,7 @@ script = ExtResource("1_6u4ey")
 flower_mesh = ExtResource("8_1srea")
 flower_material = ExtResource("3_4d4ax")
 
-[node name="Floor" type="StaticBody3D" parent="." unique_id=710934426]
+[node name="Floor" type="StaticBody3D" parent="." unique_id=710934426 groups=["floor"]]
 collision_layer = 3
 collision_mask = 3
 script = ExtResource("1_pjh0e")

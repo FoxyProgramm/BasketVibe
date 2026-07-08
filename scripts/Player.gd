@@ -83,6 +83,9 @@ func _ready():
 		sync_head_rotation_x = head.rotation.x
 		sync_grip_rotation = weapon_grip.rotation
 		
+		var main = get_tree().current_scene
+		if main.has_method("get_local_skin"):
+			apply_skin(main.get_local_skin())
 		
 		if default_environment:
 			camera.environment = default_environment # задаем инваермент в камере, чтобы у каждого игрока он мог быть свой
@@ -160,6 +163,17 @@ func _input(event):
 			elif held.is_in_group("radio"):
 				if event.pressed:
 					held.use()
+			elif held.is_in_group("seed"):
+				if event.pressed:
+					is_charging = true
+					charge_progress = 0.0
+				else:
+					if is_charging:
+						is_charging = false
+						var throw_dir = -head.global_transform.basis.z + Vector3.UP * 0.2
+						var force = lerp(MIN_THROW_FORCE, MAX_THROW_FORCE, charge_progress)
+						held.rpc_id(held.get_multiplayer_authority(), "request_throw", throw_dir, force, linear_velocity)
+						charge_bar.hide()
 		else:
 			if event.pressed:
 				var closest = get_closest_interactable()
@@ -173,6 +187,8 @@ func get_held_object():
 	for b in get_tree().get_nodes_in_group("bat"):
 		if b.held_by_id == multiplayer.get_unique_id(): return b
 	for b in get_tree().get_nodes_in_group("radio"):
+		if b.held_by_id == multiplayer.get_unique_id(): return b
+	for b in get_tree().get_nodes_in_group("seed"):
 		if b.held_by_id == multiplayer.get_unique_id(): return b
 	return null
 
@@ -195,6 +211,12 @@ func get_closest_interactable() -> Node3D:
 				min_dist = d
 
 	for b in get_tree().get_nodes_in_group("radio"):
+		if b.held_by_id == 0:
+			var d = global_position.distance_to(b.global_position)
+			if d < min_dist:
+				closest = b
+				min_dist = d
+	for b in get_tree().get_nodes_in_group("seed"):
 		if b.held_by_id == 0:
 			var d = global_position.distance_to(b.global_position)
 			if d < min_dist:
