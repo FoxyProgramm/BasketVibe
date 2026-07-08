@@ -10,7 +10,30 @@ var names : Array[String] = [
 	"Крит на 20",
 	"Силиконовая Сиська",
 	"Лапух Дубравый",
-	"Окупант"
+	"Окупант",
+	"Опечатка",
+	"Смойся",
+	"Пмойся",
+	"Кто прочитал - тот гэй",
+	"Продам Гараж",
+	"Секретный Лук",
+	"Зимбабвэ",
+	"Горный запах скалы",
+	"Редиски",
+	"Снежный рот",
+	"Атомный таракан",
+	"Дождливый ветер",
+	"Мокрый пистолет",
+	"Сажа",
+	"Боку но пико",
+	"Пенецелин",
+	"Пульт от ядеки",
+	"Сумашествие редисок",
+	"Обрыган",
+	"Целовашка",
+	"Смута",
+	"Переселенец",
+	"Йо майо"
 ]
 
 const PORT = 7777
@@ -49,6 +72,7 @@ func _ready():
 
 func _on_host_pressed():
 	local_info.name = $UI/MainMenu/Username.text
+	local_info.skin = $UI/MainMenu/OptionButton.get_selected_id()
 	main_menu.hide()
 	$UI/background.visible = false
 	var port = port_entry.text.to_int()
@@ -72,6 +96,7 @@ func _on_host_pressed():
 func _on_join_pressed():
 	main_menu.hide()
 	local_info.name = $UI/MainMenu/Username.text
+	local_info.skin = $UI/MainMenu/OptionButton.get_selected_id()
 	$UI/background.visible = false
 	var port = port_entry.text.to_int()
 	if port <= 0: port = 7777
@@ -92,6 +117,7 @@ func add_player(id:int, info:PackedByteArray) -> void:
 	var player:Player = $Players.get_node_or_null(str(id))
 	if player:
 		player.get_node("Username").text = info_.name
+		player.apply_skin(info_.skin)
 
 func _on_peer_connected(id) -> void:
 	if multiplayer.is_server():
@@ -154,3 +180,9 @@ func _spawn_trash():
 	b.name = "Trash"
 	b.position = Vector3(35, 3.3, -33.2)
 	level_items.add_child(b, true)
+
+
+func _on_menu_character_selected(index: int) -> void:
+	var character: Characters.Character = Characters.LIST.get(index)
+	if character:
+		$UI/MainMenu/Control/TextureRect.texture = character.head_texture

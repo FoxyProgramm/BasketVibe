@@ -227,6 +227,12 @@ func _process(delta: float):
 			var q_target = Quaternion.from_euler(base_grip_rot)
 			weapon_grip.rotation = q_current.slerp(q_target, 15.0 * delta).get_euler()
 
+func apply_skin(id:int) -> void:
+	var character:Characters.Character = Characters.LIST.get(id)
+	if character != null:
+		$Head/HeadSprite.texture = character.head_texture
+		$BodySprite.texture = character.body_texture
+
 @rpc("call_local", "reliable")
 func play_swing_anim():
 	if is_swinging: return
