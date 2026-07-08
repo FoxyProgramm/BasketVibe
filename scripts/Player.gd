@@ -55,10 +55,10 @@ func _ready():
 	sync.delta_interval = 0.05
 	add_child(sync)
 	
-	var charge_bar = $UI/ChargeBar
 	if charge_bar:
+		charge_bar.hide()
 		# Случайный цвет
-		var fill_color = Color(randf(), randf(), randf(), 1.0)
+		var fill_color = Color(randf()*0.5+0.5, randf()*0.5+0.5, randf()*0.5+0.5, 1.0)
 		# Более тёмный для фона
 		var bg_color = fill_color.darkened(0.8)
 		
@@ -82,7 +82,7 @@ func _ready():
 		sync_rotation_y = rotation.y
 		sync_head_rotation_x = head.rotation.x
 		sync_grip_rotation = weapon_grip.rotation
-		charge_bar.hide()
+		
 		
 		if default_environment:
 			camera.environment = default_environment # задаем инваермент в камере, чтобы у каждого игрока он мог быть свой
@@ -245,6 +245,7 @@ func apply_knockback(direction: Vector3, force: float):
 		knockback_velocity = direction.normalized() * force 
 		knockback_velocity.y = force * 0.25
 		_play_hit_effect(direction, force)
+@warning_ignore("unused_parameter")
 func _play_hit_effect(dir: Vector3, strength: float):
 	var side = 1.0 if randf() > 0.5 else -1.0  # Случайно влево или вправо
 	# Трясём камеру

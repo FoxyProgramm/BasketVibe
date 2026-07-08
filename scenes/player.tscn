@@ -22,13 +22,26 @@ billboard_keep_scale = true
 material = SubResource("StandardMaterial3D_cxr5p")
 size = Vector2(1.28, 1.28)
 
+[sub_resource type="Gradient" id="Gradient_qhqgy"]
+offsets = PackedFloat32Array(0, 0.15873016)
+colors = PackedColorArray(0.23921569, 0.23921569, 0.23921569, 1, 0.23753911, 0.23753914, 0.23753908, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_nlkna"]
+gradient = SubResource("Gradient_qhqgy")
+fill_from = Vector2(0.9017094, 0)
+fill_to = Vector2(0, 0.34188035)
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kne1u"]
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
+texture = SubResource("GradientTexture2D_nlkna")
+
+[sub_resource type="Gradient" id="Gradient_dqkch"]
+colors = PackedColorArray(0.37, 0.37, 0.37, 1, 0.82, 0.82, 0.82, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_tyxer"]
+gradient = SubResource("Gradient_dqkch")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tdg3f"]
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
+texture = SubResource("GradientTexture2D_tyxer")
 
 [sub_resource type="Theme" id="Theme_hri7i"]
 ProgressBar/styles/background = SubResource("StyleBoxTexture_kne1u")
@@ -106,10 +119,10 @@ grow_horizontal = 2
 grow_vertical = 0
 theme = SubResource("Theme_hri7i")
 max_value = 1.0
-value = 0.66
 show_percentage = false
 
 [node name="ColorRect" type="ColorRect" parent="UI/ChargeBar" unique_id=1640625340]
+visible = false
 z_index = -4
 layout_mode = 0
 offset_left = -2.0
