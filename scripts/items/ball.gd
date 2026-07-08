@@ -56,7 +56,7 @@ func is_authority() -> int:
 	return get_multiplayer_authority() == multiplayer.get_unique_id()
 
 func _physics_process(delta: float) -> void:
-	debug.set_text(0, str(get_multiplayer_authority()) + " | " + str(self.freeze) + " | " + str(self.sleeping))
+	#debug.set_text(0, str(get_multiplayer_authority()) + " | " + str(self.freeze) + " | " + str(self.sleeping))
 	if is_authority():
 		if held_by_id != 0:
 			var player = _get_player(held_by_id)

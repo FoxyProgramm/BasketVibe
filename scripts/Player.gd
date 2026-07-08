@@ -103,15 +103,15 @@ func _input(event):
 		head.rotate_x(-event.relative.y * 0.003)
 		head.rotation.x = clamp(head.rotation.x, -PI/2.5, PI/2.5)
 
-	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
-		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-			if is_charging:
-				is_charging = false
-				charge_bar.hide()
-		else:
-			if !console.visible:
-				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	#if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+		#if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+			#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			#if is_charging:
+				#is_charging = false
+				#charge_bar.hide()
+		#else:
+			#if !console.visible:
+				#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 	if event is InputEventKey and event.pressed and event.keycode == KEY_Q:
 		var held = get_held_object()
@@ -128,10 +128,10 @@ func _input(event):
 				held.rpc_id(held.get_multiplayer_authority(), "request_dribble")
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-			if !console.visible:
-				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-			return
+		#if event.pressed and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+			#if !console.visible:
+				#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			#return
 
 		var held = get_held_object()
 		
@@ -278,56 +278,63 @@ func _physics_process(delta):
 			var q_target = Quaternion.from_euler(sync_grip_rotation)
 			weapon_grip.rotation = q_current.slerp(q_target, 15.0 * delta).get_euler()
 
+@onready var chat_menu = get_tree().get_first_node_in_group("chat")
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if not is_multiplayer_authority(): return
-	var t = state.transform
-	t.basis = Basis.from_euler(Vector3(0, target_yaw, 0))
-	state.transform = t
+	var on_pause:bool = chat_menu.line_edit.visible
 	
-	if console.visible:
+	if !on_pause:
+		var t = state.transform
+		t.basis = Basis.from_euler(Vector3(0, target_yaw, 0))
+		state.transform = t
+		
+		if console.visible:
+			state.linear_velocity.x = 0
+			state.linear_velocity.z = 0
+			return 
+
+		var is_on_floor = ground_cast.is_colliding()
+
+		if Input.is_key_pressed(KEY_SPACE) and is_on_floor:
+			state.linear_velocity.y = JUMP_VELOCITY
+
+		var input_dir = Vector2.ZERO
+		if Input.is_key_pressed(KEY_W): input_dir.y -= 1
+		if Input.is_key_pressed(KEY_S): input_dir.y += 1
+		if Input.is_key_pressed(KEY_A): input_dir.x -= 1
+		if Input.is_key_pressed(KEY_D): input_dir.x += 1
+		input_dir = input_dir.normalized()
+
+		var direction = (t.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+		var current_y = state.linear_velocity.y
+
+		var current_speed = SPRINT_SPEED if Input.is_key_pressed(KEY_SHIFT) else WALK_SPEED
+
+		var target_x = 0.0
+		var target_z = 0.0
+
+		if direction:
+			target_x = direction.x * current_speed
+			target_z = direction.z * current_speed
+
+		state.linear_velocity.x = target_x + knockback_velocity.x
+		state.linear_velocity.z = target_z + knockback_velocity.z
+
+		if knockback_velocity.y > 0:
+			current_y = max(current_y, knockback_velocity.y)
+			knockback_velocity.y = 0
+
+		state.linear_velocity.y = current_y
+
+		# Трение для отталкивания
+		# Вместо раздельного трения:
+		var knockback_speed = knockback_velocity.length()
+		if knockback_speed > 0:
+			knockback_speed = move_toward(knockback_speed, 0, 20.0 * state.step)
+			knockback_velocity = knockback_velocity.normalized() * knockback_speed
+	else :
 		state.linear_velocity.x = 0
 		state.linear_velocity.z = 0
-		return 
-
-	var is_on_floor = ground_cast.is_colliding()
-
-	if Input.is_key_pressed(KEY_SPACE) and is_on_floor:
-		state.linear_velocity.y = JUMP_VELOCITY
-
-	var input_dir = Vector2.ZERO
-	if Input.is_key_pressed(KEY_W): input_dir.y -= 1
-	if Input.is_key_pressed(KEY_S): input_dir.y += 1
-	if Input.is_key_pressed(KEY_A): input_dir.x -= 1
-	if Input.is_key_pressed(KEY_D): input_dir.x += 1
-	input_dir = input_dir.normalized()
-
-	var direction = (t.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	var current_y = state.linear_velocity.y
-
-	var current_speed = SPRINT_SPEED if Input.is_key_pressed(KEY_SHIFT) else WALK_SPEED
-
-	var target_x = 0.0
-	var target_z = 0.0
-
-	if direction:
-		target_x = direction.x * current_speed
-		target_z = direction.z * current_speed
-
-	state.linear_velocity.x = target_x + knockback_velocity.x
-	state.linear_velocity.z = target_z + knockback_velocity.z
-
-	if knockback_velocity.y > 0:
-		current_y = max(current_y, knockback_velocity.y)
-		knockback_velocity.y = 0
-
-	state.linear_velocity.y = current_y
-
-	# Трение для отталкивания
-	# Вместо раздельного трения:
-	var knockback_speed = knockback_velocity.length()
-	if knockback_speed > 0:
-		knockback_speed = move_toward(knockback_speed, 0, 20.0 * state.step)
-		knockback_velocity = knockback_velocity.normalized() * knockback_speed
 
 func interact():
 	pass
