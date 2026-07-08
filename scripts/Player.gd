@@ -83,6 +83,9 @@ func _ready():
 		sync_head_rotation_x = head.rotation.x
 		sync_grip_rotation = weapon_grip.rotation
 		
+		var main = get_tree().current_scene
+		if main.has_method("get_local_skin"):
+			apply_skin(main.get_local_skin())
 		
 		if default_environment:
 			camera.environment = default_environment # задаем инваермент в камере, чтобы у каждого игрока он мог быть свой

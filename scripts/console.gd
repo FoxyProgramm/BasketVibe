@@ -112,14 +112,6 @@ func _add_song(path: String):
 		radio.rpc("_receive_song_data", data)
 				
 
-#func _on_line_edit_text_submitted(new_text: String) -> void:
-	#var regex = RegEx.create_from_string("\\w+")
-	#var results : Array[String] = []
-	#for result in regex.search_all(new_text):
-		#results.append(result.get_string())
-	#parse(results)
-	#self.hide()
-	#toggle_mouse()
 func _on_line_edit_text_submitted(new_text: String) -> void:
 	if new_text.is_empty(): return
 	

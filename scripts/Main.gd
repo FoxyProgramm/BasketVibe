@@ -186,3 +186,6 @@ func _on_menu_character_selected(index: int) -> void:
 	var character: Characters.Character = Characters.LIST.get(index)
 	if character:
 		$UI/MainMenu/Control/TextureRect.texture = character.head_texture
+
+func get_local_skin() -> int:
+	return local_info.skin
