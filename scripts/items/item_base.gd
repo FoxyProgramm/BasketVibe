@@ -3,7 +3,8 @@ extends RigidBody3D
 
 #region Abstract functions
 @abstract func is_pickable() -> bool
-
+@abstract func is_throwable() -> bool
+@abstract func is_swingable() -> bool
 #endregion
 
 
@@ -18,5 +19,9 @@ func transfer_authority(new_id:int, velocity: Vector3 = Vector3.ZERO) -> void:
 		self.freeze = true
 		self.sleeping = true
 	self.set_multiplayer_authority(new_id)
+
+@rpc("any_peer", "call_local", "reliable")
+func apply_item_impulse(impulse: Vector3) -> void:
+	apply_central_impulse(impulse)
 
 #endregion

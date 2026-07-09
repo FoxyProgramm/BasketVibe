@@ -300,6 +300,14 @@ func _physics_process(delta):
 			var q_target = Quaternion.from_euler(sync_grip_rotation)
 			weapon_grip.rotation = q_current.slerp(q_target, 15.0 * delta).get_euler()
 
+func get_items_in_sight() -> Array[ItemBase]:
+	var result : Array[ItemBase] = []
+	var bodies: Array[Node3D]= $Head/Area3D.get_overlapping_bodies()
+	for body in bodies:
+		if body is ItemBase:
+			result.append(body)
+	return result
+
 @onready var chat_menu = get_tree().get_first_node_in_group("chat")
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if not is_multiplayer_authority(): return

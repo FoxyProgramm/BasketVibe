@@ -11,6 +11,12 @@ var is_slowing: bool = false
 var sync_position:Vector3 = Vector3.ZERO
 var sync_rotation:Vector3 = Vector3.ZERO
 
+func is_swingable() -> bool:
+	return true
+
+func is_throwable() -> bool:
+	return false
+
 func is_pickable() -> bool:
 	return false
 
@@ -71,9 +77,8 @@ func _start_slow_and_delete(body: RigidBody3D):
 		body.queue_free()
 
 @rpc("any_peer", "call_local", "reliable")
-func apply_trash_impulse(impulse: Vector3):
-	apply_central_impulse(impulse / 2)
-	
+func apply_item_impulse(impulse: Vector3) -> void:
+	super(impulse/2)
 	# Вращение перпендикулярно направлению удара
 	var hit_dir = impulse.normalized()
 	var strength = impulse.length() * -0.5

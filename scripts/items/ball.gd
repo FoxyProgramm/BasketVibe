@@ -14,6 +14,12 @@ var is_dribbling: bool = false
 		held_by_id = val
 		_update_ball_state()
 
+func is_swingable() -> bool:
+	return true
+
+func is_throwable() -> bool:
+	return true
+
 func is_pickable() -> bool:
 	return true
 

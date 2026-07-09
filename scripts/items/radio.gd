@@ -25,7 +25,13 @@ var original_pitch: float = 1.0
 
 @onready var sprite_mat = $Sprite3D
 
-func is_pickable() -> bool :
+func is_swingable() -> bool:
+	return true
+
+func is_throwable() -> bool:
+	return true
+
+func is_pickable() -> bool:
 	return true
 
 func _ready() -> void:
@@ -192,9 +198,14 @@ func _get_player(id: int) -> Node3D:
 			return p
 	return null
 
+#@rpc("any_peer", "call_local", "reliable")
+#func apply_radio_impulse(impulse: Vector3):
+	#apply_central_impulse(impulse)
+	#_hit_pitch_effect()
+
 @rpc("any_peer", "call_local", "reliable")
-func apply_radio_impulse(impulse: Vector3):
-	apply_central_impulse(impulse)
+func apply_item_impulse(impulse:Vector3) -> void:
+	super(impulse)
 	_hit_pitch_effect()
 
 func _hit_pitch_effect():
