@@ -303,7 +303,7 @@ func _physics_process(delta):
 @onready var chat_menu = get_tree().get_first_node_in_group("chat")
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if not is_multiplayer_authority(): return
-	var on_pause:bool = chat_menu.line_edit.visible
+	var on_pause:bool = chat_menu.line_edit.editable
 	
 	if !on_pause:
 		var t = state.transform

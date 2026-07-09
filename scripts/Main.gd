@@ -184,7 +184,6 @@ func _spawn_seed():
 	b.name = "Seed"
 	b.position = Vector3(0, 3, 0)
 	level_items.add_child(b, true)
-	print("1")
 
 func _on_menu_character_selected(index: int) -> void:
 	var character: Characters.Character = Characters.LIST.get(index)
