@@ -7,11 +7,6 @@ var hold_rotation := Vector3(0, 0, 0)
 @export var sync_position: Vector3
 @export var sync_rotation: Vector3
 
-@export var held_by_id: int = 0:
-	set(val):
-		held_by_id = val
-		_update_bat_state()
-
 @export var songs: Array[AudioStream] = []
 @export var fade_duration: float = 1.8
 @export var volume_db: float = -15.0
@@ -100,19 +95,6 @@ func _update_radio_state(state: bool, song_index: int):
 		fade_tween.tween_property(audio_player, "volume_db", volume_db, fade_duration).set_ease(Tween.EASE_OUT)
 	else:
 		fade_tween.tween_property(audio_player, "volume_db", -200.0, fade_duration).set_ease(Tween.EASE_IN)
-
-func _update_bat_state():
-	if held_by_id != 0:
-		if not freeze: freeze = true
-		collision_layer = 0
-		collision_mask = 0
-	else:
-		if not multiplayer.is_server():
-			freeze = true
-		else:
-			if freeze: freeze = false
-		collision_layer = 3
-		collision_mask = 3
 
 func _process(delta: float):
 	var cam = get_viewport().get_camera_3d()

@@ -7,11 +7,6 @@ var hold_rotation := Vector3(0, 0, 0)
 @export var sync_position: Vector3
 @export var sync_rotation: Vector3
 
-@export var held_by_id: int = 0:
-	set(val):
-		held_by_id = val
-		_update_bat_state()
-
 @onready var visuals = $Visuals
 
 @onready var sprite_mat = $Visuals/Sprite3D.material_override
@@ -43,20 +38,6 @@ func _ready() -> void:
 
 	if not multiplayer.is_server():
 		freeze = true
-
-func _update_bat_state():
-	if held_by_id != 0:
-		if not freeze: freeze = true
-		collision_layer = 0
-		collision_mask = 0
-	else:
-		if not is_authority():
-			freeze = true
-		else:
-			freeze = false
-		collision_layer = 3
-		collision_mask = 3
-
 
 func _process(delta: float):
 	var cam = get_viewport().get_camera_3d()
