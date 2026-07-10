@@ -33,7 +33,8 @@ var names : Array[String] = [
 	"Целовашка",
 	"Смута",
 	"Переселенец",
-	"Йо майо"
+	"Йо майо",
+	"Погадист"
 ]
 
 const PORT = 7777
@@ -120,6 +121,9 @@ func add_player(id:int, info:PackedByteArray) -> void:
 func _on_peer_connected(id) -> void:
 	if multiplayer.is_server():
 		_spawn_player(id)
+		var spike_forest = get_node_or_null("level_thorn")
+		if spike_forest:
+			spike_forest.rpc_id(id, "set_seed", spike_forest.seed_value)
 	rpc_id(id, "add_player", multiplayer.get_unique_id(), local_info.pack())
 	
 func _on_peer_disconnected(id) -> void:

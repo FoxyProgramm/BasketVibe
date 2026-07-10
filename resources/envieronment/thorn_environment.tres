@@ -1,0 +1,26 @@
+[gd_resource type="Environment" format=3 uid="uid://dj2c4aag0dg1m"]
+
+[ext_resource type="Texture2D" uid="uid://ql2eeec2kidr" path="res://textures/imgonline-com-ua-Texture-seamless-6VKFGkkwqlGR.jpg" id="1_1q0pp"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_b1ffc"]
+panorama = ExtResource("1_1q0pp")
+
+[sub_resource type="Sky" id="Sky_wngyc"]
+sky_material = SubResource("PanoramaSkyMaterial_b1ffc")
+
+[resource]
+background_mode = 1
+background_energy_multiplier = 0.6
+sky = SubResource("Sky_wngyc")
+reflected_light_source = 2
+tonemap_mode = 2
+tonemap_exposure = 0.61
+tonemap_white = 16.0
+fog_enabled = true
+fog_light_color = Color(0.3395, 0.34440002, 0.35, 1)
+fog_density = 0.1072
+fog_sky_affect = 0.8
+adjustment_enabled = true
+adjustment_brightness = 0.6
+adjustment_contrast = 1.25
+adjustment_saturation = 0.55

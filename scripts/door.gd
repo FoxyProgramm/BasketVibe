@@ -9,6 +9,7 @@ extends Area3D
 	
 @onready var sprite = $AnimatedSprite3D
 
+
 var player_nearby: Node3D = null
 
 func _ready():

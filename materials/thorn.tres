@@ -1,0 +1,11 @@
+[gd_resource type="CylinderMesh" format=3 uid="uid://kt5mviupujoe"]
+
+[ext_resource type="Material" uid="uid://c0ge5mtoit5n7" path="res://materials/thorn_material.tres" id="1_tnkrj"]
+
+[resource]
+material = ExtResource("1_tnkrj")
+top_radius = 0.0
+bottom_radius = 0.7
+height = 24.0
+radial_segments = 5
+rings = 0

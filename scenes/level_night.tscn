@@ -51,14 +51,15 @@ size = Vector2(26.615, 2)
 [sub_resource type="BoxShape3D" id="BoxShape3D_jd8yr"]
 size = Vector3(80, 37.163116, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b1ffc"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lti14"]
 shading_mode = 0
-disable_fog = true
 albedo_texture = ExtResource("7_oywpf")
 texture_filter = 0
+distance_fade_min_distance = 100.0
+distance_fade_max_distance = 99.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_wngyc"]
-material = SubResource("StandardMaterial3D_b1ffc")
+material = SubResource("StandardMaterial3D_lti14")
 size = Vector2(120, 120)
 
 [node name="Level_night" type="Node3D" unique_id=284635577]
@@ -149,7 +150,7 @@ texture = ExtResource("8_aqdls")
 environment = ExtResource("5_pjh0e")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=922109678]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.755981, 13.048155, 11.780441)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.382614, 13.048155, 11.780441)
 mesh = SubResource("PlaneMesh_wngyc")
 
 [node name="flowers" type="Node3D" parent="." unique_id=381627945]
