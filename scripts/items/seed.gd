@@ -79,13 +79,19 @@ func _plant(pos: Vector3):
 	var mat_path = flower_material.resource_path if flower_material else ""
 	pos.y -= 0.34
 	get_tree().current_scene.rpc("spawn_flowers_at", pos, flower_count, cluster_radius, mesh_path, mat_path)
+	await get_tree().create_timer(0.5).timeout
+	rpc("_remove_seed")
+
+@rpc("any_peer", "call_local", "reliable")
+func _remove_seed():
+	queue_free()
 
 @rpc("any_peer", "call_local", "reliable")
 func _hide_seed():
 	visible = false
 	freeze = true
-	var tween = create_tween()
-	tween.tween_callback(queue_free).set_delay(0.5)
+	set_process(false)
+	set_physics_process(false)
 
 func _get_player(id: int) -> Node3D:
 	for p in get_tree().get_nodes_in_group("player"):
