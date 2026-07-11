@@ -32,37 +32,42 @@ func _process(delta):
 func _check_teleport():
 	var players = get_tree().get_nodes_in_group("player")
 	if players.is_empty(): return
-	var player = players[0]
 	
-	if not player.is_multiplayer_authority(): return
+	for player in players:
+		if not player.is_multiplayer_authority(): continue
+		
+		# Проверяем что игрок примерно на высоте леса
+		if abs(player.global_position.y - global_position.y) > 20.0:
+			continue
+		
+		var half = area_size / 2.0
+		var pos = player.global_position
+		var new_pos = pos
+		var teleported = false
+		
+		if pos.x > half - teleport_margin:
+			new_pos.x = -half + teleport_margin
+			teleported = true
+		elif pos.x < -half + teleport_margin:
+			new_pos.x = half - teleport_margin
+			teleported = true
+		
+		if pos.z > half - teleport_margin:
+			new_pos.z = -half + teleport_margin
+			teleported = true
+		elif pos.z < -half + teleport_margin:
+			new_pos.z = half - teleport_margin
+			teleported = true
+		
+		if teleported:
+			_play_pacman_teleport()
+			if multiplayer.is_server():
+				player.global_position = new_pos
+				player.sync_position = new_pos
+				player.rpc_id(player.name.to_int(), "_client_teleport", new_pos, "")
+			else:
+				rpc_id(1, "_teleport_player", player.get_path(), new_pos)
 	
-	var half = area_size / 2.0
-	var pos = player.global_position
-	var new_pos = pos
-	var teleported = false
-	
-	if pos.x > half - teleport_margin:
-		new_pos.x = -half + teleport_margin
-		teleported = true
-	elif pos.x < -half + teleport_margin:
-		new_pos.x = half - teleport_margin
-		teleported = true
-	
-	if pos.z > half - teleport_margin:
-		new_pos.z = -half + teleport_margin
-		teleported = true
-	elif pos.z < -half + teleport_margin:
-		new_pos.z = half - teleport_margin
-		teleported = true
-	
-	if teleported:
-		_play_pacman_teleport()
-		if multiplayer.is_server():
-			player.global_position = new_pos
-			player.sync_position = new_pos
-			player.rpc_id(player.name.to_int(), "_client_teleport", new_pos, "")
-		else:
-			rpc_id(1, "_teleport_player", player.get_path(), new_pos)
 	_push_items_from_edge()
 
 func _push_items_from_edge():
@@ -70,9 +75,15 @@ func _push_items_from_edge():
 	
 	var half = area_size / 2.0
 	var margin = teleport_margin * 1.05
+	var location_y = global_position.y  # 260
+	var height_threshold = 20.0  # Диапазон высоты леса
 	
 	for group in Items.ITEM_DICT.keys():
 		for item in get_tree().get_nodes_in_group(group):
+			# Проверяем что предмет примерно на высоте леса
+			if abs(item.global_position.y - location_y) > height_threshold:
+				continue
+			
 			var ipos = item.global_position
 			var pushed = false
 			
@@ -94,7 +105,6 @@ func _push_items_from_edge():
 				item.global_position = ipos
 				if item is RigidBody3D:
 					item.linear_velocity = Vector3.ZERO
-
 @rpc("any_peer", "reliable")
 func _teleport_player(player_path: NodePath, new_pos: Vector3):
 	if not multiplayer.is_server(): return
