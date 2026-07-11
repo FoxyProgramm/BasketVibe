@@ -11,7 +11,7 @@
 size = Vector3(164, 1, 164)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pmotw"]
-size = Vector3(164, 1, 164)
+size = Vector3(170, 1, 170)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_it10f"]
 render_priority = 0
@@ -24,6 +24,9 @@ shader_parameter/uv1_scale_far = Vector3(0.01, 0.03, 0.01)
 shader_parameter/min_distance = 10.0
 shader_parameter/max_distance = 24.425
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_evr4l"]
+size = Vector3(170, 60, 1)
+
 [node name="level_thorn" type="Node3D" unique_id=66430996]
 script = ExtResource("1_evr4l")
 spike_mesh = ExtResource("2_8dlu5")
@@ -33,6 +36,7 @@ spike_count = 1200
 min_radius = 0.8
 max_radius = 1.2
 max_depth = -10.0
+teleport_margin = 20.0
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1208359490 groups=["floor"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
@@ -45,6 +49,22 @@ shape = SubResource("BoxShape3D_e64ar")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=462744457]
 mesh = SubResource("BoxMesh_pmotw")
 surface_material_override/0 = SubResource("ShaderMaterial_it10f")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Floor" unique_id=1997577864]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 30.231888, 82.49799)
+shape = SubResource("BoxShape3D_evr4l")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Floor" unique_id=331222835]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -82.11977, 30.23233, 0)
+shape = SubResource("BoxShape3D_evr4l")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Floor" unique_id=1233275904]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.279274, 30.231888, -82.267624)
+shape = SubResource("BoxShape3D_evr4l")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="Floor" unique_id=685993706]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 82.68506, 30.23233, -0.3416729)
+shape = SubResource("BoxShape3D_evr4l")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=834135537]
 environment = ExtResource("3_axrpt")
