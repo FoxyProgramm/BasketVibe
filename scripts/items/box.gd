@@ -92,16 +92,13 @@ func destroy():
 
 @rpc("call_local", "reliable")
 func _do_destroy():
-	visible = false
 	collision_layer = 0
 	collision_mask = 0
 	freeze = true
 	held_by_id = 0
 	var tween = create_tween()
-	tween.tween_property(self, "scale", Vector3.ZERO, 0.3).set_ease(Tween.EASE_IN)
-	if multiplayer.is_server():
-		await get_tree().create_timer(2.0).timeout
-		queue_free()
+	tween.tween_property(self, "scale", Vector3.ZERO, 0.1).set_ease(Tween.EASE_IN)
+	tween.tween_callback(_remove)
 
 func _remove():
 	if multiplayer.is_server():
