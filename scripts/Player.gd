@@ -328,7 +328,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 
 		var is_on_floor = ground_cast.is_colliding()
 
-		if Input.is_key_pressed(KEY_SPACE):# and is_on_floor:
+		if Input.is_key_pressed(KEY_SPACE) and is_on_floor:
 			state.linear_velocity.y = JUMP_VELOCITY
 
 		var input_dir = Vector2.ZERO
