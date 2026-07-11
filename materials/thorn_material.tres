@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c0ge5mtoit5n7"]
+
+[ext_resource type="Texture2D" uid="uid://d0qmjvwrvjd3n" path="res://textures/spikegrass.jpg" id="1_pesuf"]
+
+[resource]
+albedo_color = Color(0.38, 0.38, 0.38, 1)
+albedo_texture = ExtResource("1_pesuf")
+uv1_scale = Vector3(0.2, 1.5, 0.2)
+uv1_world_triplanar = true
+texture_filter = 0
+distance_fade_mode = 2
+distance_fade_min_distance = 80.0
+distance_fade_max_distance = 40.0

@@ -1,19 +1,19 @@
 [gd_resource type="Environment" format=3 uid="uid://c0fxnqlt3ov8a"]
 
-[ext_resource type="Texture2D" uid="uid://sknax0v6lwhp" path="res://textures/skynight.png" id="1_bb4g1"]
+[ext_resource type="Texture2D" uid="uid://sknax0v6lwhp" path="res://textures/skynight.png" id="1_wkgv6"]
 
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_b1ffc"]
-panorama = ExtResource("1_bb4g1")
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_c7ca3"]
+panorama = ExtResource("1_wkgv6")
 energy_multiplier = 0.2
 
-[sub_resource type="Sky" id="Sky_wngyc"]
-sky_material = SubResource("PanoramaSkyMaterial_b1ffc")
+[sub_resource type="Sky" id="Sky_o0yep"]
+sky_material = SubResource("PanoramaSkyMaterial_c7ca3")
 
 [resource]
 background_mode = 1
 background_color = Color(0.2572033, 0.2409, 0.73, 1)
 background_energy_multiplier = 5.0
-sky = SubResource("Sky_wngyc")
+sky = SubResource("Sky_o0yep")
 reflected_light_source = 2
 tonemap_mode = 3
 fog_enabled = true

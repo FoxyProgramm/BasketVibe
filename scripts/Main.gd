@@ -33,7 +33,8 @@ var names : Array[String] = [
 	"Целовашка",
 	"Смута",
 	"Переселенец",
-	"Йо майо"
+	"Йо майо",
+	"Погадист"
 ]
 
 const PORT = 7777
@@ -58,6 +59,7 @@ func _ready():
 	$PlayerSpawner.add_spawnable_scene("res://scenes/player.tscn")
 	$LevelSpawner.add_spawnable_scene("res://scenes/trash.tscn")
 	$LevelSpawner.add_spawnable_scene("res://scenes/items/seed.tscn")
+	$LevelSpawner.add_spawnable_scene("res://scenes/items/box.tscn")
 
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
@@ -89,6 +91,7 @@ func _on_host_pressed():
 	_spawn_radio()
 	_spawn_trash()
 	_spawn_seed()
+	_spawn_box()
 	
 
 func _on_join_pressed():
@@ -120,6 +123,9 @@ func add_player(id:int, info:PackedByteArray) -> void:
 func _on_peer_connected(id) -> void:
 	if multiplayer.is_server():
 		_spawn_player(id)
+		var spike_forest = get_node_or_null("level_thorn")
+		if spike_forest:
+			spike_forest.rpc_id(id, "set_seed", spike_forest.seed_value)
 	rpc_id(id, "add_player", multiplayer.get_unique_id(), local_info.pack())
 	
 func _on_peer_disconnected(id) -> void:
@@ -184,7 +190,12 @@ func _spawn_seed():
 	b.name = "Seed"
 	b.position = Vector3(0, 3, 0)
 	level_items.add_child(b, true)
-	print("1")
+	
+func _spawn_box():
+	var b = Items.BOX.instantiate()
+	b.name = "box"
+	b.position = Vector3(0, 3, 0)
+	level_items.add_child(b, true)
 
 func _on_menu_character_selected(index: int) -> void:
 	var character: Characters.Character = Characters.LIST.get(index)

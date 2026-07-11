@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://bpe5ufguaca7w"]
+
+[ext_resource type="Script" uid="uid://cjx1dt5p7sfv4" path="res://scripts/level_thorn.gd" id="1_evr4l"]
+[ext_resource type="Shader" uid="uid://cbgaoaf10x6dq" path="res://resources/shaders/DistanceUV.gdshader" id="1_w5c5q"]
+[ext_resource type="CylinderMesh" uid="uid://kt5mviupujoe" path="res://materials/thorn.tres" id="2_8dlu5"]
+[ext_resource type="Texture2D" uid="uid://d0qmjvwrvjd3n" path="res://textures/spikegrass.jpg" id="2_axrpt"]
+[ext_resource type="Environment" uid="uid://dj2c4aag0dg1m" path="res://resources/envieronment/thorn_environment.tres" id="3_axrpt"]
+[ext_resource type="Material" uid="uid://c0ge5mtoit5n7" path="res://materials/thorn_material.tres" id="3_e64ar"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_e64ar"]
+size = Vector3(164, 1, 164)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pmotw"]
+size = Vector3(170, 1, 170)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_it10f"]
+render_priority = 0
+shader = ExtResource("1_w5c5q")
+shader_parameter/albedo = Color(0.38, 0.38, 0.38, 1)
+shader_parameter/texture_albedo = ExtResource("2_axrpt")
+shader_parameter/triplanar_sharpness = 28.49
+shader_parameter/uv1_scale_close = Vector3(0.025, 0.05, 0.02)
+shader_parameter/uv1_scale_far = Vector3(0.01, 0.03, 0.01)
+shader_parameter/min_distance = 10.0
+shader_parameter/max_distance = 24.425
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_evr4l"]
+size = Vector3(170, 60, 1)
+
+[node name="level_thorn" type="Node3D" unique_id=66430996]
+script = ExtResource("1_evr4l")
+spike_mesh = ExtResource("2_8dlu5")
+spike_material = ExtResource("3_e64ar")
+area_size = 160.0
+spike_count = 1200
+min_radius = 0.8
+max_radius = 1.2
+max_depth = -10.0
+teleport_margin = 20.0
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=1208359490 groups=["floor"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1881384750]
+shape = SubResource("BoxShape3D_e64ar")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=462744457]
+mesh = SubResource("BoxMesh_pmotw")
+surface_material_override/0 = SubResource("ShaderMaterial_it10f")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Floor" unique_id=1997577864]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 30.231888, 82.49799)
+shape = SubResource("BoxShape3D_evr4l")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Floor" unique_id=331222835]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -82.11977, 30.23233, 0)
+shape = SubResource("BoxShape3D_evr4l")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Floor" unique_id=1233275904]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.279274, 30.231888, -82.267624)
+shape = SubResource("BoxShape3D_evr4l")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="Floor" unique_id=685993706]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 82.68506, 30.23233, -0.3416729)
+shape = SubResource("BoxShape3D_evr4l")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=834135537]
+environment = ExtResource("3_axrpt")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1647583256]
+transform = Transform3D(0.9903868, -0.1383253, 0, 0.1383253, 0.9903868, 0, 0, 0, 1, 0, 0, 0)
+visible = false
+mesh = ExtResource("2_8dlu5")

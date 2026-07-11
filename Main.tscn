@@ -15,8 +15,13 @@
 [ext_resource type="PackedScene" uid="uid://bnbat2jdsieje" path="res://scenes/door.tscn" id="11_20pc6"]
 [ext_resource type="Texture2D" uid="uid://ihggso1qfsli" path="res://textures/persones/papich_head.png" id="11_fpfj3"]
 [ext_resource type="Shader" uid="uid://0kdctd04l4xb" path="res://consolebackground.gdshader" id="11_sc1dx"]
+[ext_resource type="Texture2D" uid="uid://gwqfni6wvscw" path="res://textures/chat.png" id="12_5tuhn"]
 [ext_resource type="PackedScene" uid="uid://datr5ht60ko4u" path="res://scenes/level_night.tscn" id="12_5vvyt"]
+[ext_resource type="Texture2D" uid="uid://dfivmvuccxrn" path="res://textures/lineedit.png" id="12_kjvhd"]
+[ext_resource type="FontFile" uid="uid://doebh08hvvxpu" path="res://VPCH2.otf" id="13_2gh4u"]
 [ext_resource type="Environment" uid="uid://c0fxnqlt3ov8a" path="res://resources/envieronment/night_environment.tres" id="13_j4qnp"]
+[ext_resource type="PackedScene" uid="uid://bpe5ufguaca7w" path="res://scenes/level_thorn.tscn" id="19_3b0ty"]
+[ext_resource type="Environment" uid="uid://dj2c4aag0dg1m" path="res://resources/envieronment/thorn_environment.tres" id="22_bg4s2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
 size = Vector3(82, 1, 82)
@@ -88,17 +93,52 @@ LineEdit/styles/focus = SubResource("StyleBoxFlat_kjvhd")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_kjvhd")
 LineEdit/styles/read_only = SubResource("StyleBoxFlat_kjvhd")
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2gh4u"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_devvj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3b0ty"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bg4s2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hhcpw"]
+
+[sub_resource type="Theme" id="Theme_5tuhn"]
+default_font = ExtResource("13_2gh4u")
+default_font_size = 18
+RichTextLabel/colors/font_shadow_color = Color(0, 0, 0, 0.32156864)
+RichTextLabel/constants/shadow_offset_x = 2
+RichTextLabel/constants/shadow_offset_y = 2
+VScrollBar/styles/grabber = SubResource("StyleBoxEmpty_2gh4u")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxEmpty_devvj")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxEmpty_3b0ty")
+VScrollBar/styles/scroll = SubResource("StyleBoxEmpty_bg4s2")
+VScrollBar/styles/scroll_focus = SubResource("StyleBoxEmpty_hhcpw")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xrxkg"]
+texture = ExtResource("12_kjvhd")
+texture_margin_left = 6.0
+texture_margin_top = 2.0
+texture_margin_right = 6.0
+texture_margin_bottom = 4.0
+expand_margin_top = 4.0
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y8mo7"]
 shader = ExtResource("11_sc1dx")
 shader_parameter/bg_color = Color(0, 0, 0, 0.7)
 shader_parameter/scanline_amount = 0.3
 
-[node name="Main" type="Node3D" unique_id=1667223710]
+[node name="Node3D" type="Node3D" unique_id=1667223710]
 script = ExtResource("1_main")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1156263545]
-transform = Transform3D(0.8475297, -0.26537424, 0.4596411, 2.9228602e-09, 0.8660252, 0.50000036, -0.530748, -0.42376515, 0.733982, 0, 10, 0)
+[node name="sun" type="DirectionalLight3D" parent="." unique_id=995574467 groups=["sun_night"]]
+transform = Transform3D(0.7812037, -0.62267303, 0.044711605, 0.44453466, 0.60513633, 0.6604536, -0.43830323, -0.49607298, 0.7495344, 0, 10, 0)
+light_specular = 0.0
 shadow_enabled = true
+shadow_bias = 0.158
+shadow_normal_bias = 1.196
+directional_shadow_split_2 = 0.15
+directional_shadow_max_distance = 165.5
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=130271651]
 environment = ExtResource("2_c2ibq")
@@ -166,8 +206,56 @@ texture = ExtResource("6_3dxm6")
 
 [node name="Items" type="Node3D" parent="Level" unique_id=1776252388]
 
+[node name="button" parent="Level" unique_id=260329884 instance=ExtResource("7_lgr22")]
+transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, -2.3415346, 0.5, -37.943123)
+
+[node name="button2" parent="Level" unique_id=1891328852 instance=ExtResource("7_lgr22")]
+transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 9.809639, 0.5, -37.943123)
+item_type = "bat"
+
+[node name="button3" parent="Level" unique_id=687759358 instance=ExtResource("7_lgr22")]
+transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 13.196983, 0.5, -37.943123)
+item_type = "radio"
+
+[node name="button4" parent="Level" unique_id=1711849242 instance=ExtResource("7_lgr22")]
+transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, -7.860634, 0.5, -37.943123)
+item_type = "seed"
+
+[node name="doors" type="Node3D" parent="Level" unique_id=1431828175]
+
+[node name="Door" parent="Level/doors" unique_id=1708420116 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.017632, 1.2887583, -21.770157)
+target_door = NodePath("../Door2")
+
+[node name="Door2" parent="Level/doors" unique_id=1483473484 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.814034, 1.2887573, 18.980145)
+target_door = NodePath("../Door")
+variation = 1
+
+[node name="Door to night" parent="Level/doors" unique_id=355073705 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6532516, 1.2887573, 38.388855)
+target_door = NodePath("../Door from night")
+variation = 1
+location_environment = ExtResource("13_j4qnp")
+
+[node name="Door from night" parent="Level/doors" unique_id=1752515876 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.629873, 1.6428883, 192.0991)
+target_door = NodePath("../Door to night")
+location_environment = ExtResource("2_c2ibq")
+
+[node name="Door to thorn" parent="Level/doors" unique_id=1623610604 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.49802, 1.2887573, 21.923374)
+target_door = NodePath("../Door from thorn")
+variation = 2
+location_environment = ExtResource("22_bg4s2")
+
+[node name="Door from thorn" parent="Level/doors" unique_id=1403046294 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 261.321, 0)
+target_door = NodePath("../Door to thorn")
+location_environment = ExtResource("2_c2ibq")
+
 [node name="LevelSpawner" type="MultiplayerSpawner" parent="." unique_id=967452454]
-_spawnable_scenes = PackedStringArray("uid://c31asbqq05otd", "uid://qqr6cb4ile2j", "uid://csccor8yoh8hg", "uid://bh1mlpwcd7dot")
+_spawnable_scenes = PackedStringArray("uid://c31asbqq05otd", "uid://qqr6cb4ile2j", "uid://csccor8yoh8hg", "uid://bh1mlpwcd7dot", "uid://w86wd0514jmi")
 spawn_path = NodePath("../Level/Items")
 
 [node name="Players" type="Node3D" parent="." unique_id=562868757 groups=["players"]]
@@ -283,14 +371,14 @@ modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ChatHandler" type="ColorRect" parent="UI/Chat/VBoxContainer/HBoxContainer" unique_id=1579313160]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-color = Color(0, 0, 0, 0.5254902)
+[node name="Sprite2D" type="Sprite2D" parent="UI/Chat/VBoxContainer/HBoxContainer" unique_id=781192596]
+texture_filter = 1
+position = Vector2(-2.000002, -23.000002)
+scale = Vector2(1.6, 1.6)
+texture = ExtResource("12_5tuhn")
+offset = Vector2(149.65, 89.775)
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/Chat/VBoxContainer/HBoxContainer/ChatHandler" unique_id=1950225681]
-layout_mode = 1
+[node name="MarginContainer" type="MarginContainer" parent="UI/Chat/VBoxContainer/HBoxContainer/Sprite2D" unique_id=1950225681]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -301,17 +389,27 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="RichTextLabel" type="RichTextLabel" parent="UI/Chat/VBoxContainer/HBoxContainer/ChatHandler/MarginContainer" unique_id=273748983]
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/Chat/VBoxContainer/HBoxContainer/Sprite2D/MarginContainer" unique_id=273748983]
+oversampling_with_scale = 1
+texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
+theme = SubResource("Theme_5tuhn")
+vertical_alignment = 2
 
 [node name="Control" type="Control" parent="UI/Chat/VBoxContainer/HBoxContainer" unique_id=1297597296]
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="LineEdit" type="LineEdit" parent="UI/Chat/VBoxContainer" unique_id=1168375697]
-visible = false
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_xrxkg")
+theme_override_styles/read_only = SubResource("StyleBoxTexture_xrxkg")
+theme_override_styles/focus = SubResource("StyleBoxTexture_xrxkg")
+text = "fffffff"
+editable = false
 
 [node name="ChatDissapear" type="Timer" parent="UI/Chat" unique_id=139402333]
 process_callback = 0
@@ -408,7 +506,7 @@ text = "7777"
 placeholder_text = "Enter Port"
 
 [node name="background" type="ColorRect" parent="UI" unique_id=484339905 groups=["background"]]
-z_index = -99
+z_index = -999
 material = SubResource("ShaderMaterial_y8mo7")
 anchors_preset = 15
 anchor_right = 1.0
@@ -417,45 +515,11 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="button" parent="." unique_id=260329884 instance=ExtResource("7_lgr22")]
-transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, -2.3415346, 0.5, -37.943123)
-
-[node name="button2" parent="." unique_id=1891328852 instance=ExtResource("7_lgr22")]
-transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 9.809639, 0.5, -37.943123)
-item_type = "bat"
-
-[node name="button3" parent="." unique_id=687759358 instance=ExtResource("7_lgr22")]
-transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 13.196983, 0.5, -37.943123)
-item_type = "radio"
-
-[node name="button4" parent="." unique_id=1711849242 instance=ExtResource("7_lgr22")]
-transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, -7.860634, 0.5, -37.943123)
-item_type = "seed"
-
 [node name="Level_night" parent="." unique_id=284635577 instance=ExtResource("12_5vvyt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.84770393, 227.78882)
 
-[node name="doors" type="Node3D" parent="." unique_id=1431828175]
-
-[node name="Door" parent="doors" unique_id=1708420116 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.017632, 1.2887583, -21.770157)
-target_door = NodePath("../Door2")
-
-[node name="Door2" parent="doors" unique_id=1483473484 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.814034, 1.2887573, 18.980145)
-target_door = NodePath("../Door")
-variation = 1
-
-[node name="Door3" parent="doors" unique_id=355073705 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6532516, 1.2887573, 38.388855)
-target_door = NodePath("../Door4")
-variation = 1
-location_environment = ExtResource("13_j4qnp")
-
-[node name="Door4" parent="doors" unique_id=1752515876 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.629873, 1.6428883, 192.0991)
-target_door = NodePath("../Door3")
-location_environment = ExtResource("2_c2ibq")
+[node name="level_thorn" parent="." unique_id=66430996 instance=ExtResource("19_3b0ty")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 260.0686, 0)
 
 [node name="Marker3D" type="Marker3D" parent="." unique_id=2071872080]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.04972, 3.3076992, -33.20089)

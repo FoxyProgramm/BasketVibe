@@ -1,7 +1,8 @@
 class_name TrashItem
 extends ItemBase
 
-@export var target_groups: Array[String] = ["ball", "bat", "radio"]
+@export var target_groups: Array[String] = []
+var Items = preload("res://scripts/items/items.gd")
 @onready var area = $Area3D
 @export var slow_down_speed: float = 15.0  # Скорость замедления
 @export var delete_threshold: float = 0.2  # При какой скорости удалять
@@ -15,6 +16,7 @@ func is_pickable() -> bool:
 	return false
 
 func _ready():
+	target_groups = Items.ITEM_DICT.keys()
 	$AnimationPlayer.play("new_animation")
 	#scale = scale* 1.3
 	area.body_entered.connect(_on_body_entered)
