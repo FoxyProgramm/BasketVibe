@@ -129,7 +129,7 @@ shader = ExtResource("11_sc1dx")
 shader_parameter/bg_color = Color(0, 0, 0, 0.7)
 shader_parameter/scanline_amount = 0.3
 
-[node name="Node3D" type="Node3D" unique_id=1667223710]
+[node name="Node3D" type="Node3D" unique_id=1667223710 groups=["main"]]
 script = ExtResource("1_main")
 
 [node name="sun" type="DirectionalLight3D" parent="." unique_id=995574467 groups=["sun_night"]]
