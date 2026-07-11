@@ -21,6 +21,7 @@
 [ext_resource type="FontFile" uid="uid://doebh08hvvxpu" path="res://VPCH2.otf" id="13_2gh4u"]
 [ext_resource type="Environment" uid="uid://c0fxnqlt3ov8a" path="res://resources/envieronment/night_environment.tres" id="13_j4qnp"]
 [ext_resource type="PackedScene" uid="uid://bpe5ufguaca7w" path="res://scenes/level_thorn.tscn" id="19_3b0ty"]
+[ext_resource type="Texture2D" uid="uid://y4fkmgkic8b7" path="res://textures/UI/rerol.png" id="20_bg4s2"]
 [ext_resource type="Environment" uid="uid://dj2c4aag0dg1m" path="res://resources/envieronment/thorn_environment.tres" id="22_bg4s2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
@@ -481,9 +482,22 @@ popup/item_12/id = 12
 popup/item_13/text = "Константин Дебликов"
 popup/item_13/id = 13
 
-[node name="Username" type="LineEdit" parent="UI/MainMenu" unique_id=21665153]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/MainMenu" unique_id=163290980]
 layout_mode = 2
+
+[node name="Username" type="LineEdit" parent="UI/MainMenu/HBoxContainer" unique_id=21665153]
+layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "Your name"
+
+[node name="Reroll" type="TextureButton" parent="UI/MainMenu/HBoxContainer" unique_id=988365976]
+modulate = Color(0.38188028, 0.61587304, 0.31444567, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.2
+texture_normal = ExtResource("20_bg4s2")
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="HSeparator" type="HSeparator" parent="UI/MainMenu" unique_id=56451486]
 layout_mode = 2
@@ -529,3 +543,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.04972, 3.3076992, -33.2008
 [connection signal="text_submitted" from="UI/Chat/VBoxContainer/LineEdit" to="UI/Chat" method="_on_line_edit_text_submitted"]
 [connection signal="timeout" from="UI/Chat/ChatDissapear" to="UI/Chat" method="_on_chat_dissapear_timeout"]
 [connection signal="item_selected" from="UI/MainMenu/OptionButton" to="." method="_on_menu_character_selected"]
+[connection signal="pressed" from="UI/MainMenu/HBoxContainer/Reroll" to="." method="_on_reroll_username_pressed"]

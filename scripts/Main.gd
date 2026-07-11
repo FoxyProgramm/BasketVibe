@@ -34,7 +34,32 @@ var names : Array[String] = [
 	"Смута",
 	"Переселенец",
 	"Йо майо",
-	"Погадист"
+	"Погадист",
+	"Рассхититель Никит",
+	"Супер безмозглый",
+	"Капибарный торнадо",
+	"Сок Любимый",
+	"Светлое нефильтрованное",
+	"Состояние не определённое",
+	"Ковёр падений",
+	"Зелёные яйца",
+	"Краденный картофель",
+	"Салат какой-то",
+	"Имя",
+	"Имя имя",
+	"Фамилия имя имя",
+	"-->",
+	"Добавьте",
+	"Александр Наковальный",
+	"Ламинариевый",
+	"Ламинария",
+	"Ламинаровый",
+	"Ламинарья",
+	">:3c",
+	"Радист",
+	"    da     ",
+	"Чебурнет",
+	"Редиски"
 ]
 
 var item_id:int = 0
@@ -52,6 +77,8 @@ const MAX_CLIENTS = 2
 @onready var players_node = $Players
 @onready var level_node = $Level
 @onready var level_items: Node3D = $Level/Items
+
+@onready var username_line: LineEdit = $UI/MainMenu/HBoxContainer/Username
 
 var players : Dictionary[int, PlayerInfo] = {}
 var local_info := PlayerInfo.new()
@@ -73,10 +100,10 @@ func _ready():
 	# Привязываем функции к кнопкам
 	$UI/MainMenu/HostButton.pressed.connect(_on_host_pressed)
 	$UI/MainMenu/JoinButton.pressed.connect(_on_join_pressed)
-	$UI/MainMenu/Username.text = names.pick_random()
+	username_line.text = names.pick_random()
 
 func _on_host_pressed():
-	local_info.name = $UI/MainMenu/Username.text
+	local_info.name = username_line.text
 	local_info.skin = $UI/MainMenu/OptionButton.get_selected_id()
 	main_menu.hide()
 	$UI/background.visible = false
@@ -101,7 +128,7 @@ func _on_host_pressed():
 	
 func _on_join_pressed():
 	main_menu.hide()
-	local_info.name = $UI/MainMenu/Username.text
+	local_info.name = username_line.text
 	local_info.skin = $UI/MainMenu/OptionButton.get_selected_id()
 	$UI/background.visible = false
 	var port = port_entry.text.to_int()
@@ -205,3 +232,6 @@ func spawn_flowers_at(pos: Vector3, count: int, radius: float, mesh_path: String
 	multimesh.multimesh.visible_instance_count = count
 	if material:
 		multimesh.material_override = material
+
+func _on_reroll_username_pressed() -> void:
+	username_line.text = names.pick_random()

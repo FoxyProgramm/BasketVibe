@@ -65,18 +65,15 @@ func _start_slow_and_delete(body: RigidBody3D):
 			await get_tree().process_frame
 		await get_tree().create_timer(0.5).timeout
 		body.queue_free()
-
+	
 @rpc("any_peer", "call_local", "reliable")
 func apply_item_impulse(impulse: Vector3) -> void:
-	super(impulse/2)
-	# Вращение перпендикулярно направлению удара
+	super(impulse*20)
+	
 	var hit_dir = impulse.normalized()
 	var strength = impulse.length() * -0.5
-	
-	# Основное вращение перпендикулярно удару
 	var torque = hit_dir.cross(Vector3.UP) * strength
-	# Дополнительное вращение по оси удара
 	torque += hit_dir * strength * 0.3
-	# Случайный поворот для живости
 	torque += hit_dir.cross(Vector3.RIGHT) * strength * 0.7
-	apply_torque_impulse(torque)
+	
+	apply_torque_impulse(torque*20)
