@@ -28,6 +28,7 @@ players=""
 floor=""
 chat=""
 suns=""
+main=""
 
 [input]
 

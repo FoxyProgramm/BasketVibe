@@ -3,7 +3,7 @@ extends StaticBody3D
 @export var item_type: String = "ball"
 @onready var spawn_point = $Marker3D
 @onready var area = $ballspawner/Area3D
-@onready var main: Node3D = $".."
+@onready var main: Node3D = get_tree().get_first_node_in_group("main")
 
 var players_nearby: Array = []
 
