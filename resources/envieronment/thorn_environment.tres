@@ -21,6 +21,6 @@ fog_light_color = Color(0.3395, 0.34440002, 0.35, 1)
 fog_density = 0.1072
 fog_sky_affect = 0.8
 adjustment_enabled = true
-adjustment_brightness = 0.6
+adjustment_brightness = 0.65
 adjustment_contrast = 1.25
 adjustment_saturation = 0.55

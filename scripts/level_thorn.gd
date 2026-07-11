@@ -57,7 +57,7 @@ func _generate_collisions():
 		add_child(body)
 		active_collisions.append(body)
 	
-	print("Всего коллизий: ", active_collisions.size())
+	#print("Всего коллизий: ", active_collisions.size())
 
 @rpc("call_local", "reliable")
 func set_seed(seed: int):
@@ -104,8 +104,8 @@ func _generate_spikes():
 		t.basis = basis.scaled(Vector3(radius, 1.0, radius))
 		
 		spike_multimesh.multimesh.set_instance_transform(i, t)
-		if i == 0:
-			print("Шип 0: origin=", t.origin, " rotation_deg=", t.basis.get_euler() * 180/PI, " scale=", t.basis.get_scale())
+		#if i == 0:
+			#print("Шип 0: origin=", t.origin, " rotation_deg=", t.basis.get_euler() * 180/PI, " scale=", t.basis.get_scale())
 	
 	spike_multimesh.multimesh.visible_instance_count = spike_count
 	

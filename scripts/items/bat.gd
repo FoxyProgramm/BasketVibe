@@ -181,7 +181,6 @@ func request_drop(player_vel: Vector3 = Vector3.ZERO) -> void:
 @rpc("any_peer", "call_local", "reliable")
 func request_swing(charge: float) -> void:
 	if not is_authority(): return
-	print("Swing requested")
 	var sender_id = multiplayer.get_remote_sender_id()
 	if held_by_id == sender_id:
 		var player:Player = _get_player(sender_id)
@@ -207,7 +206,6 @@ func request_swing(charge: float) -> void:
 							ball.rpc("update_held_state", 0)
 						if multiplayer.get_unique_id() == ball.get_multiplayer_authority():
 							ball.linear_velocity = (swing_dir + Vector3.UP * 0.2).normalized() * hit_force
-							print("Applied velocity")
 						else :
 							ball.rpc_id(ball.get_multiplayer_authority(), "set_linear_velocity_net", (swing_dir + Vector3.UP * 0.2).normalized() * hit_force)
 							
@@ -229,6 +227,10 @@ func request_swing(charge: float) -> void:
 						var hit_force = lerp(50.0, 265.0, charge)
 						var impulse = (swing_dir + Vector3.UP * 0.3).normalized() * hit_force
 						trash.rpc("apply_trash_impulse", impulse)
+			for box in get_tree().get_nodes_in_group("box"):
+				var dist = player.global_position.distance_to(box.global_position)
+				if dist < 4.0:
+					box.rpc("destroy")
 
 			# Проверяем попадание по ИГРОКАМ
 			for p in get_tree().get_nodes_in_group("player"):

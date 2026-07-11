@@ -174,6 +174,9 @@ func _input(event):
 						var force = lerp(MIN_THROW_FORCE, MAX_THROW_FORCE, charge_progress)
 						held.rpc_id(held.get_multiplayer_authority(), "request_throw", throw_dir, force, linear_velocity)
 						charge_bar.hide()
+			elif held.is_in_group("box"):
+				if event.pressed:
+						held.rpc_id(held.get_multiplayer_authority(), "setkas")
 		else:
 			if event.pressed:
 				var closest = get_closest_interactable()
@@ -189,6 +192,8 @@ func get_held_object():
 	for b in get_tree().get_nodes_in_group("radio"):
 		if b.held_by_id == multiplayer.get_unique_id(): return b
 	for b in get_tree().get_nodes_in_group("seed"):
+		if b.held_by_id == multiplayer.get_unique_id(): return b
+	for b in get_tree().get_nodes_in_group("box"):
 		if b.held_by_id == multiplayer.get_unique_id(): return b
 	return null
 
@@ -217,6 +222,12 @@ func get_closest_interactable() -> Node3D:
 				closest = b
 				min_dist = d
 	for b in get_tree().get_nodes_in_group("seed"):
+		if b.held_by_id == 0:
+			var d = global_position.distance_to(b.global_position)
+			if d < min_dist:
+				closest = b
+				min_dist = d
+	for b in get_tree().get_nodes_in_group("box"):
 		if b.held_by_id == 0:
 			var d = global_position.distance_to(b.global_position)
 			if d < min_dist:

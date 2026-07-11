@@ -38,12 +38,14 @@ func _spawn_item(item_id:int, count:int = 1) -> void:
 	if not multiplayer.is_server(): return
 	var players:Node3D = get_tree().get_first_node_in_group("players")
 	var sender_id:int = multiplayer.get_remote_sender_id()
+	if sender_id == 0:
+		sender_id = 1
 	var player = players.get_node_or_null(str(sender_id))
 	var level_node = get_tree().current_scene.get_node_or_null("Level/Items")
 	var spawn_position:Vector3 = Vector3(0, 5, 0)
 	
 	if player:
-		spawn_position = player.global_position + Vector3(0, 2, 0)
+		spawn_position = player.global_position + Vector3(0, 3, 0)
 	
 	for i in range(count):
 		var item = Items.ITEM_DICT.values()[item_id].instantiate()
