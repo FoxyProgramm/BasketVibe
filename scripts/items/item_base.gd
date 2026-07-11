@@ -5,14 +5,37 @@ extends RigidBody3D
 @abstract func is_pickable() -> bool
 @abstract func is_throwable() -> bool
 @abstract func is_swingable() -> bool
+@abstract func get_sync_properties() -> Array[String]
 #endregion
 
+#region Properties
 @export var held_by_id: int = 0:
 	set(val):
 		held_by_id = val
 		_update_state()
+#endregion
 
 #region Regular functions
+
+func _ready() -> void:
+	var sync = MultiplayerSynchronizer.new()
+	sync.root_path = NodePath("..")
+	sync.name = "MultiplayerSynchronizer"
+	
+	var config = SceneReplicationConfig.new()
+	
+	for prop in get_sync_properties():
+		config.add_property(NodePath(".:%s" % [prop]))
+	
+	sync.replication_config = config
+	sync.replication_interval = 0.05
+	sync.delta_interval = 0.05
+	
+	add_child(sync, true)
+
+	if not multiplayer.is_server():
+		freeze = true
+
 @rpc("any_peer", "call_local", "reliable")
 func transfer_authority(new_id:int, velocity: Vector3 = Vector3.ZERO) -> void:
 	if new_id == multiplayer.get_unique_id():

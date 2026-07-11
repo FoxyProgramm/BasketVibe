@@ -29,30 +29,14 @@ func is_throwable() -> bool:
 func is_pickable() -> bool:
 	return true
 
+func get_sync_properties() -> Array[String]:
+	return ["sync_position", "sync_rotation"]
+
 func _ready() -> void:
+	super()
 	original_pitch = audio_player.pitch_scale
-	
-	var sync = MultiplayerSynchronizer.new()
-	sync.root_path = NodePath("..")
-	sync.name = "MultiplayerSynchronizer"
-	var config = SceneReplicationConfig.new()
-
-	config.add_property(NodePath(".:sync_position"))
-	config.add_property(NodePath(".:sync_rotation"))
-	sync.replication_config = config
-
-	sync.replication_interval = 0.05
-	sync.delta_interval = 0.05
-	add_child(sync, true)
-
-	sync_position = global_position
-	sync_rotation = rotation
-
 	audio_player.volume_db = -80.0
 	audio_player.finished.connect(_on_song_finished)
-
-	if not multiplayer.is_server():
-		freeze = true
 
 func _on_song_finished():
 	if is_on and audio_player.stream:

@@ -20,26 +20,12 @@ func is_throwable() -> bool:
 func is_pickable() -> bool:
 	return true
 
+func get_sync_properties() -> Array[String]:
+	return ["sync_position", "sync_rotation"]
+
 func _ready() -> void:
-	var sync = MultiplayerSynchronizer.new()
-	sync.name = "MultiplayerSynchronizer"
-	sync.root_path = NodePath("..")
-	var config = SceneReplicationConfig.new()
-
-	config.add_property(NodePath(".:sync_position"))
-	config.add_property(NodePath(".:sync_rotation"))
-	sync.replication_config = config
-
-	sync.replication_interval = 0.05
-	sync.delta_interval = 0.05
-	add_child(sync, true)
-
-	sync_position = global_position
-	sync_rotation = rotation
-
-	if not multiplayer.is_server():
-		freeze = true
-
+	super()
+	
 func _process(delta: float):
 	var cam = get_viewport().get_camera_3d()
 	var sprite = get_node_or_null("Visuals/Sprite3D")

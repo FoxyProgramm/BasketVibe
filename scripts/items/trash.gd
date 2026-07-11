@@ -20,27 +20,14 @@ func is_throwable() -> bool:
 func is_pickable() -> bool:
 	return false
 
+func get_sync_properties() -> Array[String]:
+	return ["sync_position", "sync_rotation"]
+
 func _ready():
+	super()
 	$AnimationPlayer.play("new_animation")
-	#scale = scale* 1.3
+	scale = scale* 1.3
 	area.body_entered.connect(_on_body_entered)
-	
-	var sync = MultiplayerSynchronizer.new()
-	sync.root_path = NodePath("..")
-	sync.name = "MultiplayerSynchronizer"
-	
-	var config = SceneReplicationConfig.new()
-	config.add_property(NodePath(".:sync_position"))
-	config.add_property(NodePath(".:sync_rotation"))
-	
-	sync.replication_config = config
-	sync.replication_interval = 0.05
-	sync.delta_interval = 0.05
-	
-	add_child(sync, true)
-	
-	if !multiplayer.is_server():
-		self.freeze = true
 
 func _physics_process(delta: float) -> void:
 	if self.is_multiplayer_authority():

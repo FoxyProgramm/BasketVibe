@@ -18,26 +18,11 @@ func is_throwable() -> bool:
 func is_pickable() -> bool:
 	return true
 
+func get_sync_properties() -> Array[String]:
+	return ["sync_position"]
+
 func _ready() -> void:
-	var sync = MultiplayerSynchronizer.new()
-	sync.root_path = NodePath("..")
-	sync.name = "MultiplayerSynchronizer"
-	
-	var config = SceneReplicationConfig.new()
-	config.add_property(NodePath(".:sync_position"))
-	
-	sync.replication_config = config
-	sync.replication_interval = 0.05
-	sync.delta_interval = 0.05
-	
-	add_child(sync, true)
-
-	sync_position = global_position
-
-	if not multiplayer.is_server():
-		freeze = true
-
-
+	super()
 
 var last_position: Vector3
 

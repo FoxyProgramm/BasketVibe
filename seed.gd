@@ -25,6 +25,9 @@ func is_pickable() -> bool:
 func is_authority() -> int:
 	return get_multiplayer_authority() == multiplayer.get_unique_id()
 
+func get_sync_properties() -> Array[String]:
+	return ["sync_position"]
+
 func _ready() -> void:
 	add_to_group("seed")
 	var sync = MultiplayerSynchronizer.new()
