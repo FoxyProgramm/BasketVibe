@@ -22,6 +22,7 @@ func is_pickable() -> bool:
 
 func _ready() -> void:
 	var sync = MultiplayerSynchronizer.new()
+	sync.name = "MultiplayerSynchronizer"
 	sync.root_path = NodePath("..")
 	var config = SceneReplicationConfig.new()
 
@@ -31,7 +32,7 @@ func _ready() -> void:
 
 	sync.replication_interval = 0.05
 	sync.delta_interval = 0.05
-	add_child(sync)
+	add_child(sync, true)
 
 	sync_position = global_position
 	sync_rotation = rotation

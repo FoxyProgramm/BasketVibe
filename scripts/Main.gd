@@ -36,6 +36,12 @@ var names : Array[String] = [
 	"Йо майо"
 ]
 
+var item_id:int = 0
+
+func get_item_id() -> String:
+	item_id += 1
+	return "Item_" + str(item_id)
+
 const PORT = 7777
 const MAX_CLIENTS = 2
 
@@ -83,6 +89,7 @@ func _on_host_pressed():
 	multiplayer.multiplayer_peer = peer
 
 	_spawn_player(multiplayer.get_unique_id())
+	
 	_spawn_item("ball", Vector3(0, 3, -4))
 	_spawn_item("bat", Vector3(-2, 3, -4))
 	_spawn_item("radio", Vector3(11.7, 2.5, -36.5))
@@ -145,9 +152,10 @@ func _spawn_player(id: int):
 
 func _spawn_item(item:String, position_:Vector3 = Vector3(0,2,0)) -> void:
 	var b = Items.ITEM_DICT.get(item).instantiate()
+	b.name = get_item_id()
 	if b:
 		b.position = position_
-		level_items.add_child(b)
+		level_items.add_child(b, true)
 
 func _on_menu_character_selected(index: int) -> void:
 	var character: Characters.Character = Characters.LIST.get(index)

@@ -27,6 +27,7 @@ func _ready():
 	
 	var sync = MultiplayerSynchronizer.new()
 	sync.root_path = NodePath("..")
+	sync.name = "MultiplayerSynchronizer"
 	
 	var config = SceneReplicationConfig.new()
 	config.add_property(NodePath(".:sync_position"))
@@ -36,7 +37,7 @@ func _ready():
 	sync.replication_interval = 0.05
 	sync.delta_interval = 0.05
 	
-	add_child(sync)
+	add_child(sync, true)
 	
 	if !multiplayer.is_server():
 		self.freeze = true

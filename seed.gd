@@ -28,13 +28,14 @@ func is_authority() -> int:
 func _ready() -> void:
 	add_to_group("seed")
 	var sync = MultiplayerSynchronizer.new()
+	sync.name = "MultiplayerSynchronizer"
 	sync.root_path = NodePath("..")
 	var config = SceneReplicationConfig.new()
 	config.add_property(NodePath(".:sync_position"))
 	sync.replication_config = config
 	sync.replication_interval = 0.05
 	sync.delta_interval = 0.05
-	add_child(sync)
+	add_child(sync, true)
 	sync_position = global_position
 	if not multiplayer.is_server():
 		freeze = true

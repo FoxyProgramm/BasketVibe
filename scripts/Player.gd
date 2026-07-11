@@ -41,6 +41,7 @@ func _ready():
 	var sync = MultiplayerSynchronizer.new()
 	sync.set_multiplayer_authority(name.to_int())
 	sync.root_path = NodePath("..")
+	sync.name = "MultiplayerSynchronizer"
 	var config = SceneReplicationConfig.new()
 
 	# Синхронизируем наши новые переменные, а не физические координаты напрямую
@@ -53,7 +54,7 @@ func _ready():
 	# Снова включаем экономию трафика! (20 пакетов в секунду)
 	sync.replication_interval = 0.05
 	sync.delta_interval = 0.05
-	add_child(sync)
+	add_child(sync, true)
 	
 	if charge_bar:
 		charge_bar.hide()

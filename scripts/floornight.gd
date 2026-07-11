@@ -12,10 +12,11 @@ func _ready():
 	# Создаём синхронизатор
 	var sync = MultiplayerSynchronizer.new()
 	sync.root_path = NodePath("..")
+	sync.name = "MultiplayerSynchronizer"
 	var config = SceneReplicationConfig.new()
 	config.add_property(NodePath(".:synced_rotation_y"))
 	sync.replication_config = config
-	add_child(sync)
+	add_child(sync, true)
 	
 	if multiplayer.is_server():
 		synced_rotation_y = 90 * randi_range(1, 4)
