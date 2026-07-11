@@ -91,14 +91,7 @@ func parse(commands:Array[String]) -> void:
 		"addsong":
 			if commands.size() > 1:
 				var path = commands[1]
-				if FileAccess.file_exists(path):
-					if multiplayer.is_server():
-						_add_song(path)
-					else:
-						_client_add_song(path)
-					log_info("Successful add track from " + path, "#12ab00")
-				else:
-					log_info("Error add track, check your path: " + path, "red")
+				_client_add_song(path)
 
 @rpc("any_peer", "reliable")
 func _add_song(data: PackedByteArray):
@@ -119,8 +112,11 @@ func _client_add_song(path: String):
 	var data = file.get_buffer(file.get_length())
 	file.close()
 	
-	rpc_id(1, "_add_song", data)
-	log_info("Sending tract to all players...", "#88ccff")
+	if multiplayer.is_server():
+		_add_song(data)
+	else:
+		rpc_id(1, "_add_song", data)
+	log_info("Sending track to all players...", "#88ccff")
 
 func _on_line_edit_text_submitted(new_text: String) -> void:
 	if new_text.is_empty(): return
