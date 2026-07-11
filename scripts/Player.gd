@@ -41,6 +41,7 @@ func _ready():
 	var sync = MultiplayerSynchronizer.new()
 	sync.set_multiplayer_authority(name.to_int())
 	sync.root_path = NodePath("..")
+	sync.name = "MultiplayerSynchronizer"
 	var config = SceneReplicationConfig.new()
 
 	# Синхронизируем наши новые переменные, а не физические координаты напрямую
@@ -53,7 +54,7 @@ func _ready():
 	# Снова включаем экономию трафика! (20 пакетов в секунду)
 	sync.replication_interval = 0.05
 	sync.delta_interval = 0.05
-	add_child(sync)
+	add_child(sync, true)
 	
 	if charge_bar:
 		charge_bar.hide()
@@ -105,16 +106,6 @@ func _input(event):
 		target_yaw -= event.relative.x * 0.003
 		head.rotate_x(-event.relative.y * 0.003)
 		head.rotation.x = clamp(head.rotation.x, -PI/2.5, PI/2.5)
-
-	#if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
-		#if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-			#if is_charging:
-				#is_charging = false
-				#charge_bar.hide()
-		#else:
-			#if !console.visible:
-				#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 	if event is InputEventKey and event.pressed and event.keycode == KEY_Q:
 		var held = get_held_object()
@@ -179,7 +170,7 @@ func _input(event):
 						held.rpc_id(held.get_multiplayer_authority(), "setkas")
 		else:
 			if event.pressed:
-				var closest = get_closest_interactable()
+				var closest = get_closes_item_is_sigth()
 				if closest:
 					closest.rpc_id(closest.get_multiplayer_authority(), "request_pickup", multiplayer.get_unique_id())
 					
@@ -197,6 +188,7 @@ func get_held_object():
 		if b.held_by_id == multiplayer.get_unique_id(): return b
 	return null
 
+## @deprecated you should die
 func get_closest_interactable() -> Node3D:
 	var closest = null
 	var min_dist = 4.0
@@ -311,6 +303,21 @@ func _physics_process(delta):
 			var q_target = Quaternion.from_euler(sync_grip_rotation)
 			weapon_grip.rotation = q_current.slerp(q_target, 15.0 * delta).get_euler()
 
+func get_items_in_sight() -> Array[ItemBase]:
+	var result : Array[ItemBase] = []
+	var bodies: Array[Node3D]= $Head/Area3D.get_overlapping_bodies()
+	for body in bodies:
+		if body is ItemBase:
+			result.append(body)
+	return result
+
+func get_closes_item_is_sigth() -> ItemBase:
+	var items := get_items_in_sight()
+	if items :
+		return items.get(0)
+	else :
+		return null
+
 @onready var chat_menu = get_tree().get_first_node_in_group("chat")
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if not is_multiplayer_authority(): return
@@ -331,12 +338,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 		if Input.is_key_pressed(KEY_SPACE) and is_on_floor:
 			state.linear_velocity.y = JUMP_VELOCITY
 
-		var input_dir = Vector2.ZERO
-		if Input.is_key_pressed(KEY_W): input_dir.y -= 1
-		if Input.is_key_pressed(KEY_S): input_dir.y += 1
-		if Input.is_key_pressed(KEY_A): input_dir.x -= 1
-		if Input.is_key_pressed(KEY_D): input_dir.x += 1
-		input_dir = input_dir.normalized()
+		var input_dir = Input.get_vector("left", "right", "up", "down")
 
 		var direction = (t.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 		var current_y = state.linear_velocity.y

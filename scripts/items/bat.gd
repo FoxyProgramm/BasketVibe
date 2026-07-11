@@ -7,51 +7,25 @@ var hold_rotation := Vector3(0, 0, 0)
 @export var sync_position: Vector3
 @export var sync_rotation: Vector3
 
-@export var held_by_id: int = 0:
-	set(val):
-		held_by_id = val
-		_update_bat_state()
-
 @onready var visuals = $Visuals
 
 @onready var sprite_mat = $Visuals/Sprite3D.material_override
 
+func is_swingable() -> bool:
+	return true
+
+func is_throwable() -> bool:
+	return true
+
 func is_pickable() -> bool:
 	return true
 
+func get_sync_properties() -> Array[String]:
+	return ["sync_position", "sync_rotation"]
+
 func _ready() -> void:
-	var sync = MultiplayerSynchronizer.new()
-	sync.root_path = NodePath("..")
-	var config = SceneReplicationConfig.new()
-
-	config.add_property(NodePath(".:sync_position"))
-	config.add_property(NodePath(".:sync_rotation"))
-	sync.replication_config = config
-
-	sync.replication_interval = 0.05
-	sync.delta_interval = 0.05
-	add_child(sync)
-
-	sync_position = global_position
-	sync_rotation = rotation
-
-	if not multiplayer.is_server():
-		freeze = true
-
-func _update_bat_state():
-	if held_by_id != 0:
-		if not freeze: freeze = true
-		collision_layer = 0
-		collision_mask = 0
-	else:
-		if not is_authority():
-			freeze = true
-		else:
-			freeze = false
-		collision_layer = 3
-		collision_mask = 3
-
-
+	super()
+	
 func _process(delta: float):
 	var cam = get_viewport().get_camera_3d()
 	var sprite = get_node_or_null("Visuals/Sprite3D")
@@ -192,45 +166,22 @@ func request_swing(charge: float) -> void:
 			if not head: return
 			var swing_dir:Vector3 = -head.global_transform.basis.z
 
-			for ball:RigidBody3D in get_tree().get_nodes_in_group("ball"):
-				var dist:float = player.global_position.distance_to(ball.global_position)
-				if dist < 4.0:
-					var to_ball:Vector3 = (ball.global_position - head.global_position).normalized()
-					if swing_dir.dot(to_ball) > 0.2:
-						var speed:float = ball.linear_velocity.length()
-						var base_force:float = lerp(8.0, 16.0, charge)
-						var hit_force:float = base_force + (clamp(speed, 1.0, 10.0) * 1.5)
-
-						if ball.held_by_id != 0:
-							ball.held_by_id = 0
-							ball.rpc("update_held_state", 0)
-						if multiplayer.get_unique_id() == ball.get_multiplayer_authority():
-							ball.linear_velocity = (swing_dir + Vector3.UP * 0.2).normalized() * hit_force
-						else :
-							ball.rpc_id(ball.get_multiplayer_authority(), "set_linear_velocity_net", (swing_dir + Vector3.UP * 0.2).normalized() * hit_force)
-							
-			for radio in get_tree().get_nodes_in_group("radio"):
-				var dist = player.global_position.distance_to(radio.global_position)
-				if dist < 4.0:
-					var to_radio = (radio.global_position - head.global_position).normalized()
-					var dot = swing_dir.dot(to_radio)
-					if dot > 0.2:
-						var hit_force = lerp(4.0, 15.0, charge)
-						var impulse = (swing_dir + Vector3.UP * 0.3).normalized() * hit_force
-						radio.rpc("apply_radio_impulse", impulse)
-			for trash in get_tree().get_nodes_in_group("trash"):
-				var dist = player.global_position.distance_to(trash.global_position)
-				if dist < 4.0:
-					var to_trash = (trash.global_position - head.global_position).normalized()
-					var dot = swing_dir.dot(to_trash)
-					if dot > 0.2:
-						var hit_force = lerp(50.0, 265.0, charge)
-						var impulse = (swing_dir + Vector3.UP * 0.3).normalized() * hit_force
-						trash.rpc("apply_trash_impulse", impulse)
-			for box in get_tree().get_nodes_in_group("box"):
-				var dist = player.global_position.distance_to(box.global_position)
-				if dist < 4.0:
-					box.rpc("destroy")
+			var items := player.get_items_in_sight()
+			for item in items:
+				if !item.is_swingable(): continue
+				var to_item : Vector3 = head.global_position.direction_to(item.global_position)
+				if swing_dir.dot(to_item) > 0.2:
+					if item is BoxItem:
+						item.rpc("destroy")
+						continue
+					var speed:float = item.linear_velocity.length()
+					var base_force:float = lerp(8.0, 16.0, charge)
+					var hit_force:float = base_force + (clamp(speed, 1.0, 10.0) * 1.5)
+					var impulse = (swing_dir + Vector3.UP * 0.2).normalized() * hit_force
+					if multiplayer.get_unique_id() == item.get_multiplayer_authority():
+						item.apply_item_impulse(impulse)
+					else :
+						item.rpc_id(item.get_multiplayer_authority(), "apply_item_impulse", impulse)
 
 			# Проверяем попадание по ИГРОКАМ
 			for p in get_tree().get_nodes_in_group("player"):
@@ -239,7 +190,7 @@ func request_swing(charge: float) -> void:
 				var dist = player.global_position.distance_to(p.global_position)
 				if dist < 4.0:
 					var to_p = (p.global_position - head.global_position).normalized()
-					if swing_dir.dot(to_p) > 0.4:
+					if swing_dir.dot(to_p) > 0.2:
 						var knock_force = lerp(6.0, 20.0, charge)
 						p.rpc_id(p.name.to_int(), "apply_knockback", swing_dir, knock_force)
 

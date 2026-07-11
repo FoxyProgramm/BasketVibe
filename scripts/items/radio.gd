@@ -7,11 +7,6 @@ var hold_rotation := Vector3(0, 0, 0)
 @export var sync_position: Vector3
 @export var sync_rotation: Vector3
 
-@export var held_by_id: int = 0:
-	set(val):
-		held_by_id = val
-		_update_bat_state()
-
 @export var songs: Array[AudioStream] = []
 @export var fade_duration: float = 1.8
 @export var volume_db: float = -15.0
@@ -25,32 +20,23 @@ var original_pitch: float = 1.0
 
 @onready var sprite_mat = $Sprite3D
 
-func is_pickable() -> bool :
+func is_swingable() -> bool:
 	return true
 
+func is_throwable() -> bool:
+	return true
+
+func is_pickable() -> bool:
+	return true
+
+func get_sync_properties() -> Array[String]:
+	return ["sync_position", "sync_rotation"]
+
 func _ready() -> void:
+	super()
 	original_pitch = audio_player.pitch_scale
-	
-	var sync = MultiplayerSynchronizer.new()
-	sync.root_path = NodePath("..")
-	var config = SceneReplicationConfig.new()
-
-	config.add_property(NodePath(".:sync_position"))
-	config.add_property(NodePath(".:sync_rotation"))
-	sync.replication_config = config
-
-	sync.replication_interval = 0.05
-	sync.delta_interval = 0.05
-	add_child(sync)
-
-	sync_position = global_position
-	sync_rotation = rotation
-
 	audio_player.volume_db = -80.0
 	audio_player.finished.connect(_on_song_finished)
-
-	if not multiplayer.is_server():
-		freeze = true
 
 func _on_song_finished():
 	if is_on and audio_player.stream:
@@ -94,19 +80,6 @@ func _update_radio_state(state: bool, song_index: int):
 		fade_tween.tween_property(audio_player, "volume_db", volume_db, fade_duration).set_ease(Tween.EASE_OUT)
 	else:
 		fade_tween.tween_property(audio_player, "volume_db", -200.0, fade_duration).set_ease(Tween.EASE_IN)
-
-func _update_bat_state():
-	if held_by_id != 0:
-		if not freeze: freeze = true
-		collision_layer = 0
-		collision_mask = 0
-	else:
-		if not multiplayer.is_server():
-			freeze = true
-		else:
-			if freeze: freeze = false
-		collision_layer = 3
-		collision_mask = 3
 
 func _process(delta: float):
 	var cam = get_viewport().get_camera_3d()
@@ -192,9 +165,14 @@ func _get_player(id: int) -> Node3D:
 			return p
 	return null
 
+#@rpc("any_peer", "call_local", "reliable")
+#func apply_radio_impulse(impulse: Vector3):
+	#apply_central_impulse(impulse)
+	#_hit_pitch_effect()
+
 @rpc("any_peer", "call_local", "reliable")
-func apply_radio_impulse(impulse: Vector3):
-	apply_central_impulse(impulse)
+func apply_item_impulse(impulse:Vector3) -> void:
+	super(impulse)
 	_hit_pitch_effect()
 
 func _hit_pitch_effect():

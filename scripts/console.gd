@@ -5,6 +5,8 @@ extends VBoxContainer
 
 @onready var background = get_tree().get_first_node_in_group("background")
 
+@onready var main: Node3D = $"../../.."
+
 var command_history: Array[String] = []
 var history_index: int = -1
 
@@ -50,6 +52,7 @@ func _spawn_item(item_id:int, count:int = 1) -> void:
 	for i in range(count):
 		var item = Items.ITEM_DICT.values()[item_id].instantiate()
 		item.position = spawn_position
+		item.name = main.get_item_id()
 		if level_node:
 			level_node.add_child(item, true)
 		else:
@@ -64,7 +67,7 @@ func _delete_items(mode:int) -> void:
 	match mode:
 		0: #ALL
 			for child in level_node.get_children():
-				log_info("Delited " + str(child), "#5a8a54")
+				log_info("Deleted " + str(child), "#5a8a54")
 				child.queue_free()
 
 func parse(commands:Array[String]) -> void:

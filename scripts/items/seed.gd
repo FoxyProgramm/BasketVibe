@@ -4,10 +4,6 @@ extends ItemBase
 var hold_offset := Vector3(0, -0.3, -1.2)
 
 @export var sync_position: Vector3
-@export var held_by_id: int = 0:
-	set(val):
-		held_by_id = val
-		_update_state()
 
 @export var flower_mesh: Mesh
 @export var flower_material: Material
@@ -16,38 +12,35 @@ var hold_offset := Vector3(0, -0.3, -1.2)
 
 var was_held: bool = false
 
+func is_swingable() -> bool:
+	return true
+
+func is_throwable() -> bool:
+	return true
+
 func is_pickable() -> bool:
-	return not was_held
+	return true
 
 func is_authority() -> int:
 	return get_multiplayer_authority() == multiplayer.get_unique_id()
 
+func get_sync_properties() -> Array[String]:
+	return ["sync_position"]
+
 func _ready() -> void:
 	add_to_group("seed")
 	var sync = MultiplayerSynchronizer.new()
+	sync.name = "MultiplayerSynchronizer"
 	sync.root_path = NodePath("..")
 	var config = SceneReplicationConfig.new()
 	config.add_property(NodePath(".:sync_position"))
 	sync.replication_config = config
 	sync.replication_interval = 0.05
 	sync.delta_interval = 0.05
-	add_child(sync)
+	add_child(sync, true)
 	sync_position = global_position
 	if not multiplayer.is_server():
 		freeze = true
-
-func _update_state():
-	if held_by_id != 0:
-		if not freeze: freeze = true
-		collision_layer = 0
-		collision_mask = 0
-	else:
-		if not is_authority():
-			freeze = true
-		else:
-			freeze = false
-		collision_layer = 3
-		collision_mask = 3
 
 func _physics_process(delta: float) -> void:
 	if is_authority():

@@ -12,30 +12,24 @@ var is_slowing: bool = false
 var sync_position:Vector3 = Vector3.ZERO
 var sync_rotation:Vector3 = Vector3.ZERO
 
+func is_swingable() -> bool:
+	return true
+
+func is_throwable() -> bool:
+	return false
+
 func is_pickable() -> bool:
 	return false
 
+func get_sync_properties() -> Array[String]:
+	return ["sync_position", "sync_rotation"]
+
 func _ready():
+	super()
 	target_groups = Items.ITEM_DICT.keys()
 	$AnimationPlayer.play("new_animation")
-	#scale = scale* 1.3
+	scale = scale* 1.3
 	area.body_entered.connect(_on_body_entered)
-	
-	var sync = MultiplayerSynchronizer.new()
-	sync.root_path = NodePath("..")
-	
-	var config = SceneReplicationConfig.new()
-	config.add_property(NodePath(".:sync_position"))
-	config.add_property(NodePath(".:sync_rotation"))
-	
-	sync.replication_config = config
-	sync.replication_interval = 0.05
-	sync.delta_interval = 0.05
-	
-	add_child(sync)
-	
-	if !multiplayer.is_server():
-		self.freeze = true
 
 func _physics_process(delta: float) -> void:
 	if self.is_multiplayer_authority():
@@ -73,9 +67,8 @@ func _start_slow_and_delete(body: RigidBody3D):
 		body.queue_free()
 
 @rpc("any_peer", "call_local", "reliable")
-func apply_trash_impulse(impulse: Vector3):
-	apply_central_impulse(impulse / 2)
-	
+func apply_item_impulse(impulse: Vector3) -> void:
+	super(impulse/2)
 	# Вращение перпендикулярно направлению удара
 	var hit_dir = impulse.normalized()
 	var strength = impulse.length() * -0.5

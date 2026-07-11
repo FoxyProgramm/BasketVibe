@@ -3,6 +3,7 @@ extends StaticBody3D
 @export var item_type: String = "ball"
 @onready var spawn_point = $Marker3D
 @onready var area = $ballspawner/Area3D
+@onready var main: Node3D = $".."
 
 var players_nearby: Array = []
 
@@ -32,17 +33,11 @@ func _request_spawn():
 func _spawn_item():
 	if not multiplayer.is_server():
 		return
+		
+	var item = Items.ITEM_DICT.get(item_type).instantiate()
+	if not item : return
 	
-	var item
-	if item_type == "ball":
-		item = Items.BALL.instantiate()
-	elif item_type == "bat":
-		item = Items.BAT.instantiate()
-	elif item_type == "radio":
-		item = Items.RADIO.instantiate()
-	elif item_type == "seed":
-		item = Items.SEED.instantiate()
-	
+	item.name = main.get_item_id()
 	var spawn_pos = spawn_point.global_position if spawn_point else global_position + Vector3.UP * 0.5
 	
 	var level_node = get_tree().current_scene.get_node_or_null("Level/Items")

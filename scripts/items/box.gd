@@ -1,31 +1,29 @@
-extends RigidBody3D
+class_name BoxItem
+extends ItemBase
 
 var hold_offset := Vector3(0, 0.0, -2.5)
 var setka = false
 @export var sync_position: Vector3
-@export var held_by_id: int = 0:
-	set(val):
-		held_by_id = val
-		_update_state()
 
 func is_pickable() -> bool:
 	return true
+
+func is_throwable() -> bool:
+	return false
+
+func is_swingable() -> bool:
+	return true
+
+func get_sync_properties() -> Array[String]:
+	return ["sync_position"]
 
 func is_authority() -> int:
 	return get_multiplayer_authority() == multiplayer.get_unique_id()
 
 func _ready() -> void:
+	super()
 	add_to_group("box")
 	freeze = true  # Не двигается
-	var sync = MultiplayerSynchronizer.new()
-	sync.root_path = NodePath("..")
-	var config = SceneReplicationConfig.new()
-	config.add_property(NodePath(".:sync_position"))
-	sync.replication_config = config
-	sync.replication_interval = 0.05
-	sync.delta_interval = 0.05
-	add_child(sync)
-	sync_position = global_position
 
 func _update_state():
 	if held_by_id != 0:

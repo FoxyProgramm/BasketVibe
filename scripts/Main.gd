@@ -37,6 +37,12 @@ var names : Array[String] = [
 	"Погадист"
 ]
 
+var item_id:int = 0
+
+func get_item_id() -> String:
+	item_id += 1
+	return "Item_" + str(item_id)
+
 const PORT = 7777
 const MAX_CLIENTS = 2
 
@@ -84,16 +90,15 @@ func _on_host_pressed():
 		return
 	multiplayer.multiplayer_peer = peer
 
-
 	_spawn_player(multiplayer.get_unique_id())
-	_spawn_ball()
-	_spawn_bat()
-	_spawn_radio()
-	_spawn_trash()
-	_spawn_seed()
-	_spawn_box()
-	
 
+	_spawn_item("ball", Vector3(0, 3, -4))
+	_spawn_item("bat", Vector3(-2, 3, -4))
+	_spawn_item("radio", Vector3(11.7, 2.5, -36.5))
+	_spawn_item("trash", Vector3(35, 3.3, -33.2))
+	_spawn_item("seed", Vector3(0, 3, 0))
+	_spawn_item("box", Vector3(3,3,3))
+	
 func _on_join_pressed():
 	main_menu.hide()
 	local_info.name = $UI/MainMenu/Username.text
@@ -134,26 +139,16 @@ func _on_peer_disconnected(id) -> void:
 	if players_node.has_node(str(id)):
 		players_node.get_node(str(id)).queue_free()
 
-	var balls = get_tree().get_nodes_in_group("ball")
-	if not balls.is_empty():
-		var ball = balls[0]
-		if ball.held_by_id == id:
-			ball.held_by_id = 0
-			ball.freeze = false
-
-	var bats = get_tree().get_nodes_in_group("bat")
-	if not bats.is_empty():
-		var bat = bats[0]
-		if bat.held_by_id == id:
-			bat.held_by_id = 0
-			bat.freeze = false
-
-	var radios = get_tree().get_nodes_in_group("radio")
-	if not radios.is_empty():
-		var radio = radios[0]
-		if radio.held_by_id == id:
-			radio.held_by_id = 0
-			radio.freeze = false
+	for child in $Level/Items.get_children():
+		if child and child is ItemBase:
+			if child.held_by_id == id:
+				child.rpc("transfer_authority", 1)
+				child.held_by_id = 0
+				child.freeze = false
+			elif child.get_multiplayer_authority() == id:
+				child.rpc("transfer_authority", 1)
+				child.freeze = false
+				child.held_by_id = 0
 
 func _spawn_player(id: int):
 	var p = player_scene.instantiate()
@@ -161,41 +156,12 @@ func _spawn_player(id: int):
 	p.position = Vector3(randf_range(-10, 10), 2, randf_range(-10, 10))
 	players_node.add_child(p, true)
 
-func _spawn_ball():
-	var b = Items.BALL.instantiate()
-	b.name = "Ball"
-	b.position = Vector3(0, 3, -4)
-	level_items.add_child(b, true)
-
-func _spawn_bat():
-	var b = Items.BAT.instantiate()
-	b.name = "Bat"
-	b.position = Vector3(-2, 3, -4)
-	level_items.add_child(b, true)
-
-func _spawn_radio():
-	var b = Items.RADIO.instantiate()
-	b.name = "Radio"
-	b.position = Vector3(11.7, 2.5, -36.5)
-	level_items.add_child(b, true)
-
-func _spawn_trash():
-	var b = Items.TRASH.instantiate()
-	b.name = "Trash"
-	b.position = Vector3(35, 3.3, -33.2)
-	level_items.add_child(b, true)
-
-func _spawn_seed():
-	var b = Items.SEED.instantiate()
-	b.name = "Seed"
-	b.position = Vector3(0, 3, 0)
-	level_items.add_child(b, true)
-	
-func _spawn_box():
-	var b = Items.BOX.instantiate()
-	b.name = "box"
-	b.position = Vector3(0, 3, 0)
-	level_items.add_child(b, true)
+func _spawn_item(item:String, position_:Vector3 = Vector3(0,2,0)) -> void:
+	var b = Items.ITEM_DICT.get(item).instantiate()
+	b.name = get_item_id()
+	if b:
+		b.position = position_
+		level_items.add_child(b, true)
 
 func _on_menu_character_selected(index: int) -> void:
 	var character: Characters.Character = Characters.LIST.get(index)
