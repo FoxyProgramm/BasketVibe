@@ -58,6 +58,8 @@ func _on_host_pressed():
 		print("Cannot host: ", err)
 		return
 	multiplayer.multiplayer_peer = peer
+	
+	$UI/Players.add_new_player(multiplayer.get_unique_id(), local_info)
 
 	_spawn_player(multiplayer.get_unique_id())
 
@@ -84,6 +86,8 @@ func _on_join_pressed():
 		print("Cannot join: ", err)
 		return
 	multiplayer.multiplayer_peer = peer
+	
+	$UI/Players.add_new_player(multiplayer.get_unique_id(), local_info)
 
 @rpc("any_peer", "reliable")
 func add_player(id:int, info:PackedByteArray) -> void:
@@ -93,8 +97,9 @@ func add_player(id:int, info:PackedByteArray) -> void:
 	if player:
 		player.get_node("Username").text = info_.name
 		player.apply_skin(info_.skin)
+		$UI/Players.add_new_player(id, info_)
 
-func _on_peer_connected(id) -> void:
+func _on_peer_connected(id:int) -> void:
 	if multiplayer.is_server():
 		_spawn_player(id)
 		var spike_forest = get_node_or_null("level_thorn")
@@ -102,7 +107,8 @@ func _on_peer_connected(id) -> void:
 			spike_forest.rpc_id(id, "set_seed", spike_forest.seed_value)
 	rpc_id(id, "add_player", multiplayer.get_unique_id(), local_info.pack())
 	
-func _on_peer_disconnected(id) -> void:
+func _on_peer_disconnected(id:int) -> void:
+	$UI/Players.remove_player(id)
 	if not multiplayer.is_server():return 
 		
 	if players_node.has_node(str(id)):
@@ -177,3 +183,12 @@ func spawn_flowers_at(pos: Vector3, count: int, radius: float, mesh_path: String
 
 func _on_reroll_username_pressed() -> void:
 	username_line.text = names.pick_random()
+
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("players"):
+		$UI/Players.show()
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	elif event.is_action_released("players"):
+		$UI/Players.hide()
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

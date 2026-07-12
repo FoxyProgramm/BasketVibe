@@ -325,6 +325,15 @@ func interact():
 	pass
 
 @rpc("any_peer", "call_local", "reliable")
+func reset_position() -> void:
+	global_position = Vector3(0, 2, 0)
+	linear_velocity = Vector3.ZERO
+
+@rpc("any_peer", "call_local", "reliable")
+func disconnect_from_server() -> void:
+	multiplayer.multiplayer_peer = null
+
+@rpc("any_peer", "call_local", "reliable")
 func _client_teleport(new_pos: Vector3, env_path: String): # временное отключение синхронизации чтобы она не откатывала телепорт двери
 	var synchronizer = get_node_or_null("MultiplayerSynchronizer")
 	if synchronizer:

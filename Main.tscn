@@ -11,14 +11,15 @@
 [ext_resource type="PackedScene" uid="uid://dy38qfo3bpemy" path="res://scenes/button.tscn" id="7_lgr22"]
 [ext_resource type="Script" uid="uid://bh41i1mku2arp" path="res://scripts/chat.gd" id="8_sc1dx"]
 [ext_resource type="Script" uid="uid://crssebrmnamsi" path="res://scripts/console.gd" id="8_wkp8b"]
-[ext_resource type="FontFile" uid="uid://clfy0p1l85uab" path="res://Mx437_Paradise132_7x16.ttf" id="10_fpfj3"]
+[ext_resource type="FontFile" uid="uid://clfy0p1l85uab" path="res://fonts/Mx437_Paradise132_7x16.ttf" id="10_fpfj3"]
 [ext_resource type="PackedScene" uid="uid://bnbat2jdsieje" path="res://scenes/door.tscn" id="11_20pc6"]
 [ext_resource type="Texture2D" uid="uid://ihggso1qfsli" path="res://textures/persones/papich_head.png" id="11_fpfj3"]
 [ext_resource type="Shader" uid="uid://0kdctd04l4xb" path="res://consolebackground.gdshader" id="11_sc1dx"]
 [ext_resource type="Texture2D" uid="uid://gwqfni6wvscw" path="res://textures/chat.png" id="12_5tuhn"]
 [ext_resource type="PackedScene" uid="uid://datr5ht60ko4u" path="res://scenes/level_night.tscn" id="12_5vvyt"]
 [ext_resource type="Texture2D" uid="uid://dfivmvuccxrn" path="res://textures/lineedit.png" id="12_kjvhd"]
-[ext_resource type="FontFile" uid="uid://doebh08hvvxpu" path="res://VPCH2.otf" id="13_2gh4u"]
+[ext_resource type="Script" uid="uid://djx8bvunsxyvp" path="res://scripts/players_tab_controller.gd" id="12_mxvw5"]
+[ext_resource type="FontFile" uid="uid://doebh08hvvxpu" path="res://fonts/VPCH2.otf" id="13_2gh4u"]
 [ext_resource type="Environment" uid="uid://c0fxnqlt3ov8a" path="res://resources/envieronment/night_environment.tres" id="13_j4qnp"]
 [ext_resource type="PackedScene" uid="uid://bpe5ufguaca7w" path="res://scenes/level_thorn.tscn" id="19_3b0ty"]
 [ext_resource type="Texture2D" uid="uid://y4fkmgkic8b7" path="res://textures/UI/rerol.png" id="20_bg4s2"]
@@ -351,8 +352,6 @@ offset_left = 20.0
 offset_top = 20.0
 offset_right = 1132.0
 offset_bottom = 628.0
-grow_horizontal = 2
-grow_vertical = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
@@ -422,10 +421,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -50.0
-offset_right = 100.0
-offset_bottom = 50.0
+offset_left = -106.0
+offset_top = -109.0
+offset_right = 106.0
+offset_bottom = 109.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -487,6 +486,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Your name"
+max_length = 16
 
 [node name="Reroll" type="TextureButton" parent="UI/MainMenu/HBoxContainer" unique_id=988365976]
 modulate = Color(0.38188028, 0.61587304, 0.31444567, 1)
@@ -527,6 +527,28 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="Players" type="CenterContainer" parent="UI" unique_id=875595487]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("12_mxvw5")
+
+[node name="PanelContainer" type="PanelContainer" parent="UI/Players" unique_id=1673358016]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Players/PanelContainer" unique_id=1159130519]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Players/PanelContainer/MarginContainer" unique_id=1113752923]
+layout_mode = 2
 
 [node name="Level_night" parent="." unique_id=284635577 instance=ExtResource("12_5vvyt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.84770393, 227.78882)

@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://doebh08hvvxpu"
-path="res://.godot/imported/VPCH2.otf-8b31a190f8c1f025d5170a01eb975704.fontdata"
+uid="uid://clfy0p1l85uab"
+path="res://.godot/imported/Mx437_Paradise132_7x16.ttf-9594c8f937914ffb29c5315d4b6ef36e.fontdata"
 
 [deps]
 
-source_file="res://VPCH2.otf"
-dest_files=["res://.godot/imported/VPCH2.otf-8b31a190f8c1f025d5170a01eb975704.fontdata"]
+source_file="res://fonts/Mx437_Paradise132_7x16.ttf"
+dest_files=["res://.godot/imported/Mx437_Paradise132_7x16.ttf-9594c8f937914ffb29c5315d4b6ef36e.fontdata"]
 
 [params]
 
