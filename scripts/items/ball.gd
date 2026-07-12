@@ -30,20 +30,17 @@ func is_authority() -> int:
 	return get_multiplayer_authority() == multiplayer.get_unique_id()
 
 func _physics_process(delta: float) -> void:
-	#debug.set_text(0, str(get_multiplayer_authority()) + " | " + str(self.freeze) + " | " + str(self.sleeping))
 	if is_authority():
-		if held_by_id != 0:
-			var player = _get_player(held_by_id)
-			if player:
-				var head = player.get_node_or_null("Head")
-				if head:
-					global_position = head.global_transform * hold_offset
-				else:
-					global_position = player.global_transform * hold_offset
+		if held_by_id != 0 and held_by_player:
+			var head = held_by_player.get_node("Head")
+			if head:
+				global_position = head.global_transform * hold_offset
+			else:
+				global_position = held_by_player.global_transform * hold_offset
 
-				linear_velocity = Vector3.ZERO
-				angular_velocity = Vector3.ZERO
-				rotation = Vector3.ZERO
+			linear_velocity = Vector3.ZERO
+			angular_velocity = Vector3.ZERO
+			rotation = Vector3.ZERO
 
 		if self.global_position.y < -20:
 			self.global_position = Vector3(0,10,0)
@@ -61,23 +58,15 @@ func _physics_process(delta: float) -> void:
 
 	last_position = global_position
 
-	if anim_sprite:
-		if held_by_id == 0 and speed > 0.5:
-			if not anim_sprite.is_playing():
-				anim_sprite.play("default")
-			anim_sprite.speed_scale = speed * 0.4
-		else:
-			anim_sprite.stop()
+	if held_by_id == 0 and speed > 0.5:
+		if not anim_sprite.is_playing():
+			anim_sprite.play("default")
+		anim_sprite.speed_scale = speed * 0.4
+	else:
+		anim_sprite.stop()
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
-	var contact_count:int = state.get_contact_count()
-	for i in range(contact_count):
-		var collider = state.get_contact_collider_object(i)
-		if collider is Player:
-			var new_id : int = int(collider.name)
-			if new_id == get_multiplayer_authority():
-				return
-			rpc("transfer_authority", new_id, self.linear_velocity)
+	transfer_authority_on_touch(state)
 
 @rpc("any_peer", "call_local", "reliable")
 func request_dribble() -> void:
@@ -96,7 +85,6 @@ func request_dribble() -> void:
 			if result:
 				drop_y = result.position.y - global_position.y + 0.3
 				drop_y = min(-0.1, drop_y)
-
 		rpc("play_dribble_anim", drop_y)
 
 @rpc("call_local", "reliable")

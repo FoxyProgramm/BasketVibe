@@ -45,6 +45,9 @@ func _physics_process(delta: float) -> void:
 	else:
 		global_position = global_position.lerp(sync_position, 25.0 * delta)
 
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	transfer_authority_on_touch(state)
+
 func _do_plant():
 	if multiplayer.is_server():
 		_plant(global_position)

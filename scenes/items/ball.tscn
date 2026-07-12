@@ -75,6 +75,7 @@ shape = SubResource("SphereShape3D_1")
 pixel_size = 0.0026
 billboard = 1
 shaded = true
+alpha_cut = 1
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_jd8yr")
 

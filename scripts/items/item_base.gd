@@ -9,7 +9,8 @@ extends RigidBody3D
 #endregion
 
 #region Properties
-@export var held_by_id: int = 0:
+var held_by_player: Player = null
+var held_by_id: int = 0:
 	set(val):
 		held_by_id = val
 		_update_state()
@@ -97,9 +98,11 @@ func update_held_state(new_id: int):
 	if new_id == 0:
 		var player :Player= _get_player(held_by_id)
 		player.held_item = null
+		held_by_player = null
 	else :
 		var player := _get_player(new_id)
 		player.held_item = self
+		held_by_player = player
 	held_by_id = new_id
 
 @rpc("any_peer", "call_local", "reliable")
@@ -109,8 +112,17 @@ func request_throw(direction: Vector3, force: float, player_vel: Vector3 = Vecto
 
 	var sender_id = multiplayer.get_remote_sender_id()
 	if held_by_id == sender_id:
-		#held_by_id = 0
 		rpc("update_held_state", 0)
 		linear_velocity = direction.normalized() * force + player_vel
+
+func transfer_authority_on_touch(state: PhysicsDirectBodyState3D) -> void:
+	var contact_count:int = state.get_contact_count()
+	for i in range(contact_count):
+		var collider = state.get_contact_collider_object(i)
+		if collider is Player:
+			var new_id : int = int(collider.name)
+			if new_id == get_multiplayer_authority():
+				return
+			rpc("transfer_authority", new_id, self.linear_velocity)
 
 #endregion

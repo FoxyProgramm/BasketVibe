@@ -38,6 +38,9 @@ func _physics_process(delta: float) -> void:
 		rotation.y = lerp_angle(rotation.y, sync_rotation.y, 15.0 * delta)
 		rotation.z = lerp_angle(rotation.z, sync_rotation.z, 15.0 * delta)
 
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	transfer_authority_on_touch(state)
+
 func _on_body_entered(body: Node3D):
 	if body.is_in_group("player"):
 		var eject_dir = (body.global_position - global_position).normalized() + Vector3.UP * 0.5
