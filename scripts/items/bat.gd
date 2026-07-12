@@ -9,6 +9,7 @@ var hold_rotation := Vector3(0, 0, 0)
 
 @onready var visuals = $Visuals
 
+@onready var sprite = $Visuals/Sprite3D
 @onready var sprite_mat = $Visuals/Sprite3D.material_override
 
 func is_swingable() -> bool:
@@ -28,7 +29,7 @@ func _ready() -> void:
 	
 func _process(delta: float):
 	var cam = get_viewport().get_camera_3d()
-	var sprite = get_node_or_null("Visuals/Sprite3D")
+	#var sprite = get_node_or_null("Visuals/Sprite3D")
 	if cam and sprite:
 		var to_cam = cam.global_position - sprite.global_position
 		var local_up = global_transform.basis.y.normalized()
@@ -40,44 +41,6 @@ func _process(delta: float):
 			var right = local_up.cross(forward).normalized()
 
 			sprite.global_basis = Basis(right, local_up, forward) * 0.5
-
-	var anim_sprite = get_node_or_null("Visuals/AnimatedSprite3D")
-	if cam and anim_sprite:
-		var to_cam = cam.global_position - anim_sprite.global_position
-		var local_up = global_transform.basis.y.normalized()
-		var projected_to_cam = to_cam - local_up * to_cam.dot(local_up)
-		if projected_to_cam.length_squared() > 0.001:
-			var forward = projected_to_cam.normalized()
-			var right = local_up.cross(forward).normalized()
-			anim_sprite.global_basis = Basis(right, local_up, forward) * 0.5
-
-	# --- ЛОГИКА АНИМАЦИИ СПРАЙТА ---
-	if anim_sprite and anim_sprite.sprite_frames:
-		var anim_name = anim_sprite.animation
-		var frame_count = anim_sprite.sprite_frames.get_frame_count(anim_name)
-
-		if frame_count > 0:
-			# Если у нас настроен анимированный спрайт, прячем статичный
-			if sprite: sprite.hide()
-			anim_sprite.show()
-
-			var player = _get_player(held_by_id) if held_by_id != 0 else null
-
-			if player:
-				var is_swinging = player.get("is_swinging")
-
-				if is_swinging:
-					# Во время удара проигрываем анимацию
-					if anim_sprite.frame == 0 and not anim_sprite.is_playing():
-						anim_sprite.play(anim_name)
-				else:
-					# В спокойном состоянии или при заряде останавливаем анимацию на первом кадре
-					anim_sprite.stop()
-					anim_sprite.frame = 0
-			else:
-				# Если бита валяется на земле
-				anim_sprite.stop()
-				anim_sprite.frame = 0
 
 	# --- ЛОГИКА ОБВОДКИ (Outline) ---
 	var target_alpha = 0.0
@@ -130,29 +93,6 @@ func is_authority() -> int:
 	return get_multiplayer_authority() == multiplayer.get_unique_id()
 
 @rpc("any_peer", "call_local", "reliable")
-func request_pickup(player_id: int) -> void:
-	if not is_authority(): return
-	
-	if held_by_id != 0: return
-
-	var player = _get_player(player_id)
-	if player:
-		if global_position.distance_to(player.global_position) < 4.0:
-			held_by_id = player_id
-			self.rotation = Vector3.ZERO
-			rpc("update_held_state", player_id)
-			rpc("transfer_authority", player_id)
-
-@rpc("any_peer", "call_local", "reliable")
-func request_drop(player_vel: Vector3 = Vector3.ZERO) -> void:
-	if not is_authority(): return
-	var sender_id = multiplayer.get_remote_sender_id()
-	if held_by_id == sender_id:
-		held_by_id = 0
-		rpc("update_held_state", 0)
-		linear_velocity = player_vel
-
-@rpc("any_peer", "call_local", "reliable")
 func request_swing(charge: float) -> void:
 	if not is_authority(): return
 	var sender_id = multiplayer.get_remote_sender_id()
@@ -202,13 +142,3 @@ func request_swing(charge: float) -> void:
 							if bat.held_by_id == p.name.to_int():
 								bat.held_by_id = 0
 								bat.rpc("update_held_state", 0)
-
-@rpc("authority", "call_local", "reliable")
-func update_held_state(new_id: int):
-	held_by_id = new_id
-
-func _get_player(id: int) -> Node3D:
-	for p in get_tree().get_nodes_in_group("player"):
-		if p.name == str(id):
-			return p
-	return null

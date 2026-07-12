@@ -15,6 +15,7 @@ material = SubResource("StandardMaterial3D_wngyc")
 [sub_resource type="BoxShape3D" id="BoxShape3D_y8mo7"]
 
 [node name="box" type="RigidBody3D" unique_id=896297733]
+gravity_scale = 0.0
 script = ExtResource("1_288oi")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1519855420]

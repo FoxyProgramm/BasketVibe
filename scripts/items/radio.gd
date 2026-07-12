@@ -135,42 +135,6 @@ func _physics_process(delta: float) -> void:
 			rotation.z = lerp_angle(rotation.z, sync_rotation.z, 15.0 * delta)
 
 @rpc("any_peer", "call_local", "reliable")
-func request_pickup(player_id: int) -> void:
-	if not multiplayer.is_server(): return
-	if held_by_id != 0: return
-
-	var player = _get_player(player_id)
-	if player:
-		if global_position.distance_to(player.global_position) < 4.0:
-			held_by_id = player_id
-			self.rotation = Vector3.ZERO
-			rpc("update_held_state", player_id)
-
-@rpc("any_peer", "call_local", "reliable")
-func request_drop(player_vel: Vector3 = Vector3.ZERO) -> void:
-	if not multiplayer.is_server(): return
-	var sender_id = multiplayer.get_remote_sender_id()
-	if held_by_id == sender_id:
-		held_by_id = 0
-		rpc("update_held_state", 0)
-		linear_velocity = player_vel
-
-@rpc("any_peer", "call_local", "reliable")
-func update_held_state(new_id: int):
-	held_by_id = new_id
-
-func _get_player(id: int) -> Node3D:
-	for p in get_tree().get_nodes_in_group("player"):
-		if p.name == str(id):
-			return p
-	return null
-
-#@rpc("any_peer", "call_local", "reliable")
-#func apply_radio_impulse(impulse: Vector3):
-	#apply_central_impulse(impulse)
-	#_hit_pitch_effect()
-
-@rpc("any_peer", "call_local", "reliable")
 func apply_item_impulse(impulse:Vector3) -> void:
 	super(impulse)
 	_hit_pitch_effect()

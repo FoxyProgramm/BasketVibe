@@ -66,4 +66,47 @@ func _update_state():
 		collision_layer = 3
 		collision_mask = 3
 
+func _get_player(id: int) -> Node3D:
+	for p in get_tree().get_nodes_in_group("player"):
+		if p.name == str(id):
+			return p
+	return null
+
+@rpc("any_peer", "call_local", "reliable")
+func request_pickup(player_id: int) -> void:
+	if not is_multiplayer_authority(): return
+	if not is_pickable(): return
+	if held_by_id != 0: return
+
+	var player = _get_player(player_id)
+	if player:
+		held_by_id = player_id
+		self.rotation = Vector3.ZERO
+		rpc("update_held_state", player_id)
+		rpc("transfer_authority", player_id)
+
+@rpc("any_peer", "call_local", "reliable")
+func request_drop(player_vel: Vector3 = Vector3.ZERO) -> void:
+	if not is_multiplayer_authority(): return
+	var sender_id = multiplayer.get_remote_sender_id()
+	if held_by_id == sender_id:
+		held_by_id = 0
+		rpc("update_held_state", 0)
+		linear_velocity = player_vel
+
+@rpc("authority", "call_local", "reliable")
+func update_held_state(new_id: int):
+	held_by_id = new_id
+
+@rpc("any_peer", "call_local", "reliable")
+func request_throw(direction: Vector3, force: float, player_vel: Vector3 = Vector3.ZERO) -> void:
+	if not is_multiplayer_authority(): return
+	if not is_throwable(): return
+
+	var sender_id = multiplayer.get_remote_sender_id()
+	if held_by_id == sender_id:
+		held_by_id = 0
+		rpc("update_held_state", 0)
+		linear_velocity = direction.normalized() * force + player_vel
+
 #endregion
