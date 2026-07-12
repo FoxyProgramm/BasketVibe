@@ -27,11 +27,12 @@ var player_scene = preload("res://scenes/player.tscn")
 func _ready():
 	names = preload("res://resources/names.tres").names
 	
-	$LevelSpawner.add_spawnable_scene("res://scenes/ball.tscn")
-	$LevelSpawner.add_spawnable_scene("res://scenes/bat.tscn")
-	$LevelSpawner.add_spawnable_scene("res://scenes/radio.tscn")
 	$PlayerSpawner.add_spawnable_scene("res://scenes/player.tscn")
-	$LevelSpawner.add_spawnable_scene("res://scenes/trash.tscn")
+	
+	$LevelSpawner.add_spawnable_scene("res://scenes/items/ball.tscn")
+	$LevelSpawner.add_spawnable_scene("res://scenes/items/bat.tscn")
+	$LevelSpawner.add_spawnable_scene("res://scenes/items/radio.tscn")
+	$LevelSpawner.add_spawnable_scene("res://scenes/items/trash.tscn")
 	$LevelSpawner.add_spawnable_scene("res://scenes/items/seed.tscn")
 	$LevelSpawner.add_spawnable_scene("res://scenes/items/box.tscn")
 
