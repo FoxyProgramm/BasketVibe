@@ -47,6 +47,8 @@ collision_mask = 3
 shape = SubResource("BoxShape3D_e64ar")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=462744457]
+visibility_range_end = 130.0
+visibility_range_end_margin = 10.0
 mesh = SubResource("BoxMesh_pmotw")
 surface_material_override/0 = SubResource("ShaderMaterial_it10f")
 
