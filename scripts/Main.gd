@@ -1,67 +1,6 @@
 extends Node3D
 
-var names : Array[String] = [
-	"Чебоксар",
-	"Редиски",
-	"Чаполах",
-	"Сувенир",
-	"Анальный гром",
-	"Средиземный паук",
-	"Крит на 20",
-	"Силиконовая Сиська",
-	"Лапух Дубравый",
-	"Окупант",
-	"Опечатка",
-	"Смойся",
-	"Пмойся",
-	"Кто прочитал - тот гэй",
-	"Продам Гараж",
-	"Секретный Лук",
-	"Зимбабвэ",
-	"Горный запах скалы",
-	"Редиски",
-	"Снежный рот",
-	"Атомный таракан",
-	"Дождливый ветер",
-	"Мокрый пистолет",
-	"Сажа",
-	"Боку но пико",
-	"Пенецелин",
-	"Пульт от ядеки",
-	"Сумашествие редисок",
-	"Обрыган",
-	"Целовашка",
-	"Смута",
-	"Переселенец",
-	"Йо майо",
-	"Погадист",
-	"Рассхититель Никит",
-	"Супер безмозглый",
-	"Капибарный торнадо",
-	"Сок Любимый",
-	"Светлое нефильтрованное",
-	"Состояние не определённое",
-	"Ковёр падений",
-	"Зелёные яйца",
-	"Краденный картофель",
-	"Салат какой-то",
-	"Имя",
-	"Имя имя",
-	"Фамилия имя имя",
-	"-->",
-	"Добавьте",
-	"Александр Наковальный",
-	"Ламинариевый",
-	"Ламинария",
-	"Ламинаровый",
-	"Ламинарья",
-	">:3c",
-	"Радист",
-	"    da     ",
-	"Чебурнет",
-	"Редиски"
-]
-
+var names : Array[String] = []
 var item_id:int = 0
 
 func get_item_id() -> String:
@@ -69,7 +8,7 @@ func get_item_id() -> String:
 	return "Item_" + str(item_id)
 
 const PORT = 7777
-const MAX_CLIENTS = 2
+const MAX_CLIENTS = 12
 
 @onready var main_menu = $UI/MainMenu
 @onready var address_entry = $UI/MainMenu/AddressEntry
@@ -86,6 +25,8 @@ var local_info := PlayerInfo.new()
 var player_scene = preload("res://scenes/player.tscn")
 
 func _ready():
+	names = preload("res://resources/names.tres").names
+	
 	$LevelSpawner.add_spawnable_scene("res://scenes/ball.tscn")
 	$LevelSpawner.add_spawnable_scene("res://scenes/bat.tscn")
 	$LevelSpawner.add_spawnable_scene("res://scenes/radio.tscn")

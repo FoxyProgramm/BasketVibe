@@ -90,12 +90,17 @@ func request_drop(player_vel: Vector3 = Vector3.ZERO) -> void:
 	if not is_multiplayer_authority(): return
 	var sender_id = multiplayer.get_remote_sender_id()
 	if held_by_id == sender_id:
-		held_by_id = 0
 		rpc("update_held_state", 0)
 		linear_velocity = player_vel
 
 @rpc("authority", "call_local", "reliable")
 func update_held_state(new_id: int):
+	if new_id == 0:
+		var player :Player= _get_player(held_by_id)
+		player.held_item = null
+	else :
+		var player := _get_player(new_id)
+		player.held_item = self
 	held_by_id = new_id
 
 @rpc("any_peer", "call_local", "reliable")
@@ -105,7 +110,7 @@ func request_throw(direction: Vector3, force: float, player_vel: Vector3 = Vecto
 
 	var sender_id = multiplayer.get_remote_sender_id()
 	if held_by_id == sender_id:
-		held_by_id = 0
+		#held_by_id = 0
 		rpc("update_held_state", 0)
 		linear_velocity = direction.normalized() * force + player_vel
 
