@@ -7,13 +7,14 @@ static var RADIO : PackedScene = preload("res://scenes/items/radio.tscn")
 static var TRASH : PackedScene = preload("res://scenes/items/trash.tscn")
 static var SEED : PackedScene = preload("res://scenes/items/seed.tscn")
 static var BOX : PackedScene = preload("res://scenes/items/box.tscn")
+static var BALLOON : PackedScene = preload("res://scenes/items/balloon.tscn")
 
 static var ITEM_LIST:Array[PackedScene] = [
-	BAT, BALL, RADIO, TRASH, SEED, BOX
+	BAT, BALL, RADIO, TRASH, SEED, BOX, BALLOON
 ]
 
 static var ITEM_NAMES: Array[String] = [
-	"bat", "ball", "radio", "trash", "seed", "box"
+	"bat", "ball", "radio", "trash", "seed", "box", "balloon"
 ]
 
 static var ITEM_DICT:Dictionary[String, PackedScene] = {
@@ -22,5 +23,6 @@ static var ITEM_DICT:Dictionary[String, PackedScene] = {
 	"radio": RADIO,
 	"trash": TRASH,
 	"seed": SEED,
-	"box": BOX
+	"box": BOX,
+	"balloon": BALLOON
 }

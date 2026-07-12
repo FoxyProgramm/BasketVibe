@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://ben0mx45hbhwn"]
+
+[ext_resource type="Script" uid="uid://cqpvsix8hts07" path="res://scripts/items/balloon.gd" id="1_tg5u4"]
+[ext_resource type="Texture2D" uid="uid://dsxlqkioa6pyj" path="res://textures/vozduhniiball.png" id="2_6u4r6"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_6u4r6"]
+bounce = 2.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wngyc"]
+transparency = 1
+albedo_color = Color(3.1311767, 0, 0, 1)
+albedo_texture = ExtResource("2_6u4r6")
+texture_filter = 0
+billboard_mode = 1
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_y8mo7"]
+material = SubResource("StandardMaterial3D_wngyc")
+center_offset = Vector3(0, -0.475, 0)
+orientation = 2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_y8mo7"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wngyc"]
+radius = 0.5426784
+
+[node name="balloon" type="RigidBody3D" unique_id=1873163462 groups=["balloon"]]
+physics_material_override = SubResource("PhysicsMaterial_6u4r6")
+gravity_scale = 0.2
+linear_damp = 3.0
+script = ExtResource("1_tg5u4")
+sync_position = Vector3(0, 0.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=229796268]
+mesh = SubResource("PlaneMesh_y8mo7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1895818006]
+shape = SubResource("SphereShape3D_y8mo7")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1512027517]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=302649609]
+shape = SubResource("SphereShape3D_wngyc")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

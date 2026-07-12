@@ -171,6 +171,17 @@ func _input(event):
 			elif held.is_in_group("box"):
 				if event.pressed:
 						held.rpc_id(held.get_multiplayer_authority(), "setkas")
+			elif held.is_in_group("balloon"):
+				if event.pressed:
+					is_charging = true
+					charge_progress = 0.0
+				else:
+					if is_charging:
+						is_charging = false
+						var throw_dir = -head.global_transform.basis.z + Vector3.UP * 0.2
+						var force = lerp(MIN_THROW_FORCE, MAX_THROW_FORCE, charge_progress)
+						held.rpc_id(held.get_multiplayer_authority(), "request_throw", throw_dir, force, linear_velocity)
+						charge_bar.hide()
 		else:
 			if event.pressed:
 				var closest = get_closes_item_is_sigth()

@@ -35,6 +35,7 @@ func _ready():
 	$LevelSpawner.add_spawnable_scene("res://scenes/items/trash.tscn")
 	$LevelSpawner.add_spawnable_scene("res://scenes/items/seed.tscn")
 	$LevelSpawner.add_spawnable_scene("res://scenes/items/box.tscn")
+	$LevelSpawner.add_spawnable_scene("res://scenes/items/balloon.tscn")
 
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
@@ -67,6 +68,7 @@ func _on_host_pressed():
 	_spawn_item("trash", Vector3(35, 3.3, -33.2))
 	_spawn_item("seed", Vector3(0, 3, 0))
 	_spawn_item("box", Vector3(3,3,3))
+	_spawn_item("balloon", Vector3(7,4,2))
 	
 func _on_join_pressed():
 	main_menu.hide()
