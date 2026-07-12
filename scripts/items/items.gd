@@ -9,7 +9,11 @@ static var SEED : PackedScene = preload("res://scenes/items/seed.tscn")
 static var BOX : PackedScene = preload("res://scenes/items/box.tscn")
 
 static var ITEM_LIST:Array[PackedScene] = [
-	BAT, BALL, RADIO, TRASH, SEED
+	BAT, BALL, RADIO, TRASH, SEED, BOX
+]
+
+static var ITEM_NAMES: Array[String] = [
+	"bat", "ball", "radio", "trash", "seed", "box"
 ]
 
 static var ITEM_DICT:Dictionary[String, PackedScene] = {

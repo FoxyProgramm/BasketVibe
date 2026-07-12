@@ -30,20 +30,17 @@ func is_authority() -> int:
 	return get_multiplayer_authority() == multiplayer.get_unique_id()
 
 func _physics_process(delta: float) -> void:
-	#debug.set_text(0, str(get_multiplayer_authority()) + " | " + str(self.freeze) + " | " + str(self.sleeping))
 	if is_authority():
-		if held_by_id != 0:
-			var player = _get_player(held_by_id)
-			if player:
-				var head = player.get_node_or_null("Head")
-				if head:
-					global_position = head.global_transform * hold_offset
-				else:
-					global_position = player.global_transform * hold_offset
+		if held_by_id != 0 and held_by_player:
+			var head = held_by_player.get_node("Head")
+			if head:
+				global_position = head.global_transform * hold_offset
+			else:
+				global_position = held_by_player.global_transform * hold_offset
 
-				linear_velocity = Vector3.ZERO
-				angular_velocity = Vector3.ZERO
-				rotation = Vector3.ZERO
+			linear_velocity = Vector3.ZERO
+			angular_velocity = Vector3.ZERO
+			rotation = Vector3.ZERO
 
 		if self.global_position.y < -20:
 			self.global_position = Vector3(0,10,0)
@@ -61,54 +58,15 @@ func _physics_process(delta: float) -> void:
 
 	last_position = global_position
 
-	if anim_sprite:
-		if held_by_id == 0 and speed > 0.5:
-			if not anim_sprite.is_playing():
-				anim_sprite.play("default")
-			anim_sprite.speed_scale = speed * 0.4
-		else:
-			anim_sprite.stop()
+	if held_by_id == 0 and speed > 0.5:
+		if not anim_sprite.is_playing():
+			anim_sprite.play("default")
+		anim_sprite.speed_scale = speed * 0.4
+	else:
+		anim_sprite.stop()
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
-	var contact_count:int = state.get_contact_count()
-	for i in range(contact_count):
-		var collider = state.get_contact_collider_object(i)
-		if collider is Player:
-			var new_id : int = int(collider.name)
-			if new_id == get_multiplayer_authority():
-				return
-			rpc("transfer_authority", new_id, self.linear_velocity)
-
-@rpc("any_peer", "call_local", "reliable")
-func request_pickup(player_id: int) -> void:
-	if not is_authority(): return
-	if held_by_id != 0: return 
-
-	var player = _get_player(player_id)
-	if player:
-		if global_position.distance_to(player.global_position) < 4.0:
-			held_by_id = player_id
-			rpc("update_held_state", player_id)
-			rpc("transfer_authority", player_id)
-
-@rpc("any_peer", "call_local", "reliable")
-func request_drop(player_vel: Vector3 = Vector3.ZERO) -> void:
-	if not is_authority(): return
-	var sender_id = multiplayer.get_remote_sender_id()
-	if held_by_id == sender_id:
-		held_by_id = 0
-		rpc("update_held_state", 0)
-		linear_velocity = player_vel
-
-@rpc("any_peer", "call_local", "reliable")
-func request_throw(direction: Vector3, force: float, player_vel: Vector3 = Vector3.ZERO) -> void:
-	if not is_authority(): return
-
-	var sender_id = multiplayer.get_remote_sender_id()
-	if held_by_id == sender_id:
-		held_by_id = 0
-		rpc("update_held_state", 0)
-		linear_velocity = direction.normalized() * force + player_vel
+	transfer_authority_on_touch(state)
 
 @rpc("any_peer", "call_local", "reliable")
 func request_dribble() -> void:
@@ -127,7 +85,6 @@ func request_dribble() -> void:
 			if result:
 				drop_y = result.position.y - global_position.y + 0.3
 				drop_y = min(-0.1, drop_y)
-
 		rpc("play_dribble_anim", drop_y)
 
 @rpc("call_local", "reliable")
@@ -141,16 +98,10 @@ func play_dribble_anim(target_y: float):
 
 @rpc("authority", "call_local", "reliable")
 func update_held_state(new_id: int):
-	held_by_id = new_id
+	super(new_id)
 	if new_id == 0:
 		is_dribbling = false
 		$AnimatedSprite3D.position.y = 0.0
-
-func _get_player(id: int) -> Node3D:
-	for p in get_tree().get_nodes_in_group("player"):
-		if p.name == str(id):
-			return p
-	return null
 
 func _on_check_authority_timeout() -> void:
 	if held_by_id != 0: return

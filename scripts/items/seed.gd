@@ -28,19 +28,8 @@ func get_sync_properties() -> Array[String]:
 	return ["sync_position"]
 
 func _ready() -> void:
+	super()
 	add_to_group("seed")
-	var sync = MultiplayerSynchronizer.new()
-	sync.name = "MultiplayerSynchronizer"
-	sync.root_path = NodePath("..")
-	var config = SceneReplicationConfig.new()
-	config.add_property(NodePath(".:sync_position"))
-	sync.replication_config = config
-	sync.replication_interval = 0.05
-	sync.delta_interval = 0.05
-	add_child(sync, true)
-	sync_position = global_position
-	if not multiplayer.is_server():
-		freeze = true
 
 func _physics_process(delta: float) -> void:
 	if is_authority():
@@ -56,7 +45,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		global_position = global_position.lerp(sync_position, 25.0 * delta)
 
-
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	transfer_authority_on_touch(state)
 
 func _do_plant():
 	if multiplayer.is_server():
@@ -86,48 +76,16 @@ func _hide_seed():
 	set_process(false)
 	set_physics_process(false)
 
-func _get_player(id: int) -> Node3D:
-	for p in get_tree().get_nodes_in_group("player"):
-		if p.name == str(id):
-			return p
-	return null
-
-@rpc("any_peer", "call_local", "reliable")
-func request_pickup(player_id: int) -> void:
-	if not is_authority(): return
-	if held_by_id != 0 or was_held: return
-	var player = _get_player(player_id)
-	if player and global_position.distance_to(player.global_position) < 4.0:
-		held_by_id = player_id
-		rpc("update_held_state", player_id)
-		rpc("transfer_authority", player_id)
-
-@rpc("any_peer", "call_local", "reliable")
-func request_drop(player_vel: Vector3 = Vector3.ZERO) -> void:
-	if not is_authority(): return
-	var sender_id = multiplayer.get_remote_sender_id()
-	if held_by_id == sender_id:
-		held_by_id = 0
-		rpc("update_held_state", 0)
-		linear_velocity = player_vel
-
 @rpc("any_peer", "call_local", "reliable")
 func request_throw(direction: Vector3, force: float, player_vel: Vector3 = Vector3.ZERO) -> void:
-	if not is_authority(): return
+	super(direction, force, player_vel)
 	var sender_id = multiplayer.get_remote_sender_id()
 	if held_by_id == sender_id:
-		held_by_id = 0
-		rpc("update_held_state", 0)
 		rpc("mark_as_thrown")
-		linear_velocity = direction.normalized() * force + player_vel
 
 @rpc("call_local", "reliable")
 func mark_as_thrown():
 	was_held = true
-
-@rpc("authority", "call_local", "reliable")
-func update_held_state(new_id: int):
-	held_by_id = new_id
 
 @rpc("any_peer", "call_local", "reliable")
 func transfer_authority(new_id:int, velocity: Vector3 = Vector3.ZERO) -> void:

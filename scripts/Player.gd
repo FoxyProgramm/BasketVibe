@@ -28,6 +28,7 @@ var knockback_velocity: Vector3 = Vector3.ZERO
 
 var base_grip_rot := Vector3.ZERO
 var is_swinging := false
+var held_item: ItemBase = null
 #@onready var head_mesh = $Head/HeadMesh
 @onready var ground_cast = $GroundCast
 @onready var charge_bar = $UI/ChargeBar
@@ -173,60 +174,9 @@ func _input(event):
 				var closest = get_closes_item_is_sigth()
 				if closest:
 					closest.rpc_id(closest.get_multiplayer_authority(), "request_pickup", multiplayer.get_unique_id())
-					
 
 func get_held_object():
-	for b in get_tree().get_nodes_in_group("ball"):
-		if b.held_by_id == multiplayer.get_unique_id(): return b
-	for b in get_tree().get_nodes_in_group("bat"):
-		if b.held_by_id == multiplayer.get_unique_id(): return b
-	for b in get_tree().get_nodes_in_group("radio"):
-		if b.held_by_id == multiplayer.get_unique_id(): return b
-	for b in get_tree().get_nodes_in_group("seed"):
-		if b.held_by_id == multiplayer.get_unique_id(): return b
-	for b in get_tree().get_nodes_in_group("box"):
-		if b.held_by_id == multiplayer.get_unique_id(): return b
-	return null
-
-## @deprecated you should die
-func get_closest_interactable() -> Node3D:
-	var closest = null
-	var min_dist = 4.0
-
-	for b in get_tree().get_nodes_in_group("ball"):
-		if b.held_by_id == 0:
-			var d = global_position.distance_to(b.global_position)
-			if d < min_dist:
-				closest = b
-				min_dist = d
-
-	for b in get_tree().get_nodes_in_group("bat"):
-		if b.held_by_id == 0:
-			var d = global_position.distance_to(b.global_position)
-			if d < min_dist:
-				closest = b
-				min_dist = d
-
-	for b in get_tree().get_nodes_in_group("radio"):
-		if b.held_by_id == 0:
-			var d = global_position.distance_to(b.global_position)
-			if d < min_dist:
-				closest = b
-				min_dist = d
-	for b in get_tree().get_nodes_in_group("seed"):
-		if b.held_by_id == 0:
-			var d = global_position.distance_to(b.global_position)
-			if d < min_dist:
-				closest = b
-				min_dist = d
-	for b in get_tree().get_nodes_in_group("box"):
-		if b.held_by_id == 0:
-			var d = global_position.distance_to(b.global_position)
-			if d < min_dist:
-				closest = b
-				min_dist = d
-
-	return closest
+	return held_item
 
 func _process(delta: float):
 	if not is_multiplayer_authority(): return

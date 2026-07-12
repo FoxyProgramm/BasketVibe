@@ -9,7 +9,8 @@ extends RigidBody3D
 #endregion
 
 #region Properties
-@export var held_by_id: int = 0:
+var held_by_player: Player = null
+var held_by_id: int = 0:
 	set(val):
 		held_by_id = val
 		_update_state()
@@ -65,5 +66,63 @@ func _update_state():
 				freeze = false
 		collision_layer = 3
 		collision_mask = 3
+
+@onready var players :Node3D = get_tree().get_first_node_in_group("players")
+
+func _get_player(id: int) -> Node3D:
+	return players.get_node_or_null(str(id))
+
+@rpc("any_peer", "call_local", "reliable")
+func request_pickup(player_id: int) -> void:
+	if not is_multiplayer_authority(): return
+	if not is_pickable(): return
+	if held_by_id != 0: return
+
+	var player = _get_player(player_id)
+	if player:
+		held_by_id = player_id
+		self.rotation = Vector3.ZERO
+		rpc("update_held_state", player_id)
+		rpc("transfer_authority", player_id)
+
+@rpc("any_peer", "call_local", "reliable")
+func request_drop(player_vel: Vector3 = Vector3.ZERO) -> void:
+	if not is_multiplayer_authority(): return
+	var sender_id = multiplayer.get_remote_sender_id()
+	if held_by_id == sender_id:
+		rpc("update_held_state", 0)
+		linear_velocity = player_vel
+
+@rpc("authority", "call_local", "reliable")
+func update_held_state(new_id: int):
+	if new_id == 0:
+		var player :Player= _get_player(held_by_id)
+		player.held_item = null
+		held_by_player = null
+	else :
+		var player := _get_player(new_id)
+		player.held_item = self
+		held_by_player = player
+	held_by_id = new_id
+
+@rpc("any_peer", "call_local", "reliable")
+func request_throw(direction: Vector3, force: float, player_vel: Vector3 = Vector3.ZERO) -> void:
+	if not is_multiplayer_authority(): return
+	if not is_throwable(): return
+
+	var sender_id = multiplayer.get_remote_sender_id()
+	if held_by_id == sender_id:
+		rpc("update_held_state", 0)
+		linear_velocity = direction.normalized() * force + player_vel
+
+func transfer_authority_on_touch(state: PhysicsDirectBodyState3D) -> void:
+	var contact_count:int = state.get_contact_count()
+	for i in range(contact_count):
+		var collider = state.get_contact_collider_object(i)
+		if collider is Player:
+			var new_id : int = int(collider.name)
+			if new_id == get_multiplayer_authority():
+				return
+			rpc("transfer_authority", new_id, self.linear_velocity)
 
 #endregion
