@@ -35,8 +35,6 @@ func _check_teleport():
 	
 	for player in players:
 		if not player.is_multiplayer_authority(): continue
-		
-		# Проверяем что игрок примерно на высоте леса
 		if abs(player.global_position.y - global_position.y) > 20.0:
 			continue
 		
@@ -75,10 +73,10 @@ func _push_items_from_edge():
 	
 	var half = area_size / 2.0
 	var margin = teleport_margin * 1.05
-	var location_y = global_position.y  # 260
-	var height_threshold = 20.0  # Диапазон высоты леса
+	var location_y = global_position.y
+	var height_threshold = 20.0 
 	
-	for group in Items.ITEM_DICT.keys():
+	for group in Items.ITEM_NAMES:
 		for item in get_tree().get_nodes_in_group(group):
 			# Проверяем что предмет примерно на высоте леса
 			if abs(item.global_position.y - location_y) > height_threshold:
@@ -105,6 +103,7 @@ func _push_items_from_edge():
 				item.global_position = ipos
 				if item is RigidBody3D:
 					item.linear_velocity = Vector3.ZERO
+
 @rpc("any_peer", "reliable")
 func _teleport_player(player_path: NodePath, new_pos: Vector3):
 	if not multiplayer.is_server(): return
@@ -113,38 +112,60 @@ func _teleport_player(player_path: NodePath, new_pos: Vector3):
 		player.global_position = new_pos
 		player.sync_position = new_pos
 		player.rpc_id(player.name.to_int(), "_client_teleport", new_pos, "")
+
+var rand := RandomNumberGenerator.new()
+
+func _get_random_properties() -> Dictionary[String, Variant]:
+	var result :Dictionary[String, Variant] = {}
 	
+	result['pos'] = Vector3(
+		rand.randf_range(-area_size / 2, area_size / 2),
+	 	rand.randf_range(0, max_depth),
+		rand.randf_range(-area_size / 2, area_size / 2)
+	)
+	result['tilt'] = Vector2( rand.randf_range(-0.1, 0.1), rand.randf_range(-0.1, 0.1) )
+	result['radius'] = rand.randf_range(min_radius, max_radius)
+	result['rotate_y'] = rand.randf() * TAU
+	
+	return result
+
 func _generate_collisions():
-	var rng = RandomNumberGenerator.new()
-	rng.seed = seed_value
+	rand.seed = seed_value
+	rand.state = 0
 	
 	for i in range(spike_count):
-		var x = rng.randf_range(-area_size / 2, area_size / 2)
-		var z = rng.randf_range(-area_size / 2, area_size / 2)
-		var depth = rng.randf_range(0, max_depth)
-		var radius = rng.randf_range(min_radius, max_radius)
-		var tilt_x = rng.randf_range(-0.1, 0.1)
-		var tilt_z = rng.randf_range(-0.1, 0.1)
-		var rot_y = rng.randf() * TAU
+		var properties := _get_random_properties()
 		
-		var body = StaticBody3D.new()
-		var shape = CylinderShape3D.new()
+		var x:float = properties['pos'].x
+		var z:float = properties['pos'].z
+		var depth:float = properties['pos'].y
+		var radius:float = properties['radius']
+		var tilt_x:float = properties['tilt'].x
+		var tilt_z:float = properties['tilt'].y
+		var rot_y:float = properties['rotate_y']
+		
+		var body := StaticBody3D.new()
+		var shape := CylinderShape3D.new()
 		shape.height = 18.0 - depth
 		shape.radius = radius * 0.5
-		var col = CollisionShape3D.new()
+		var col := CollisionShape3D.new()
 		col.shape = shape
 		body.add_child(col)
 		
-		body.position = Vector3(x, -depth, z)
-		body.rotation_degrees = Vector3(rad_to_deg(tilt_x), rad_to_deg(rot_y), rad_to_deg(tilt_z))
-		body.scale = Vector3(radius, 1.0, radius)
+		var t = Transform3D()
+		t.origin = Vector3(x, -depth, z)
+		var basis_ = Basis()
+		basis_ = basis_.rotated(Vector3.UP, rot_y)
+		basis_ = basis_.rotated(Vector3.RIGHT, tilt_x)
+		basis_ = basis_.rotated(Vector3.FORWARD, tilt_z)
+		t.basis = basis_.scaled(Vector3(radius, 1.0, radius))
+		body.transform = t
+		
 		body.collision_layer = 1
 		body.collision_mask = 1
 		add_child(body)
 		active_collisions.append(body)
 	
-	#print("Всего коллизий: ", active_collisions.size())
-
 @rpc("call_local", "reliable")
 func set_seed(seed: int):
 	seed_value = seed
@@ -159,8 +180,8 @@ func _generate_spikes():
 	if spike_multimesh:
 		spike_multimesh.queue_free()
 	
-	var rng = RandomNumberGenerator.new()
-	rng.seed = seed_value
+	rand.seed = seed_value
+	rand.state = 0
 	
 	spike_multimesh = MultiMeshInstance3D.new()
 	spike_multimesh.multimesh = MultiMesh.new()
@@ -170,29 +191,27 @@ func _generate_spikes():
 	add_child(spike_multimesh)
 	
 	for i in range(spike_count):
-		var x = rng.randf_range(-area_size / 2, area_size / 2)
-		var z = rng.randf_range(-area_size / 2, area_size / 2)
-		
-		var depth = rng.randf_range(0, max_depth)  # Насколько уходит под землю
-		var visible_height = 18.0 - depth           # Сколько видно над землёй
-		
-		var tilt_x = rng.randf_range(-0.1, 0.1)
-		var tilt_z = rng.randf_range(-0.1, 0.1)
+		var properties := _get_random_properties()
+
+		var x:float = properties["pos"].x
+		var z:float = properties["pos"].z
+		var depth:float = properties["pos"].y
+		var radius:float = properties["radius"]
+		var tilt_x:float = properties["tilt"].x
+		var tilt_z:float = properties["tilt"].y
+		var rot_y:float = properties["rotate_y"]
 		
 		var t = Transform3D()
 		t.origin = Vector3(x, -depth, z)  # Заглубляем
 		
-		var basis = Basis()
-		basis = basis.rotated(Vector3.UP, rng.randf() * TAU)
-		basis = basis.rotated(Vector3.RIGHT, tilt_x)
-		basis = basis.rotated(Vector3.FORWARD, tilt_z)
-		var radius = rng.randf_range(min_radius, max_radius)
-		t.basis = basis.scaled(Vector3(radius, 1.0, radius))
+		var basis_ = Basis()
+		basis_ = basis_.rotated(Vector3.UP, rot_y)
+		basis_ = basis_.rotated(Vector3.RIGHT, tilt_x)
+		basis_ = basis_.rotated(Vector3.FORWARD, tilt_z)
+		t.basis = basis_.scaled(Vector3(radius, 1.0, radius))
 		
 		spike_multimesh.multimesh.set_instance_transform(i, t)
-		#if i == 0:
-			#print("Шип 0: origin=", t.origin, " rotation_deg=", t.basis.get_euler() * 180/PI, " scale=", t.basis.get_scale())
-	
+
 	spike_multimesh.multimesh.visible_instance_count = spike_count
 	
 	if spike_material:

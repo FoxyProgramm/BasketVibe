@@ -66,11 +66,10 @@ func _update_state():
 		collision_layer = 3
 		collision_mask = 3
 
+@onready var players :Node3D = get_tree().get_first_node_in_group("players")
+
 func _get_player(id: int) -> Node3D:
-	for p in get_tree().get_nodes_in_group("player"):
-		if p.name == str(id):
-			return p
-	return null
+	return players.get_node_or_null(str(id))
 
 @rpc("any_peer", "call_local", "reliable")
 func request_pickup(player_id: int) -> void:
