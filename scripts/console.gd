@@ -10,6 +10,9 @@ extends VBoxContainer
 var command_history: Array[String] = []
 var history_index: int = -1
 
+var cheat_mode: String = "nobody"
+
+
 func _ready():
 	pass
 	#line_edit.text_submitted.connect(_on_line_edit_text_submitted)
@@ -92,7 +95,64 @@ func parse(commands:Array[String]) -> void:
 			if commands.size() > 1:
 				var path = commands[1]
 				_client_add_song(path)
+		"cheats":
+			if commands.size() > 1:
+				var mode = commands[1]
+				if mode in ["nobody", "host", "all"]:
+					if multiplayer.is_server():
+						_set_cheat_mode(mode)
+					else:
+						log_info("You do not have permission to change cheat operation mode", "red")
+				else:
+					log_info("Unknown cheat operation mode", "red")
+		"noclip":
+			if not can_use_cheats():
+				cantusecheats()
+				return
+			var player = get_tree().get_first_node_in_group("player")
+			if player and player.is_multiplayer_authority():
+				player.noclip = !player.noclip
+				log_info("Noclip: " + str(player.noclip), "#12ab00")
+		"resetpos":
+			var player = get_tree().get_first_node_in_group("player")
+			if player and player.is_multiplayer_authority():
+				var new_pos = Vector3.ZERO
+				if multiplayer.is_server():
+					player.global_position = new_pos
+					player.sync_position = new_pos
+					player.rpc_id(player.name.to_int(), "_client_teleport", new_pos, "")
+				else:
+					rpc_id(1, "_teleport_player", player.get_path(), new_pos)
+				log_info("Your coordinate reseted", "#12ab00")
 
+@rpc("any_peer", "reliable")
+func _teleport_player(player_path: NodePath, new_pos: Vector3):
+	if not multiplayer.is_server(): return
+	var player = get_node_or_null(player_path)
+	if player:
+		player.global_position = new_pos
+		player.sync_position = new_pos
+		player.rpc_id(player.name.to_int(), "_client_teleport", new_pos, "")
+
+@rpc("any_peer", "reliable")
+func _set_cheat_mode(mode: String):
+	if not multiplayer.is_server(): return
+	cheat_mode = mode
+	rpc("_update_cheat_mode", mode)
+
+@rpc("call_local", "reliable")
+func _update_cheat_mode(mode: String):
+	cheat_mode = mode
+	log_info("Cheats mode: " + mode, "#12ab00")
+
+func can_use_cheats() -> bool:
+	match cheat_mode:
+		"all":  return true
+		"host": return multiplayer.is_server()
+		_: return false
+
+func cantusecheats():
+	log_info("You do not have permission to use cheats commands", "red")
 @rpc("any_peer", "reliable")
 func _add_song(data: PackedByteArray):
 	if not multiplayer.is_server():

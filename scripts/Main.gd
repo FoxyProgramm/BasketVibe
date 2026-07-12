@@ -97,9 +97,7 @@ func add_player(id:int, info:PackedByteArray) -> void:
 func _on_peer_connected(id) -> void:
 	if multiplayer.is_server():
 		_spawn_player(id)
-		var spike_forest = get_node_or_null("level_thorn")
-		if spike_forest:
-			spike_forest.rpc_id(id, "set_seed", spike_forest.seed_value)
+		sync_vars(id)
 	rpc_id(id, "add_player", multiplayer.get_unique_id(), local_info.pack())
 	
 func _on_peer_disconnected(id) -> void:
@@ -177,3 +175,10 @@ func spawn_flowers_at(pos: Vector3, count: int, radius: float, mesh_path: String
 
 func _on_reroll_username_pressed() -> void:
 	username_line.text = names.pick_random()
+
+func sync_vars(id):
+	var spike_forest = get_node_or_null("Level/level_thorn")
+	if spike_forest:
+		spike_forest.rpc_id(id, "set_seed", spike_forest.seed_value)
+	var console = $"UI/Debug/Console"
+	console.rpc_id(id, "_update_cheat_mode", console.cheat_mode)

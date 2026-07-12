@@ -13,6 +13,8 @@ var is_charging: bool = false
 var charge_progress: float = 0.0
 var knockback_velocity: Vector3 = Vector3.ZERO
 
+var noclip: bool = false
+
 @export var default_environment: Environment #юазовый эрваермент, чтобы потом менять
 
 # Переменные для сетевой интерполяции
@@ -285,8 +287,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 
 		var is_on_floor = ground_cast.is_colliding()
 
-		if Input.is_key_pressed(KEY_SPACE) and is_on_floor:
-			state.linear_velocity.y = JUMP_VELOCITY
+		if Input.is_key_pressed(KEY_SPACE):
+			if noclip:
+				state.linear_velocity.y = JUMP_VELOCITY
+			elif is_on_floor:
+				state.linear_velocity.y = JUMP_VELOCITY
 
 		var input_dir = Input.get_vector("left", "right", "up", "down")
 
