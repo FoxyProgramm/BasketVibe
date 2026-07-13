@@ -175,7 +175,7 @@ func _input(event):
 				else:
 					if is_charging:
 						is_charging = false
-						if charge_progress >= 0.95:  # Полный заряд — усиляем
+						if charge_progress >= 0.5:  # Полный заряд — усиляем
 							held.rpc_id(held.get_multiplayer_authority(), "reinforce")
 						else:
 							held.rpc_id(held.get_multiplayer_authority(), "setkas")

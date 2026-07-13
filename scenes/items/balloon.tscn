@@ -21,7 +21,7 @@ orientation = 2
 [sub_resource type="SphereShape3D" id="SphereShape3D_y8mo7"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_wngyc"]
-radius = 0.5426784
+radius = 0.77479064
 
 [node name="balloon" type="RigidBody3D" unique_id=1873163462 groups=["balloon"]]
 physics_material_override = SubResource("PhysicsMaterial_6u4r6")
