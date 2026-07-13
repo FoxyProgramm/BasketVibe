@@ -170,7 +170,16 @@ func _input(event):
 						charge_bar.hide()
 			elif held.is_in_group("box"):
 				if event.pressed:
-						held.rpc_id(held.get_multiplayer_authority(), "setkas")
+					is_charging = true
+					charge_progress = 0.0
+				else:
+					if is_charging:
+						is_charging = false
+						if charge_progress >= 0.95:  # Полный заряд — усиляем
+							held.rpc_id(held.get_multiplayer_authority(), "reinforce")
+						else:
+							held.rpc_id(held.get_multiplayer_authority(), "setkas")
+						charge_bar.hide()
 			elif held.is_in_group("balloon"):
 				if event.pressed:
 					is_charging = true

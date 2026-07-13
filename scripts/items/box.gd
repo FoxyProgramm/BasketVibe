@@ -2,7 +2,8 @@ class_name BoxItem
 extends ItemBase
 
 var hold_offset := Vector3(0, 0.0, -2.5)
-var setka = false
+var setka: bool = false
+var is_reinforced: bool = false
 @export var sync_position: Vector3
 
 func is_pickable() -> bool:
@@ -62,6 +63,7 @@ func setkas():
 
 @rpc("any_peer", "call_local", "reliable")
 func destroy():
+	if is_reinforced: return
 	if multiplayer.is_server():
 		rpc("_do_destroy")
 
@@ -78,3 +80,16 @@ func _do_destroy():
 func _remove():
 	if multiplayer.is_server():
 		queue_free()
+
+@rpc("any_peer", "call_local", "reliable")
+func reinforce():
+	is_reinforced = !is_reinforced
+	
+	if is_reinforced:
+		var mat = $MeshInstance3D.get_active_material(0).duplicate()
+		mat.albedo_texture = preload("res://textures/crutaa_box.png")
+		$MeshInstance3D.material_override = mat
+	else:
+		var mat = $MeshInstance3D.get_active_material(0).duplicate()
+		mat.albedo_texture = preload("res://textures/box.png")
+		$MeshInstance3D.material_override = mat
