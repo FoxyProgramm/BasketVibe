@@ -92,6 +92,12 @@ func parse(commands:Array[String]) -> void:
 			if commands.size() > 1:
 				var path = commands[1]
 				_client_add_song(path)
+		"kick":
+			if commands.size() > 1:
+				kick_player(int(commands.get(1)))
+		"spawn":
+			if commands.size() > 1:
+				spawn_player(int(commands.get(1)))
 
 @rpc("any_peer", "reliable")
 func _add_song(data: PackedByteArray):
@@ -194,3 +200,17 @@ func _input(event: InputEvent) -> void:
 
 func log_info(text: String, color: String = "#66ff66"):
 	console_log("[color=" + color + "]" + text + "[/color]")
+
+@onready var players_node:Node3D = get_tree().get_first_node_in_group("players")
+func get_player(id:int) -> Player:
+	return players_node.get_node_or_null(str(id))
+
+func spawn_player(id:int) -> void:
+	var player:Player = get_player(id)
+	if player:
+		player.rpc("reset_position")
+
+func kick_player(id:int) -> void:
+	var player:Player = get_player(id)
+	if player:
+		player.rpc_id(id, "disconnect_from_server")

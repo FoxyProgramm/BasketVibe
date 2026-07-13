@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://s5rqjsq4o453"]
 
 [ext_resource type="Script" uid="uid://wrnkwp4pnoq" path="res://scripts/player_tab_info_line.gd" id="1_kd0gv"]
-[ext_resource type="Texture2D" uid="uid://e5tv6t64m11u" path="res://icon.svg" id="2_hgtky"]
 [ext_resource type="FontFile" uid="uid://b8b68qqh2mqq2" path="res://fonts/PixelifySans-VariableFont_wght.ttf" id="2_kd0gv"]
 
 [node name="PlayerTabInfoLine" type="HBoxContainer" unique_id=1652860157]
@@ -31,28 +30,3 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("2_kd0gv")
 theme_override_font_sizes/font_size = 16
 text = "ывапвапывапsdfgfd"
-
-[node name="VSeparator2" type="VSeparator" parent="." unique_id=1581791497]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="." unique_id=948629378]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Spawn" type="TextureButton" parent="." unique_id=1857954970]
-custom_minimum_size = Vector2(26, 0)
-layout_mode = 2
-focus_mode = 0
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("2_hgtky")
-ignore_texture_size = true
-stretch_mode = 5
-
-[node name="Kick" type="TextureButton" parent="." unique_id=149801253]
-custom_minimum_size = Vector2(26, 0)
-layout_mode = 2
-focus_mode = 0
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("2_hgtky")
-ignore_texture_size = true
-stretch_mode = 5
