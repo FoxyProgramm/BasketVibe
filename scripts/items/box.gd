@@ -3,7 +3,7 @@ extends ItemBase
 
 var hold_offset := Vector3(0, 0.0, -2.5)
 var setka: bool = false
-var is_reinforced: bool = false
+@export var is_reinforced: bool = false
 @export var sync_position: Vector3
 
 func is_pickable() -> bool:
@@ -16,7 +16,7 @@ func is_swingable() -> bool:
 	return true
 
 func get_sync_properties() -> Array[String]:
-	return ["sync_position"]
+	return ["sync_position", "is_reinforced"]
 
 func is_authority() -> int:
 	return get_multiplayer_authority() == multiplayer.get_unique_id()
@@ -69,6 +69,7 @@ func destroy():
 
 @rpc("call_local", "reliable")
 func _do_destroy():
+	if is_reinforced: return
 	collision_layer = 0
 	collision_mask = 0
 	freeze = true
@@ -79,17 +80,20 @@ func _do_destroy():
 
 func _remove():
 	if multiplayer.is_server():
+		held_by_id = 0
+		if held_by_player:
+			held_by_player = null
+		await get_tree().create_timer(0.1).timeout
 		queue_free()
 
 @rpc("any_peer", "call_local", "reliable")
 func reinforce():
 	is_reinforced = !is_reinforced
-	
-	if is_reinforced:
-		var mat = $MeshInstance3D.get_active_material(0).duplicate()
-		mat.albedo_texture = preload("res://textures/crutaa_box.png")
-		$MeshInstance3D.material_override = mat
-	else:
-		var mat = $MeshInstance3D.get_active_material(0).duplicate()
-		mat.albedo_texture = preload("res://textures/box.png")
-		$MeshInstance3D.material_override = mat
+	rpc("_update_texture", is_reinforced)
+
+@rpc("call_local", "reliable")
+func _update_texture(reinforced: bool):
+	var texture_path = "res://textures/crutaa_box.png" if reinforced else "res://textures/box.png"
+	var mat = $MeshInstance3D.get_active_material(0).duplicate()
+	mat.albedo_texture = load(texture_path)
+	$MeshInstance3D.material_override = mat
