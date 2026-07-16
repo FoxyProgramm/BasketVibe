@@ -115,16 +115,39 @@ func parse(commands:Array[String]) -> void:
 				log_info("Noclip: " + str(player.noclip), "#12ab00")
 		"resetpos":
 			var player = get_tree().get_first_node_in_group("player")
-			if player and player.is_multiplayer_authority():
-				var new_pos = Vector3.ZERO
-				if multiplayer.is_server():
-					player.global_position = new_pos
-					player.sync_position = new_pos
-					player.rpc_id(player.name.to_int(), "_client_teleport", new_pos, "")
-				else:
-					rpc_id(1, "_teleport_player", player.get_path(), new_pos)
-				log_info("Your coordinate reseted", "#12ab00")
-
+			if not player: return
+			
+			# Находим ЛОКАЛЬНОГО игрока
+			for p in get_tree().get_nodes_in_group("player"):
+				if p.is_multiplayer_authority():
+					player = p
+					break
+			
+			var new_pos = Vector3.ZERO
+			if multiplayer.is_server():
+				player.global_position = new_pos
+				player.sync_position = new_pos
+				player.rpc_id(player.name.to_int(), "_client_teleport", new_pos, "")
+			else:
+				rpc_id(1, "_teleport_player", player.get_path(), new_pos)
+			log_info("Your coordinate reseted", "#12ab00")
+		"level_box":
+			if commands.size() > 1:
+				var box_level = get_tree().get_first_node_in_group("level_box")
+				if box_level:
+					var type = commands[1]
+					if type in ["delete"]:
+						log_info("All box be deleted from box_level", "#12ab00")
+						if multiplayer.is_server():
+							box_level.clear_boxes()
+						else:
+							box_level.rpc_id(1, "clear_boxes_at_level")
+					elif type in ["create"]:
+						log_info("All box was respawned on box_level", "#12ab00")
+						if multiplayer.is_server():
+							box_level.respawn_boxes()
+						else:
+							box_level.rpc_id(1, "respawn_boxes_at_level")
 @rpc("any_peer", "reliable")
 func _teleport_player(player_path: NodePath, new_pos: Vector3):
 	if not multiplayer.is_server(): return

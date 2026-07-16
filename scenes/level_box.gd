@@ -8,26 +8,35 @@ extends Node3D
 
 func _ready():
 	await get_tree().process_frame
-	_spawn_all_boxes()
+	if multiplayer.is_server():
+		_spawn_all_boxes()
 
 func _spawn_all_boxes():
 	var half = (grid_size - 1) * box_size / 2.0
-	var level_items = get_tree().current_scene.get_node_or_null("Level/Items")
 	var count = 0
 	
 	for y in range(layers):
 		for x in range(grid_size):
-			await get_tree().create_timer(0.001).timeout
+			await get_tree().process_frame  # Разгружаем кадр
 			for z in range(grid_size):
-				var box = box_scene.instantiate()
-				if level_items:
-					level_items.add_child(box, true)
-				else:
-					add_child(box, true)
+				var local_pos = Vector3(
+					x * box_size - half - 0.5,
+					-y * box_size - 0.5,
+					z * box_size - half - 0.5
+				)
+				var angle = randi_range(0, 3) * PI/2
+				rpc("_create_box", local_pos, angle)
 				count += 1
-				var local_pos = Vector3(x * box_size - half - 0.5, -y * box_size - 0.5, z * box_size - half - 0.5)
-				box.global_position = global_position + local_pos
-				box.rotation.y = randi_range(0, 3) * PI/2
+	
+
+
+@rpc("any_peer", "call_local", "reliable")
+func _create_box(local_pos: Vector3, angle: float):
+	var box = box_scene.instantiate()
+	box.position = local_pos
+	box.rotation.y = angle
+	box.freeze = true
+	add_child(box)
 
 func _process(delta):
 	_check_fall()
@@ -57,3 +66,39 @@ func _teleport_player(player_path: NodePath, new_pos: Vector3):
 		player.global_position = new_pos
 		player.sync_position = new_pos
 		player.rpc_id(player.name.to_int(), "_client_teleport", new_pos, "")
+
+func clear_boxes():
+	if not multiplayer.is_server(): return
+	rpc("_clear_boxes")
+
+@rpc("any_peer", "call_local", "reliable")
+func _clear_boxes():
+	for child in get_children():
+		if child.is_in_group("box"):
+			child.visible = false
+			child.collision_layer = 0
+			child.collision_mask = 0
+			child.freeze = true
+			if multiplayer.is_server():
+				child.queue_free()
+
+func respawn_boxes():
+	if multiplayer.is_server():
+		_do_respawn()
+
+@rpc("any_peer", "reliable")
+func _do_respawn():
+	if not multiplayer.is_server(): return
+	_clear_boxes()
+	await get_tree().process_frame
+	_spawn_all_boxes()
+
+@rpc("any_peer", "reliable")
+func clear_boxes_at_level():
+	if not multiplayer.is_server(): return
+	clear_boxes()
+
+@rpc("any_peer", "reliable")
+func respawn_boxes_at_level():
+	if not multiplayer.is_server(): return
+	respawn_boxes()

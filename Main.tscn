@@ -547,11 +547,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.84770393, 227.78882)
 [node name="level_thorn" parent="." unique_id=66430996 instance=ExtResource("19_3b0ty")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 260.0686, 0)
 
+[node name="level_box" parent="." unique_id=1022402976 groups=["level_box"] instance=ExtResource("24_hhcpw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -90, 0, 0)
+
 [node name="Marker3D" type="Marker3D" parent="." unique_id=2071872080]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.04972, 3.3076992, -33.20089)
-
-[node name="level_box" parent="." unique_id=1022402976 instance=ExtResource("24_hhcpw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -90, 0, 0)
 
 [connection signal="text_submitted" from="UI/Debug/Console/LineEdit" to="UI/Debug/Console" method="_on_line_edit_text_submitted"]
 [connection signal="text_submitted" from="UI/Chat/VBoxContainer/LineEdit" to="UI/Chat" method="_on_line_edit_text_submitted"]
