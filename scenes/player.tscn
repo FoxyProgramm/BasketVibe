@@ -27,6 +27,9 @@ size = Vector2(1.28, 1.28)
 [sub_resource type="BoxShape3D" id="BoxShape3D_jd8yr"]
 size = Vector3(1.4424438, 1.4782715, 2.7988281)
 
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_s8prn"]
+points = PackedVector3Array(0, 0, 1.5, -0.75, 0.75, -1.45, -0.75, -0.75, -1.45, 0.75, -0.75, -1.45, 0.75, 0.75, -1.45)
+
 [sub_resource type="Gradient" id="Gradient_qhqgy"]
 offsets = PackedFloat32Array(0, 0.15873016)
 colors = PackedColorArray(0.23921569, 0.23921569, 0.23921569, 1, 0.23753911, 0.23753914, 0.23753908, 1)
@@ -120,6 +123,11 @@ color = Color(1, 1, 1, 0.8)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Head/Area3D" unique_id=1349043401]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08242798, -0.010375977, -1.508183)
 shape = SubResource("BoxShape3D_jd8yr")
+disabled = true
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Head/Area3D" unique_id=860583052]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08242798, -0.010375977, -1.508183)
+shape = SubResource("ConvexPolygonShape3D_s8prn")
 
 [node name="GroundCast" type="RayCast3D" parent="." unique_id=102618209]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)

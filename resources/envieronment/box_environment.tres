@@ -1,0 +1,25 @@
+[gd_resource type="Environment" format=3 uid="uid://cxb0dspp31w2d"]
+
+[ext_resource type="Texture2D" uid="uid://c2y7vs5y2v8rl" path="res://textures/fading_sky-sunset_01-1024x512.png" id="1_ic1rx"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_gkrjc"]
+panorama = ExtResource("1_ic1rx")
+filter = false
+energy_multiplier = 1.55
+
+[sub_resource type="Sky" id="Sky_5qbgb"]
+sky_material = SubResource("PanoramaSkyMaterial_gkrjc")
+
+[resource]
+background_mode = 1
+sky = SubResource("Sky_5qbgb")
+ambient_light_source = 3
+reflected_light_source = 2
+tonemap_white = 16.0
+fog_enabled = true
+fog_light_color = Color(0.39979059, 0.31441128, 0.3765672, 1)
+fog_density = 0.02
+fog_sky_affect = 0.273
+adjustment_brightness = 0.65
+adjustment_contrast = 1.25
+adjustment_saturation = 0.55

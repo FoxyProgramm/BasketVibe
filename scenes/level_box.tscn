@@ -1,0 +1,157 @@
+[gd_scene format=3 uid="uid://dcuayog64rjkl"]
+
+[ext_resource type="Script" uid="uid://p6y7mebulern" path="res://scenes/level_box.gd" id="1_fh63e"]
+[ext_resource type="Shader" uid="uid://cbgaoaf10x6dq" path="res://resources/shaders/DistanceUV.gdshader" id="1_wwn8d"]
+[ext_resource type="PackedScene" uid="uid://q3g5ruaqryfl" path="res://scenes/items/box.tscn" id="2_74f14"]
+[ext_resource type="Texture2D" uid="uid://bljv4q4l2ulul" path="res://textures/trava.png" id="2_fh63e"]
+[ext_resource type="Texture2D" uid="uid://810ie2c8hsw1" path="res://textures/zabor.png" id="3_74f14"]
+[ext_resource type="Texture2D" uid="uid://btmdcvk7mrhbw" path="res://textures/dapoebatmne.png" id="6_74f14"]
+[ext_resource type="Environment" uid="uid://cxb0dspp31w2d" path="res://resources/envieronment/box_environment.tres" id="6_wwn8d"]
+[ext_resource type="Texture2D" uid="uid://dswbnpalkjta8" path="res://textures/zapostiamoralshiny.png" id="7_74f14"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(82, 1, 82)
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(80, 1, 80)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ofhsj"]
+render_priority = 0
+shader = ExtResource("1_wwn8d")
+shader_parameter/albedo = Color(0.912059, 0.726315, 0.486837, 1)
+shader_parameter/texture_albedo = ExtResource("2_fh63e")
+shader_parameter/triplanar_sharpness = 28.49
+shader_parameter/uv1_scale_close = Vector3(0.2, 0.2, 0.2)
+shader_parameter/uv1_scale_far = Vector3(0.1, 0.1, 0.1)
+shader_parameter/min_distance = 10.0
+shader_parameter/max_distance = 24.425
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c2ibq"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+cull_mode = 2
+albedo_texture = ExtResource("3_74f14")
+uv1_scale = Vector3(11.075, 1, 1)
+texture_filter = 0
+
+[sub_resource type="QuadMesh" id="QuadMesh_jd8yr"]
+material = SubResource("StandardMaterial3D_c2ibq")
+size = Vector2(26.615, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_aciwy"]
+size = Vector3(80, 70, 1)
+
+[node name="level_box" type="Node3D" unique_id=1022402976]
+script = ExtResource("1_fh63e")
+box_scene = ExtResource("2_74f14")
+grid_size = 20
+layers = 4
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=420692789 groups=["floor"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1712449594]
+shape = SubResource("BoxShape3D_floor")
+disabled = true
+debug_color = Color(0.7, 0, 0.011666489, 1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=500308341]
+visible = false
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("ShaderMaterial_ofhsj")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Floor" unique_id=273773646]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 1.8744454, -39.633717)
+mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Floor" unique_id=322422708]
+transform = Transform3D(-1.3113416e-07, 0, -3, 0, 3, 0, 3, 0, -1.3113416e-07, 39.615204, 1.874, 0)
+mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Floor" unique_id=994873294]
+transform = Transform3D(-3, 0, 2.6226832e-07, 0, 3, 0, -2.6226832e-07, 0, -3, -0.07228851, 1.8744454, 39.687492)
+mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Floor" unique_id=19186575]
+transform = Transform3D(3.9340247e-07, 0, 3, 0, 3, 0, -3, 0, 3.9340247e-07, -39.687492, 1.874, 0.053771973)
+mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="Floor" unique_id=1542139511]
+transform = Transform3D(3, 0, 0, 0, -3, -2.6226832e-07, 0, 2.6226832e-07, -3, 0, -1.056, 39.68749)
+mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="Floor" unique_id=1354073648]
+transform = Transform3D(-1.3113416e-07, 0, -3, -2.6226832e-07, -3, 1.1464112e-14, -3, 2.6226832e-07, 1.3113416e-07, 39.615204, -1.056, 0.05377388)
+mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="Floor" unique_id=958776594]
+transform = Transform3D(-3, 0, 2.6226832e-07, 2.2928225e-14, -3, 2.6226832e-07, 2.6226832e-07, 2.6226832e-07, 3, -0.07228851, -1.056, -39.63372)
+mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="Floor" unique_id=785949532]
+transform = Transform3D(3.9340247e-07, 0, 3, 2.6226832e-07, -3, -3.4392336e-14, 3, 2.6226832e-07, -3.9340247e-07, -39.687492, -1.056, 1.9073486e-06)
+mesh = SubResource("QuadMesh_jd8yr")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Floor" unique_id=934584476]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.0267296, 39.881203)
+shape = SubResource("BoxShape3D_aciwy")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Floor" unique_id=891992195]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -40.075, 6.027172, 0)
+shape = SubResource("BoxShape3D_aciwy")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Floor" unique_id=953255332]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.279274, 6.0267296, -40.22287)
+shape = SubResource("BoxShape3D_aciwy")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="Floor" unique_id=1843125907]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 40.35428, 6.027172, -0.3416729)
+shape = SubResource("BoxShape3D_aciwy")
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=1098665069]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.270636, 1.235364, -38.72648)
+pixel_size = 0.0125
+billboard = 2
+texture_filter = 0
+texture = ExtResource("6_74f14")
+
+[node name="Sprite3D2" type="Sprite3D" parent="." unique_id=1011964073]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.766152, 3.8870208, -39.980263)
+pixel_size = 0.0125
+billboard = 2
+texture_filter = 0
+texture = ExtResource("7_74f14")
+
+[node name="Sprite3D3" type="Sprite3D" parent="." unique_id=879581517]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46.22744, 7.2713175, 8.881851)
+pixel_size = 0.0125
+billboard = 2
+texture_filter = 0
+texture = ExtResource("7_74f14")
+
+[node name="Sprite3D4" type="Sprite3D" parent="." unique_id=671790443]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.265234, 1.1436689, 43.05747)
+pixel_size = 0.0125
+billboard = 2
+texture_filter = 0
+texture = ExtResource("7_74f14")
+
+[node name="Sprite3D5" type="Sprite3D" parent="." unique_id=1944748899]
+transform = Transform3D(0.99995077, 0.009745512, -0.0018753489, -0.009748071, 0.99995154, -0.0013607135, 0.0018619967, 0.0013789281, 0.9999973, -25.069956, 4.916089, 45.414402)
+pixel_size = 0.0125
+billboard = 2
+texture_filter = 0
+texture = ExtResource("7_74f14")
+
+[node name="Sprite3D6" type="Sprite3D" parent="." unique_id=452003570]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46.282402, 17.491856, -1.920784)
+pixel_size = 0.0125
+billboard = 2
+texture_filter = 0
+texture = ExtResource("7_74f14")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1467884673]
+environment = ExtResource("6_wwn8d")

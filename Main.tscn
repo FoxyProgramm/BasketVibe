@@ -18,11 +18,13 @@
 [ext_resource type="Texture2D" uid="uid://gwqfni6wvscw" path="res://textures/chat.png" id="12_5tuhn"]
 [ext_resource type="PackedScene" uid="uid://datr5ht60ko4u" path="res://scenes/level_night.tscn" id="12_5vvyt"]
 [ext_resource type="Texture2D" uid="uid://dfivmvuccxrn" path="res://textures/lineedit.png" id="12_kjvhd"]
+[ext_resource type="Environment" uid="uid://cxb0dspp31w2d" path="res://resources/envieronment/box_environment.tres" id="12_mxvw5"]
 [ext_resource type="FontFile" uid="uid://doebh08hvvxpu" path="res://VPCH2.otf" id="13_2gh4u"]
 [ext_resource type="Environment" uid="uid://c0fxnqlt3ov8a" path="res://resources/envieronment/night_environment.tres" id="13_j4qnp"]
 [ext_resource type="PackedScene" uid="uid://bpe5ufguaca7w" path="res://scenes/level_thorn.tscn" id="19_3b0ty"]
 [ext_resource type="Texture2D" uid="uid://y4fkmgkic8b7" path="res://textures/UI/rerol.png" id="20_bg4s2"]
 [ext_resource type="Environment" uid="uid://dj2c4aag0dg1m" path="res://resources/envieronment/thorn_environment.tres" id="22_bg4s2"]
+[ext_resource type="PackedScene" uid="uid://dcuayog64rjkl" path="res://scenes/level_box.tscn" id="24_hhcpw"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
 size = Vector3(82, 1, 82)
@@ -253,6 +255,17 @@ location_environment = ExtResource("22_bg4s2")
 [node name="Door from thorn" parent="Level/doors" unique_id=1403046294 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 261.321, 0)
 target_door = NodePath("../Door to thorn")
+location_environment = ExtResource("2_c2ibq")
+
+[node name="Door to box" parent="Level/doors" unique_id=1545877103 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.2388, 1.1887398, 0)
+target_door = NodePath("../Door from box")
+variation = 1
+location_environment = ExtResource("12_mxvw5")
+
+[node name="Door from box" parent="Level/doors" unique_id=1234129935 node_paths=PackedStringArray("target_door") instance=ExtResource("11_20pc6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -89.529, 1.1367192, 0)
+target_door = NodePath("../Door to box")
 location_environment = ExtResource("2_c2ibq")
 
 [node name="LevelSpawner" type="MultiplayerSpawner" parent="." unique_id=967452454]
@@ -536,6 +549,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 260.0686, 0)
 
 [node name="Marker3D" type="Marker3D" parent="." unique_id=2071872080]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.04972, 3.3076992, -33.20089)
+
+[node name="level_box" parent="." unique_id=1022402976 instance=ExtResource("24_hhcpw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -90, 0, 0)
 
 [connection signal="text_submitted" from="UI/Debug/Console/LineEdit" to="UI/Debug/Console" method="_on_line_edit_text_submitted"]
 [connection signal="text_submitted" from="UI/Chat/VBoxContainer/LineEdit" to="UI/Chat" method="_on_line_edit_text_submitted"]

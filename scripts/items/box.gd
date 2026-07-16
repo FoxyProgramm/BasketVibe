@@ -2,7 +2,7 @@ class_name BoxItem
 extends ItemBase
 
 var hold_offset := Vector3(0, 0.0, -2.5)
-var setka: bool = false
+var setka: bool = true
 @export var is_reinforced: bool = false
 @export var sync_position: Vector3
 
